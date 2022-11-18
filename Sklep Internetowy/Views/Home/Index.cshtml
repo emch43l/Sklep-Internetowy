@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Sklep_Internetowy.Models.Product>
+﻿@using Sklep_Internetowy.Models;
+
+@model IEnumerable<Sklep_Internetowy.Models.Product>
 
 @{
     ViewData["Title"] = "Index";
@@ -25,7 +27,7 @@
                         <span class="product-name">@item.Name</span>
                     </div>
                     <div class="product-information-row">
-                        <span class="product-description">@item.Price zł</span>
+                        <span class="product-description">@item.Price.ToString("0.00") zł</span>
                     </div>
                     <div class="card-buttons-container">
                          <button class="add-to-cart">Do koszyka</button>
