@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models;
+using Sklep_Internetowy.Models.Contexts;
 using System.Diagnostics;
 
 namespace Sklep_Internetowy.Controllers
@@ -8,6 +9,8 @@ namespace Sklep_Internetowy.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        private readonly AppDbContext _context = new AppDbContext();
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -15,7 +18,8 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Index()
         {
-            return View();
+
+            return View(_context.Products.ToList());
         }
 
         public IActionResult Privacy()

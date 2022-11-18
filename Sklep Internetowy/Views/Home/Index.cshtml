@@ -1,8 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Sklep_Internetowy.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Products</h1>
+
+<p>
+    @*<a asp-action="Create">Create New</a>*@
+</p>
+<div class="products-container">
+    @foreach (var item in Model) {
+        <div class="product-card">
+            <div class="product-rating-container">
+                <i class="fas fa-star"></i>
+                <span class="product-rating">4.5</span>
+            </div>
+            <div class="product-container">
+                <div class="product-image-container">
+                    <img class="product-image" src="~/placeholder.png"/>
+                </div>
+                <div class="product-information">
+                    <div class="product-information-row">
+                        <span class="product-name">@item.Name</span>
+                    </div>
+                    <div class="product-information-row">
+                        <span class="product-description">@item.Price zł</span>
+                    </div>
+                    <div class="card-buttons-container">
+                         <button class="add-to-cart">Do koszyka</button>
+                     </div>
+                </div>
+            </div>
+        </div>   
+    }
 </div>
