@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sklep_Internetowy.Models.Contexts;
 
@@ -10,9 +11,11 @@ using Sklep_Internetowy.Models.Contexts;
 namespace SklepInternetowy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221119151555_SecondMigration")]
+    partial class SecondMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -34,6 +37,9 @@ namespace SklepInternetowy.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("Uid")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
@@ -51,6 +57,7 @@ namespace SklepInternetowy.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -69,7 +76,7 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            CreationDate = new DateTime(2022, 11, 19, 16, 55, 6, 710, DateTimeKind.Local).AddTicks(5787),
+                            CreationDate = new DateTime(2022, 11, 19, 16, 15, 54, 919, DateTimeKind.Local).AddTicks(9958),
                             Description = "Romper 7,9%",
                             Name = "Pwio",
                             Price = 2m
@@ -77,7 +84,7 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 2,
-                            CreationDate = new DateTime(2022, 11, 19, 16, 55, 6, 710, DateTimeKind.Local).AddTicks(5827),
+                            CreationDate = new DateTime(2022, 11, 19, 16, 15, 54, 919, DateTimeKind.Local).AddTicks(9997),
                             Description = "Eskimo 0,5 38%",
                             Name = "Wódka",
                             Price = 29m
@@ -85,7 +92,7 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 3,
-                            CreationDate = new DateTime(2022, 11, 19, 16, 55, 6, 710, DateTimeKind.Local).AddTicks(5829),
+                            CreationDate = new DateTime(2022, 11, 19, 16, 15, 54, 919, DateTimeKind.Local).AddTicks(9999),
                             Description = "Lays zielona cebulka",
                             Name = "Czipsy",
                             Price = 5m
@@ -93,7 +100,7 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 4,
-                            CreationDate = new DateTime(2022, 11, 19, 16, 55, 6, 710, DateTimeKind.Local).AddTicks(5832),
+                            CreationDate = new DateTime(2022, 11, 19, 16, 15, 54, 920, DateTimeKind.Local).AddTicks(1),
                             Description = "Samsung 18650 3,7V MAX 20A, 3100 mAh",
                             Name = "Bateria",
                             Price = 25m

@@ -6,7 +6,6 @@
         public string Title { get; set; }
         public string Name { get; set; }
         public Product Product { get; set; }
-        public Guid Uid { get; set; }
 
     }
 }
