@@ -13,6 +13,7 @@
 </p>
 <div class="products-container">
     @foreach (var item in Model) {
+        string path = (item.Images.FirstOrDefault() == null) ? path = "placeholder.png" : path = $"images/{item.Images.FirstOrDefault().Name}";
         <div class="product-card">
             <div class="product-rating-container">
                 <i class="fas fa-star"></i>
@@ -20,7 +21,7 @@
             </div>
             <div class="product-container">
                 <div class="product-image-container">
-                    <img class="product-image" src="~/placeholder.png"/>
+                    <img class="product-image" src="~/@path"/>
                 </div>
                 <div class="product-information">
                     <div class="product-information-row">

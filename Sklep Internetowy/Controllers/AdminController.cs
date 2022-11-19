@@ -46,7 +46,7 @@ namespace Sklep_Internetowy.Controllers
 
                 };
                 var createdEntity = _context.Add(entity);
-                List<Image> images = UploadFile(product.Images, createdEntity.Entity).Result;
+                List<Image> images = UploadImage(product.Images, createdEntity.Entity).Result;
                 images.ForEach(image => _context.Images.Add(image));
                 _context.SaveChanges();
                 return RedirectToAction("Index","Home");
@@ -55,7 +55,7 @@ namespace Sklep_Internetowy.Controllers
             return View(product);
         }
 
-        private async Task<List<Image>> UploadFile(ICollection<IFormFile>? imgs, Product product)
+        private async Task<List<Image>> UploadImage(ICollection<IFormFile>? imgs, Product product)
         {
             List<Image> images = new List<Image> { };
             if (imgs == null)
@@ -84,6 +84,8 @@ namespace Sklep_Internetowy.Controllers
 
             return images;
         }
+
+        
 
         private void CreatDirectoryIfNotExists(string path)
         {

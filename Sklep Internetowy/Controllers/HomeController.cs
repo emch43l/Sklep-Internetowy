@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Models.Contexts;
 using System.Diagnostics;
@@ -18,8 +19,7 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Index()
         {
-
-            return View(_context.Products.ToList());
+            return View(_context.Products.Include(x => x.Images).ToList());
         }
 
         public IActionResult Privacy()

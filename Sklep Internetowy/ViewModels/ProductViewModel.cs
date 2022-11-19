@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using Sklep_Internetowy.Models;
+using Sklep_Internetowy.Tools;
+using Sklep_Internetowy.ViewModels.Validation;
 
 namespace Sklep_Internetowy.ViewModels
 {
@@ -20,6 +21,8 @@ namespace Sklep_Internetowy.ViewModels
 
         public string? Description { get; set; }
 
+        [AllowedFileExtensions(".jpg",".png",".jpeg",".gif")]
+        [MaxFileSize(100,Tools.Type.KB)]
         public ICollection<IFormFile>? Images { get; set; }
 
     }
