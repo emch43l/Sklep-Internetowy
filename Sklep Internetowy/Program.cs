@@ -60,6 +60,8 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
     SupportedUICultures = cultures
 });
 
+app.MapRazorPages();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
