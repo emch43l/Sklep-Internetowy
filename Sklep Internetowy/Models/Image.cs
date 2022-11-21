@@ -1,11 +1,25 @@
-﻿namespace Sklep_Internetowy.Models
+﻿using Microsoft.AspNetCore.Identity;
+using Sklep_Internetowy.Interfaces;
+
+namespace Sklep_Internetowy.Models
 {
-    public class Image
+    public class Image : IFile
     {
-        public int Id { get; set; }
+        public Image() 
+        {
+            Id = Guid.NewGuid();
+        }
+        public Guid Id { get; private set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public Product Product { get; set; }
+        public IdentityUser User { get; set; }
+
+        public string GetFileName()
+            => Name;
+
+        public string GetFileTitle()
+            => Title;
 
     }
 }

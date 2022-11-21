@@ -1,4 +1,4 @@
-﻿using Sklep_Internetowy.Tools;
+﻿using Sklep_Internetowy.Services;
 using Sklep_Internetowy;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,23 +9,22 @@ namespace Sklep_Internetowy.ViewModels.Validation
     {
         private readonly long _maxFileSize;
 
-        public MaxFileSizeAttribute(int value, Tools.Type type) 
+        private readonly ByteParser _byteParser = new ByteParser();
+        public MaxFileSizeAttribute(int value, Services.Type type) 
         {
-            _maxFileSize = ByteParser.ToBytes(value, type);
+            _maxFileSize = _byteParser.ToBytes(value, type);
             this.ErrorMessage = $"File size is too big ! Max file size: {value}{type.ToString()}";
         }
 
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             List<IFormFile>? files = value as List<IFormFile>;
             if (files == null)
                 return ValidationResult.Success;
 
             foreach(IFormFile file in files)
-            {
                 if (!IsValidSize(file))
                     return new ValidationResult(this.ErrorMessage);
-            }
 
             return ValidationResult.Success;
             

@@ -1,0 +1,44 @@
+﻿namespace Sklep_Internetowy.Services
+{
+    public interface IDirectoryConfigurationReader
+    {
+        public void ThrowExceptionWhenParamMissing(bool value);
+
+        public string GetFolderName(TargetFolder folder);
+
+        public void SetSection(string sectionName);
+
+        public string GetDirectory(TargetFolder folder);
+    }
+    public class DirectoryConfigurationReader : IDirectoryConfigurationReader
+    {
+        private readonly IConfiguration _configuration;
+
+        private string _missingParamPlaceholder = "All";
+
+        private string _section = "Uploads";
+
+        private bool _throwException = false;
+        public DirectoryConfigurationReader(IConfiguration configuration)
+        {
+            _configuration = configuration.GetSection(_section) ?? configuration;
+        }
+
+        public void ThrowExceptionWhenParamMissing(bool value)
+            => _throwException = value;
+
+        public string GetFolderName(TargetFolder folder)
+        {
+            return _configuration.GetValue<string?>(folder.ToString()) ?? (
+                (_throwException) ? throw new ArgumentNullException() : _missingParamPlaceholder);
+        }
+
+        public string GetDirectory(TargetFolder folder)
+            => GetFolderName(TargetFolder.Root) + "/" + GetFolderName(folder);
+
+        public void SetSection(string sectionName)
+        {
+            _section = sectionName;
+        }
+    }
+}

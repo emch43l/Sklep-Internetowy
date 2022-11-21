@@ -12,17 +12,22 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
+using Sklep_Internetowy.Services;
 
 namespace Sklep_Internetowy.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly AppDbContext _context = new AppDbContext();
+        private readonly DataContext _context;
 
         private readonly string _appEnviroment;
 
-        public AdminController(IWebHostEnvironment environment)
+        private readonly IFileUploader _fileUploader;
+
+        public AdminController(IWebHostEnvironment environment, IFileUploader fileUploader, DataContext context)
         {
+            _context = context;
+            _fileUploader = fileUploader;
             _appEnviroment = environment.WebRootPath;
         }
 
@@ -35,6 +40,7 @@ namespace Sklep_Internetowy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
+            _fileUploader.SetTargetFolderTo(TargetFolder.Images);
             if (ModelState.IsValid)
             {
                 Product entity = new Product()
@@ -45,57 +51,22 @@ namespace Sklep_Internetowy.Controllers
                     Price = decimal.Parse(product.Price.ToString())
 
                 };
-                var createdEntity = _context.Add(entity);
-                List<Image> images = UploadImage(product.Images, createdEntity.Entity).Result;
-                images.ForEach(image => _context.Images.Add(image));
+                Product createdEntity = _context.Add(entity).Entity;
+
+                List<UploadedFile> images = _fileUploader.UploadFiles(product.Images).Result;
+                images.ForEach(image => _context.Images.Add(new Image()
+                {
+                    Title = image.File.FileName,
+                    Name = image.UploadedFileName,
+                    Product = createdEntity
+                }));
+
                 _context.SaveChanges();
+
                 return RedirectToAction("Index","Home");
             }
 
             return View(product);
-        }
-
-        private async Task<List<Image>> UploadImage(ICollection<IFormFile>? imgs, Product product)
-        {
-            List<Image> images = new List<Image> { };
-            if (imgs == null)
-                return images;
-            long fileSize = imgs.Sum(x => x.Length);
-            foreach (IFormFile file in imgs)
-            {
-                if (file.Length > 0)
-                {
-                    string imagesPath = _appEnviroment + "/images/";
-                    CreatDirectoryIfNotExists(imagesPath);
-                    string fileName = Guid.NewGuid() + "_" + string.Join('_', file.FileName.Split(Path.GetInvalidFileNameChars()));
-                    using (Stream stream = System.IO.File.Create(imagesPath + fileName))
-                    {
-                        await file.CopyToAsync(stream);
-                        images.Add(new Image()
-                        {
-                            Title = file.Name,
-                            Name = fileName,
-                            Product = product
-
-                        });
-                    }
-                }
-            }
-
-            return images;
-        }
-
-        
-
-        private void CreatDirectoryIfNotExists(string path)
-        {
-            if(!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
-        }
-
-        private bool ProductExists(int id)
-        {
-          return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

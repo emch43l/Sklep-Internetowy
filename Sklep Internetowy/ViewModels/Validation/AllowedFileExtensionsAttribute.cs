@@ -25,10 +25,8 @@ namespace Sklep_Internetowy.ViewModels.Validation
             return ValidationResult.Success;
         }
 
-        protected bool FileExtensionIsAllowed(IFormFile file)
-        {
-            return _allowedFileExtensions.Contains(System.IO.Path.GetExtension(file.FileName));
-        }
+        protected bool FileExtensionIsAllowed(IFormFile file) 
+            => _allowedFileExtensions.Contains(System.IO.Path.GetExtension(file.FileName));
         
     }
 }

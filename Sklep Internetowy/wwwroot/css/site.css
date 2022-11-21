@@ -54,15 +54,19 @@ body {
 }
 
 .product-image {
-    max-height: 210px;
-    height: 100%;
+    max-width: 210px;
     border-radius: 10px;
     display: block;
     margin: 0 auto;
+    max-height:100%;
+    position: relative;
+    top: 50%;
+    transform: translate(0,-50%);
 }
 
 .product-image-container {
-   
+   height: 210px;
+   position: relative;
 }
 
 .product-rating-container {
@@ -71,7 +75,8 @@ body {
     left: -7px;
     background-color: var(--card-rating);
     padding: 5px 10px;
-    border-radius: 5px
+    border-radius: 5px;
+    z-index: 1;
 }
 
 .product-rating {

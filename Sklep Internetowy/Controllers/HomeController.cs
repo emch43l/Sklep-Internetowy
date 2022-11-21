@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Models.Contexts;
+using Sklep_Internetowy.Services;
 using System.Diagnostics;
 
 namespace Sklep_Internetowy.Controllers
@@ -10,15 +11,22 @@ namespace Sklep_Internetowy.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly AppDbContext _context = new AppDbContext();
+        private readonly DataContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration _configuration;
+
+        private readonly IDirectoryConfigurationReader _reader;
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration, IDirectoryConfigurationReader uploader, DataContext context)
         {
+            _context = context;
+            _configuration= configuration;
             _logger = logger;
+            _reader = uploader;
         }
 
         public IActionResult Index()
         {
+            ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
             return View(_context.Products.Include(x => x.Images).ToList());
         }
 
