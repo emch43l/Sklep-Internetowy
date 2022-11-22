@@ -17,6 +17,7 @@ namespace Sklep_Internetowy.Models
 
         public decimal Price { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime Creation_Date { get; set; }
 
         public string? Description { get; set; }

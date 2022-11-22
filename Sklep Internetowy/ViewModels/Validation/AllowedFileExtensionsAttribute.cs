@@ -13,7 +13,7 @@ namespace Sklep_Internetowy.ViewModels.Validation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            List<IFormFile> files = value as List<IFormFile>;
+            List<IFormFile>? files = value as List<IFormFile>;
 
             if (files == null)
                 return ValidationResult.Success;

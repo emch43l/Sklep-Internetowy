@@ -10,11 +10,11 @@ namespace Sklep_Internetowy.Services
 
         public void SetTargetFolderName(string name);
 
-        public Task<List<UploadedFile>> UploadFiles(ICollection<IFormFile> files);
+        public Task<UploadedFile> UploadFile(IFormFile file);
 
         public List<FileUploaderError> GetErrors();
 
-        public List<IFile> DeleteFile(ICollection<IFile> files);
+        public IFile DeleteFile(IFile file);
 
     }
 
@@ -40,85 +40,70 @@ namespace Sklep_Internetowy.Services
 
         public FileUploader(IWebHostEnvironment environment, IDirectoryConfigurationReader reader)
         {
+            _Errors = new List<FileUploaderError>();
             _reader = reader;
             _reader.ThrowExceptionWhenParamMissing(true);
             _rootFolderName = _reader.GetFolderName(TargetFolder.Root);
             _enviromentDirectory = environment.WebRootPath;
         }
 
-        public async Task<List<UploadedFile>> UploadFiles(ICollection<IFormFile> files)
+        public async Task<UploadedFile?> UploadFile(IFormFile file)
         {
             string uniqueFileName;
 
-            List<UploadedFile> uploadedFiles = new List<UploadedFile>();
-            if (files == null)
-                return uploadedFiles;
-
-            foreach (IFormFile file in files)
+            if(file.Length <= 0)
             {
-                if(file.Length <= 0)
-                {
-                    _Errors.Add(
+                _Errors.Add(
                         new FileUploaderError(FileName: file.FileName, Message: "Inalid file !")
                         );
-                    continue;
-                }
-                try
+                return null;
+            }
+            try
+            {
+                CreatDirectoryIfNotExists(GetDirectory());
+                uniqueFileName = CreateUniqueFileName(file);
+                using (Stream stream = System.IO.File.Create(GetDirectory() + "/" + uniqueFileName))
                 {
-                    CreatDirectoryIfNotExists(GetDirectory());
-                    uniqueFileName = CreateUniqueFileName(file);
-                    using (Stream stream = System.IO.File.Create(GetDirectory() + "/" + uniqueFileName))
-                    {
-                        await file.CopyToAsync(stream);
-                        uploadedFiles.Add(new UploadedFile(File: file, UploadedFileName: uniqueFileName));
-                    }
+                    await file.CopyToAsync(stream);
+                    return new UploadedFile(File: file, UploadedFileName: uniqueFileName);
                 }
-                catch(Exception e)
-                {
-                    _Errors.Add(
-                        new FileUploaderError(FileName: file.FileName, Message: e.Message)
-                        );
-                }
-
+            }
+            catch (Exception e)
+            {
+                _Errors.Add(
+                    new FileUploaderError(FileName: file.FileName, Message: e.Message)
+                    );
             }
 
-            return uploadedFiles;
+            return null;
         }
-        public List<IFile> DeleteFile(ICollection<IFile> files)
+        public IFile? DeleteFile(IFile file)
         {
             string filePath;
-
-            List<IFile> deletedFiles = new List<IFile>();
-
-            if (files.Count == 0)
-                return deletedFiles;
-
-            foreach(IFile file in files)
+            try
             {
-                try
+                filePath = GetDirectory() + "/" + file.GetFileName();
+                if (FileExists(filePath))
                 {
-                    filePath = GetDirectory() + "/" + file.GetFileName();
-                    if(FileExists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                        deletedFiles.Add(file);
-                    }
-                    else
-                    {
-                        _Errors.Add(
-                            new FileUploaderError(FileName: file.GetFileTitle(), Message: $"File {file.GetFileTitle()} does not exist !")
-                            );
-                    }
+                    System.IO.File.Delete(filePath);
+                    return file;
                 }
-                catch(Exception e)
+                else
                 {
                     _Errors.Add(
-                        new FileUploaderError(FileName: file.GetFileTitle(), Message: e.Message)
+                        new FileUploaderError(FileName: file.GetFileTitle(), Message: $"File {file.GetFileTitle()} does not exist !")
                         );
+                    return file;
                 }
             }
+            catch (Exception e)
+            {
+                _Errors.Add(
+                    new FileUploaderError(FileName: file.GetFileTitle(), Message: e.Message)
+                    );
+            }
 
-            return deletedFiles;
+            return null;
         }
 
         private bool FileExists(string filePath)

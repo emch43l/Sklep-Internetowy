@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using Sklep_Internetowy.Services;
+using Sklep_Internetowy.Interfaces;
+using System.Dynamic;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -29,6 +31,37 @@ namespace Sklep_Internetowy.Controllers
             _context = context;
             _fileUploader = fileUploader;
             _appEnviroment = environment.WebRootPath;
+        }
+
+        public IActionResult Index()
+        {
+            dynamic model = new ExpandoObject();
+            model.Products = _context.Products.ToList();
+            model.ProductDeleteModel = new ProductDeleteModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(ProductDeleteModel model)
+        {
+            Product? product = _context.Products.Find(model.Id);
+            if (product == null)
+                return RedirectToAction("Index");
+
+            if (model.DeleteImagesOnRemoval)
+            {
+                foreach(Image file in product.Images)
+                {
+                    _fileUploader.DeleteFile(file);
+                    _context.Images.Remove(file);
+                }
+            }
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+
         }
 
         public IActionResult Create()
@@ -52,8 +85,11 @@ namespace Sklep_Internetowy.Controllers
 
                 };
                 Product createdEntity = _context.Add(entity).Entity;
-
-                List<UploadedFile> images = _fileUploader.UploadFiles(product.Images).Result;
+                List<UploadedFile> images = new List<UploadedFile>();
+                foreach (IFormFile image in product.Images)
+                {
+                    images.Add(await _fileUploader.UploadFile(image));
+                }
                 images.ForEach(image => _context.Images.Add(new Image()
                 {
                     Title = image.File.FileName,
