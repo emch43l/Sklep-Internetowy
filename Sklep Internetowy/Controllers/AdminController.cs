@@ -35,10 +35,7 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Index()
         {
-            dynamic model = new ExpandoObject();
-            model.Products = _context.Products.ToList();
-            model.ProductDeleteModel = new ProductDeleteModel();
-            return View(model);
+            return View(_context.Products.Include(p => p.ProductDetail).ToList());
         }
 
         [HttpPost]
@@ -51,7 +48,7 @@ namespace Sklep_Internetowy.Controllers
 
             if (model.DeleteImagesOnRemoval)
             {
-                foreach(Image file in product.Images)
+                foreach(Image file in product.ProductDetail.Images)
                 {
                     _fileUploader.DeleteFile(file);
                     _context.Images.Remove(file);
@@ -66,7 +63,7 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View(new ProductViewModel { Producers = GetProducers()});
         }
 
         [HttpPost]
@@ -76,26 +73,37 @@ namespace Sklep_Internetowy.Controllers
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
             if (ModelState.IsValid)
             {
+                Producer? producer =  _context.Producers.Where(p => p.Guid.ToString() == product.ProducerId).Select(p => p).First();
+                if(producer == null)
+                {
+                    ModelState.AddModelError("ProducerNotFound", "Selected producer doesnt exist !");
+                    return View(product);
+                }
+                ProductDetail productDetails = new ProductDetail();
                 Product entity = new Product()
                 {
                     Name = product.Name,
-                    Creation_Date = DateTime.Now,
-                    Description = product.Description,
-                    Price = decimal.Parse(product.Price.ToString())
-
+                    ProductDetail = productDetails,
+                    Price = decimal.Parse(product.Price.ToString()),
+                    Producer = producer
                 };
-                Product createdEntity = _context.Add(entity).Entity;
+
+                productDetails.Description = product.Description;
+                productDetails.Creation_Date = DateTime.Now;
+
                 List<UploadedFile> images = new List<UploadedFile>();
                 foreach (IFormFile image in product.Images)
                 {
                     images.Add(await _fileUploader.UploadFile(image));
                 }
-                images.ForEach(image => _context.Images.Add(new Image()
+
+                productDetails.Images = images.Select(image => new Image()
                 {
                     Title = image.File.FileName,
-                    Name = image.UploadedFileName,
-                    Product = createdEntity
-                }));
+                    Name = image.UploadedFileName
+                }).ToList();
+
+                Product createdEntity = _context.Add(entity).Entity;
 
                 _context.SaveChanges();
 
@@ -103,6 +111,11 @@ namespace Sklep_Internetowy.Controllers
             }
 
             return View(product);
+        }
+
+        private List<SelectListItem> GetProducers()
+        {
+            return _context.Producers.Select(p => new SelectListItem() { Text = p.Name, Value = p.Guid.ToString()}).ToList();
         }
     }
 }

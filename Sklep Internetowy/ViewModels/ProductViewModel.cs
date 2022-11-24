@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sklep_Internetowy.Services;
 using Sklep_Internetowy.ViewModels.Validation;
 
@@ -17,11 +19,17 @@ namespace Sklep_Internetowy.ViewModels
         [DataType(DataType.Currency)]
         public double Price { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [AllowedFileExtensions(".jpg",".png",".jpeg",".gif")]
         [MaxFileSize(100,Services.Type.KB)]
         public ICollection<IFormFile>? Images { get; set; }
+
+        [ValidateNever]
+        public List<SelectListItem> Producers { get; set; }
+
+        [Required]
+        public string ProducerId { get; set; }
 
     }
 }

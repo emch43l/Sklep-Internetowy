@@ -27,7 +27,15 @@ namespace Sklep_Internetowy.Controllers
         public IActionResult Index()
         {
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
-            return View(_context.Products.Include(x => x.Images).ToList());
+            return View(
+                new Tuple<IEnumerable<Product>, IEnumerable<Producer>>(
+                item1: _context.Products
+                        .Include(x => x.Rating)
+                        .Include(x => x.ProductDetail)
+                        .ThenInclude(x => x.Images).ToList(),
+                item2: _context.Producers.ToList()
+                )
+            );           
         }
 
         public IActionResult Privacy()

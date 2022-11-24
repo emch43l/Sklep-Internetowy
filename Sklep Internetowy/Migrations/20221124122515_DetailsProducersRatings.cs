@@ -8,11 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SklepInternetowy.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class DetailsProducersRatings : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Producers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Guid = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Producers", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -53,6 +67,28 @@ namespace SklepInternetowy.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Guid = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    ProducerId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Producers_ProducerId",
+                        column: x => x.ProducerId,
+                        principalTable: "Producers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RolesClaims",
                 columns: table => new
                 {
@@ -71,27 +107,6 @@ namespace SklepInternetowy.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    CreationDate = table.Column<DateTime>(name: "Creation_Date", type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -180,55 +195,106 @@ namespace SklepInternetowy.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductsDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    CreationDate = table.Column<DateTime>(name: "Creation_Date", type: "TEXT", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductsDetails_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductsRatings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Rating = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsRatings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductsRatings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductsRatings_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    ProductId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true)
+                    ProductDetailsId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Images", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Images_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_Images_ProductsDetails_ProductDetailsId",
+                        column: x => x.ProductDetailsId,
+                        principalTable: "ProductsDetails",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Images_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "Creation_Date", "Description", "Name", "Price", "UserId" },
+                table: "Producers",
+                columns: new[] { "Id", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("1ec304f5-69d0-4289-bd6e-ee69b8a3b43a"), new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8364), "Lays zielona cebulka", "Czipsy", 5m, null },
-                    { new Guid("24ff0f06-ae38-46db-bdf0-15b52385ad35"), new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8362), "Eskimo 0,5 38%", "Wódka", 29m, null },
-                    { new Guid("468f20f9-88cc-4445-b187-450bffde51d7"), new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8321), "Romper 7,9%", "Pwio", 2m, null },
-                    { new Guid("ba78b72c-657a-4f95-95a7-6371870ef7ca"), new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8366), "Samsung 18650 3,7V MAX 20A, 3100 mAh", "Bateria", 25m, null }
+                    { 1, new Guid("55b08ecd-94b4-455e-b282-9e57fc9d380c"), "Lays" },
+                    { 2, new Guid("eec8efca-3b76-4d48-bc30-42b6eeeed324"), "Samsung" },
+                    { 3, new Guid("ef27d49f-987b-4b65-8fa1-5f602bf17b6d"), "Default" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_ProductId",
+                name: "IX_Images_ProductDetailsId",
                 table: "Images",
+                column: "ProductDetailsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ProducerId",
+                table: "Products",
+                column: "ProducerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsDetails_ProductId",
+                table: "ProductsDetails",
+                column: "ProductId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsRatings_ProductId",
+                table: "ProductsRatings",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_UserId",
-                table: "Images",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_UserId",
-                table: "Products",
+                name: "IX_ProductsRatings_UserId",
+                table: "ProductsRatings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -276,6 +342,9 @@ namespace SklepInternetowy.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "ProductsRatings");
+
+            migrationBuilder.DropTable(
                 name: "RolesClaims");
 
             migrationBuilder.DropTable(
@@ -291,13 +360,19 @@ namespace SklepInternetowy.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "ProductsDetails");
 
             migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Producers");
         }
     }
 }

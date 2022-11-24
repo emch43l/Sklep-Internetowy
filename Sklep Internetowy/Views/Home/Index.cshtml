@@ -1,6 +1,6 @@
 ﻿@using Sklep_Internetowy.Models;
 
-@model IEnumerable<Sklep_Internetowy.Models.Product>
+@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,IEnumerable<Sklep_Internetowy.Models.Producer>>;
 
 @{
     ViewData["Title"] = "Index";
@@ -11,34 +11,49 @@
 <p>
     @*<a asp-action="Create">Create New</a>*@
 </p>
-<div class="products-container">
-    @foreach (var item in Model) {
-        string path = 
-            (item.Images.FirstOrDefault() == null) ? 
-                path = "placeholder.png" : 
-                path = $"{ViewData["ImagesPath"]}/{item.Images.FirstOrDefault().Name}";
+<div class="products-section">
+    <div class="product-sorting-container">
 
-        <div class="product-card">
-            <div class="product-rating-container">
-                <i class="fas fa-star"></i>
-                <span class="product-rating">4.5</span>
-            </div>
-            <div class="product-container">
+    </div>
+    <div class="products-container">
+        @foreach (var item in Model.Item1) {
+            string path = 
+                (item.ProductDetail.Images.FirstOrDefault() == null) ? 
+                    path = "placeholder.png" : 
+                    path = $"{ViewData["ImagesPath"]}/{item.ProductDetail.Images.FirstOrDefault().Name}";
+
+            <div class="product-row">
                 <div class="product-image-container">
-                    <img class="product-image" src="~/@path"/>
+                    <img src="@path" class="product-image"/>
                 </div>
-                <div class="product-information">
-                    <div class="product-information-row">
-                        <span class="product-name">@item.Name</span>
-                    </div>
-                    <div class="product-information-row">
-                        <span class="product-description">@item.Price.ToString("0.00") zł</span>
-                    </div>
-                    <div class="card-buttons-container">
-                         <button class="add-to-cart">Do koszyka</button>
-                     </div>
+                <div class="product-details-container">
+                    <div class="product-name">@item.Name</div>
+                    <div class="product-producer">@item.Producer.Name</div>
+                    <div class="product-rating">@item.Rating.Count()</div>
+                    <div class="product-price">@item.Price.ToString("0.00")</div>
                 </div>
             </div>
-        </div>   
-    }
+           @* <div class="product-card">
+                <div class="product-rating-container">
+                    <i class="fas fa-star"></i>
+                    <span class="product-rating">4.5</span>
+                </div>
+                <div class="product-container">
+                    <div class="product-image-container">
+                        <img class="product-image" src="~/@path"/>
+                    </div>
+                    <div class="product-information">
+                        <div class="product-information-row">
+                            <span class="product-name">@item.Name</span>
+                        </div>
+                        <div class="product-information-row">
+                            <span class="product-description">@item.Price.ToString("0.00") zł</span>
+                        </div>
+                        <div class="card-buttons-container">
+                             <button class="add-to-cart">Do koszyka</button>
+                         </div>
+                    </div>
+                </div> *@
+        }
+    </div>
 </div>

@@ -11,8 +11,8 @@ using Sklep_Internetowy.Models.Contexts;
 namespace SklepInternetowy.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221121214438_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221124122515_DetailsProducersRatings")]
+    partial class DetailsProducersRatings
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,12 +226,119 @@ namespace SklepInternetowy.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ProductDetailsId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductDetailsId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.Producer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Producers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Guid = new Guid("55b08ecd-94b4-455e-b282-9e57fc9d380c"),
+                            Name = "Lays"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Guid = new Guid("eec8efca-3b76-4d48-bc30-42b6eeeed324"),
+                            Name = "Samsung"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Guid = new Guid("ef27d49f-987b-4b65-8fa1-5f602bf17b6d"),
+                            Name = "Default"
+                        });
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProducerId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Creation_Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductsDetails");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -242,70 +349,7 @@ namespace SklepInternetowy.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Sklep_Internetowy.Models.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Creation_Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("468f20f9-88cc-4445-b187-450bffde51d7"),
-                            CreationDate = new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8321),
-                            Description = "Romper 7,9%",
-                            Name = "Pwio",
-                            Price = 2m
-                        },
-                        new
-                        {
-                            Id = new Guid("24ff0f06-ae38-46db-bdf0-15b52385ad35"),
-                            CreationDate = new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8362),
-                            Description = "Eskimo 0,5 38%",
-                            Name = "Wódka",
-                            Price = 29m
-                        },
-                        new
-                        {
-                            Id = new Guid("1ec304f5-69d0-4289-bd6e-ee69b8a3b43a"),
-                            CreationDate = new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8364),
-                            Description = "Lays zielona cebulka",
-                            Name = "Czipsy",
-                            Price = 5m
-                        },
-                        new
-                        {
-                            Id = new Guid("ba78b72c-657a-4f95-95a7-6371870ef7ca"),
-                            CreationDate = new DateTime(2022, 11, 21, 22, 44, 38, 66, DateTimeKind.Local).AddTicks(8366),
-                            Description = "Samsung 18650 3,7V MAX 20A, 3100 mAh",
-                            Name = "Bateria",
-                            Price = 25m
-                        });
+                    b.ToTable("ProductsRatings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -361,8 +405,41 @@ namespace SklepInternetowy.Migrations
 
             modelBuilder.Entity("Sklep_Internetowy.Models.Image", b =>
                 {
-                    b.HasOne("Sklep_Internetowy.Models.Product", "Product")
+                    b.HasOne("Sklep_Internetowy.Models.ProductDetail", "ProductDetails")
                         .WithMany("Images")
+                        .HasForeignKey("ProductDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductDetails");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.Product", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.Producer", "Producer")
+                        .WithMany("Products")
+                        .HasForeignKey("ProducerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producer");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductDetail", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.Product", "Product")
+                        .WithOne("ProductDetail")
+                        .HasForeignKey("Sklep_Internetowy.Models.ProductDetail", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductRating", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.Product", "Product")
+                        .WithMany("Rating")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -376,16 +453,20 @@ namespace SklepInternetowy.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Sklep_Internetowy.Models.Product", b =>
+            modelBuilder.Entity("Sklep_Internetowy.Models.Producer", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy.Models.Product", b =>
+                {
+                    b.Navigation("ProductDetail")
+                        .IsRequired();
+
+                    b.Navigation("Rating");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductDetail", b =>
                 {
                     b.Navigation("Images");
                 });

@@ -1,5 +1,5 @@
 ﻿@using Sklep_Internetowy.ViewModels;
-@model dynamic
+@model IEnumerable<Sklep_Internetowy.Models.Product>
 
 @{
     ViewData["Title"] = "Index";
@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Products) {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @item.Name
@@ -35,17 +35,14 @@
                 @item.Price
             </td>
             <td>
-                @item.Creation_Date
+                @item.ProductDetail.Creation_Date
             </td>
             <td>
-                @item.Description
+                @item.ProductDetail.Description
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <form method="post" asp-action="Delete">
-                   <input asp-for="ProductDeleteModel.Id" >
-                </form>
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

@@ -12,9 +12,7 @@ namespace Sklep_Internetowy.Models
         public Guid Id { get; private set; }
         public string Title { get; set; }
         public string Name { get; set; }
-        public Product Product { get; set; }
-        public IdentityUser User { get; set; }
-
+        public ProductDetail ProductDetails { get; set; }
         public string GetFileName()
             => Name;
 
