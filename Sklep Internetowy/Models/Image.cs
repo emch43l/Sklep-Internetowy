@@ -7,9 +7,11 @@ namespace Sklep_Internetowy.Models
     {
         public Image() 
         {
-            Id = Guid.NewGuid();
+            Guid = Guid.NewGuid();
         }
-        public Guid Id { get; private set; }
+
+        public int Id { get; set; }
+        public Guid Guid { get; private set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public ProductDetail ProductDetails { get; set; }

@@ -4,6 +4,8 @@ using Sklep_Internetowy.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models.Contexts;
+using Sklep_Internetowy.Repositories.Interfaces;
+using Sklep_Internetowy.Repositories;
 
 CultureInfo[] cultures = new CultureInfo[]
 {
@@ -31,11 +33,6 @@ builder.Services
     .AddScoped<IByteParser, ByteParser>()
     .AddScoped<IFileUploader, FileUploader>()
     .AddScoped<IDirectoryConfigurationReader,DirectoryConfigurationReader>();
-
-//builder.Services
-//    .AddDbContext<AppDbContext>()
-//    .AddDefaultIdentity<IdentityUser>()
-//    .AddEntityFrameworkStores<AppDbContext>();
 
 
 builder.Services.AddControllersWithViews();
