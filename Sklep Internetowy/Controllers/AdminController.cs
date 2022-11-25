@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Http;
 using Sklep_Internetowy.Services;
 using Sklep_Internetowy.Interfaces;
 using System.Dynamic;
+using Sklep_Internetowy.Repositories.Interfaces;
+using Sklep_Internetowy.Repositories;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -26,11 +28,23 @@ namespace Sklep_Internetowy.Controllers
 
         private readonly IFileUploader _fileUploader;
 
+        private readonly IProducerRepository _prodRepo;
+        private readonly IProductRepository _pRepo;
+        private readonly IProductCategoryRepository _pcRepo;
+        private readonly IImageRepository _imgRepo;
+
         public AdminController(IWebHostEnvironment environment, IFileUploader fileUploader, DataContext context)
         {
             _context = context;
             _fileUploader = fileUploader;
             _appEnviroment = environment.WebRootPath;
+
+            //repositories initialization
+
+            _prodRepo = new ProducerRepository(_context);
+            _pRepo = new ProductRepository(_context);
+            _pcRepo = new ProductCategoryRepository(_context);
+            _imgRepo = new ImageRepository(_context);
         }
 
         public IActionResult Index()
@@ -42,21 +56,6 @@ namespace Sklep_Internetowy.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(ProductDeleteModel model)
         {
-            Product? product = _context.Products.Find(model.Id);
-            if (product == null)
-                return RedirectToAction("Index");
-
-            if (model.DeleteImagesOnRemoval)
-            {
-                foreach(Image file in product.ProductDetail.Images)
-                {
-                    _fileUploader.DeleteFile(file);
-                    _context.Images.Remove(file);
-                }
-            }
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-
             return RedirectToAction("Index");
 
         }
@@ -71,56 +70,61 @@ namespace Sklep_Internetowy.Controllers
         public async Task<IActionResult> Create(ProductViewModel product)
         {
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
+
+            ProductDetail productDetails = new ProductDetail();
+            Product entity = new Product();
+            List<UploadedFile> images = new List<UploadedFile>();
+
             if (ModelState.IsValid)
             {
-                Producer? producer =  _context.Producers.Where(p => p.Guid == new Guid(product.ProducerId)).Select(p => p).First();
+                Producer? producer = _prodRepo.GetProducerByGuid(Guid.Parse(product.ProducerId));
                 if(producer == null)
                 {
                     ModelState.AddModelError("ProducerNotFound", "Selected producer doesnt exist !");
                     return View(product);
                 }
-                ProductDetail productDetails = new ProductDetail();
-                Product entity = new Product()
-                {
-                    Name = product.Name,
-                    ProductDetail = productDetails,
-                    Price = decimal.Parse(product.Price.ToString()),
-                    Producer = producer,
-                    Categories = new List<ProductCategory>()
-                };
-                if(product.CategoryId != null)
-                {
-                    foreach(string id in product.CategoryId)
-                    {
-                        entity.Categories.Add(_context.ProductCategories.Where(c => c.Guid == new Guid(id)).Select(c => c).First());
-                    }
-                }
+
+                entity.Name = product.Name;
+                entity.ProductDetail = productDetails;
+                entity.Price = decimal.Parse(product.Price.ToString());
+                entity.Producer = producer;
+                entity.Categories = new List<ProductCategory>();
 
                 productDetails.Description = product.Description;
                 productDetails.Creation_Date = DateTime.Now;
 
-                List<UploadedFile> images = new List<UploadedFile>();
-                if(product.Images != null) 
+                if(product.CategoryId != null)
+                {
+                    foreach(string id in product.CategoryId)
+                    {
+                        ProductCategory? productCategory = _pcRepo.GetProductCategoryByGuid(Guid.Parse(id));
+                        if(productCategory != null)
+                            entity.Categories.Add(productCategory);
+                    }
+                }
+   
+
+                if(product.Images != null && product.Images.Count != 0) 
                 {
                     foreach (IFormFile image in product.Images)
-                    {
                         images.Add(await _fileUploader.UploadFile(image));
-                    }
 
-                    productDetails.Images = images.Select(image => new Image()
-                    {
-                        Title = image.File.FileName,
-                        Name = image.UploadedFileName
-                    }).ToList();
+                    productDetails.Images = images.Select(image =>
+                        new Image() 
+                        {
+                            Title = image.File.FileName,
+                            Name = image.UploadedFileName
+                        }
+                    ).ToList();
                 }
 
-                Product createdEntity = _context.Add(entity).Entity;
-
-                _context.SaveChanges();
+                Product createdEntity = _pRepo.AddProduct(entity);
+                _pRepo.Save();
 
                 return RedirectToAction("Index","Home");
             }
-
+            product.Categories = new List<ProductCategory>(_pcRepo.GetCategories());
+            product.Producers = GetProducers();
             return View(product);
         }
 

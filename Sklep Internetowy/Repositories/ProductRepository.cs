@@ -25,8 +25,9 @@ namespace Sklep_Internetowy.Repositories
             return _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.Rating)
+                .Include(p => p.Categories)
                 .Include(p => p.ProductDetail)
-                .ThenInclude(pd => pd.Images).ToList();
+                .ThenInclude(pd => pd.Images);
         }
 
         public Product? GetProductByGuid(Guid id)
@@ -47,7 +48,7 @@ namespace Sklep_Internetowy.Repositories
 
         public Product AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            return _context.Products.Add(product).Entity;
         }
 
         public Product? RemoveProduct(Guid id)

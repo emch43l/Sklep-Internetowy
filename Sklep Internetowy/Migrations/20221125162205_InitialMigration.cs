@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SklepInternetowy.Migrations
 {
     /// <inheritdoc />
-    public partial class PopulatedCategoryTable : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -283,7 +283,9 @@ namespace SklepInternetowy.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Guid = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     ProductDetailsId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -304,9 +306,9 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "Id", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("b1668a70-c74e-42c3-a83d-e5217b54ac9f"), "Lays" },
-                    { 2, new Guid("6fef14b7-0ef9-4339-843b-866f66d20d0d"), "Samsung" },
-                    { 3, new Guid("b60223a2-0661-45dc-b513-20278293e143"), "Default" }
+                    { 1, new Guid("c05b5cdb-e22f-41ae-b742-39a1fcefea8e"), "Lays" },
+                    { 2, new Guid("1ef2c0db-c301-46d0-bf71-bd29b13c1954"), "Samsung" },
+                    { 3, new Guid("2869cf06-48ac-4913-a487-70412be39176"), "Default" }
                 });
 
             migrationBuilder.InsertData(
@@ -314,9 +316,9 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "Id", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("684af741-0507-48ca-81f7-e9fb5d0d5642"), "Elektronika" },
-                    { 2, new Guid("6e81a7f0-a6c7-4cc2-b60b-820dd92d8d5b"), "Artykuły spożywcze" },
-                    { 3, new Guid("132af5bf-37e4-410b-bbe0-a1a221542a83"), "Budowlane" }
+                    { 1, new Guid("74f16c4b-78a2-48d6-921b-b2333c0fe175"), "Elektronika" },
+                    { 2, new Guid("fb8eef59-2281-45ff-a55c-c9c115f87375"), "Artykuły spożywcze" },
+                    { 3, new Guid("ff93d2dd-9c37-4844-996d-8a3d4c525d8f"), "Budowlane" }
                 });
 
             migrationBuilder.CreateIndex(

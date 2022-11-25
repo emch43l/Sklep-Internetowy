@@ -13,5 +13,7 @@ namespace Sklep_Internetowy.Repositories.Interfaces
         public Image AddImage(Image image);
 
         public Image? RemoveImage(Guid id);
+
+        public void Save();
     }
 }

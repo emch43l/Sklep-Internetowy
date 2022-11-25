@@ -230,8 +230,11 @@ namespace SklepInternetowy.Migrations
 
             modelBuilder.Entity("Sklep_Internetowy.Models.Image", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Guid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -273,19 +276,19 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("b1668a70-c74e-42c3-a83d-e5217b54ac9f"),
+                            Guid = new Guid("c05b5cdb-e22f-41ae-b742-39a1fcefea8e"),
                             Name = "Lays"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("6fef14b7-0ef9-4339-843b-866f66d20d0d"),
+                            Guid = new Guid("1ef2c0db-c301-46d0-bf71-bd29b13c1954"),
                             Name = "Samsung"
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("b60223a2-0661-45dc-b513-20278293e143"),
+                            Guid = new Guid("2869cf06-48ac-4913-a487-70412be39176"),
                             Name = "Default"
                         });
                 });
@@ -340,19 +343,19 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("684af741-0507-48ca-81f7-e9fb5d0d5642"),
+                            Guid = new Guid("74f16c4b-78a2-48d6-921b-b2333c0fe175"),
                             Name = "Elektronika"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("6e81a7f0-a6c7-4cc2-b60b-820dd92d8d5b"),
+                            Guid = new Guid("fb8eef59-2281-45ff-a55c-c9c115f87375"),
                             Name = "Artykuły spożywcze"
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("132af5bf-37e4-410b-bbe0-a1a221542a83"),
+                            Guid = new Guid("ff93d2dd-9c37-4844-996d-8a3d4c525d8f"),
                             Name = "Budowlane"
                         });
                 });

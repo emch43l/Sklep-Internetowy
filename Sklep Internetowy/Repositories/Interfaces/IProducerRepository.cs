@@ -15,5 +15,7 @@ namespace Sklep_Internetowy.Repositories.Interfaces
         public Producer AddProducer(Producer producer);
 
         public IEnumerable<Producer>? GetProducers();
+
+        public void Save();
     }
 }

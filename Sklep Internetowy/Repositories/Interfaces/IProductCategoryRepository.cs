@@ -15,5 +15,7 @@ namespace Sklep_Internetowy.Repositories.Interfaces
         public ProductCategory UpdateProductCategory(ProductCategory category);
 
         public ProductCategory? RemoveProductCategory(Guid id);
+
+        public void Save();
     }
 }

@@ -1,19 +1,48 @@
 ﻿@using Sklep_Internetowy.Models;
 
-@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,IEnumerable<Sklep_Internetowy.Models.Producer>, IEnumerable<ProductCategory>>;
+@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>;
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Products</h1>
+<h1 class="products-header">Produkty</h1>
 
 <p>
     @*<a asp-action="Create">Create New</a>*@
 </p>
 <div class="products-section">
-    <div class="product-sorting-container">
-
+    <div class="product-filtering-container">
+        <form methot="GET">
+            <div class="category-filtering-container">
+                <h4>Kategorie</h4>
+                <div class="filtering-data-container">
+                    @foreach(var item in Model.Item3)
+                    {
+                        <div class="filtering-checkbox-container">
+                            <input name="ProductCategories" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
+                            <label for="@item.Value">@item.Text</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="filtering-section-divider"></div>
+            <div class="producer-filtering-container">
+                <h4>Producenci</h4>
+                <div class="filtering-data-container">
+                    @foreach(var item in Model.Item2)
+                    {
+                        <div class="filtering-checkbox-container">
+                            <input name="ProductProducers" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
+                            <label for="@item.Value" >@item.Text</label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="filtering-container-footer">
+                <button class="apply-filtering" type="submit">Filtruj</button>
+            </div>
+        </form>
     </div>
     <div class="products-container">
         @foreach (var item in Model.Item1) {
@@ -28,32 +57,43 @@
                 </div>
                 <div class="product-details-container">
                     <div class="product-name">@item.Name</div>
-                    <div class="product-producer">@item.Producer.Name</div>
-                    <div class="product-rating">@item.Rating.Count()</div>
-                    <div class="product-price">@item.Price.ToString("0.00")</div>
+                    <div class="product-details">
+                        <div class="product-details-left">
+                            <div class="product-producer">
+                                <span class="product-producer-label">Producent:</span>
+                                <span class="product-producer-name">@item.Producer.Name</span>
+                                </div>
+                            <div class="product-categories">
+                                @if(item.Categories != null)
+                                {
+                                    <div class="product-categories-label">Kategorie: </div>
+                                    @foreach(var cat in item.Categories)
+                                    {
+                                        <span class="product-category">@cat.Name</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="product-categories-label">Brak kategorii.</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="product-details-right">
+                            <div class="product-rating-container">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="product-price">@item.Price.ToString("0.00")
+                                <span class="product-currency">PLN</span>
+                            </div>
+                            <button class="product-add-to-cart">Do koszyka</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-           @* <div class="product-card">
-                <div class="product-rating-container">
-                    <i class="fas fa-star"></i>
-                    <span class="product-rating">4.5</span>
-                </div>
-                <div class="product-container">
-                    <div class="product-image-container">
-                        <img class="product-image" src="~/@path"/>
-                    </div>
-                    <div class="product-information">
-                        <div class="product-information-row">
-                            <span class="product-name">@item.Name</span>
-                        </div>
-                        <div class="product-information-row">
-                            <span class="product-description">@item.Price.ToString("0.00") zł</span>
-                        </div>
-                        <div class="card-buttons-container">
-                             <button class="add-to-cart">Do koszyka</button>
-                         </div>
-                    </div>
-                </div> *@
         }
     </div>
 </div>
