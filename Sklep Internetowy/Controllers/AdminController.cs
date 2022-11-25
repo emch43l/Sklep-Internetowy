@@ -63,7 +63,7 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Create()
         {
-            return View(new ProductViewModel { Producers = GetProducers()});
+            return View(new ProductViewModel { Producers = GetProducers(), Categories = _context.ProductCategories.ToList()});
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace Sklep_Internetowy.Controllers
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
             if (ModelState.IsValid)
             {
-                Producer? producer =  _context.Producers.Where(p => p.Guid.ToString() == product.ProducerId).Select(p => p).First();
+                Producer? producer =  _context.Producers.Where(p => p.Guid == new Guid(product.ProducerId)).Select(p => p).First();
                 if(producer == null)
                 {
                     ModelState.AddModelError("ProducerNotFound", "Selected producer doesnt exist !");
@@ -85,23 +85,34 @@ namespace Sklep_Internetowy.Controllers
                     Name = product.Name,
                     ProductDetail = productDetails,
                     Price = decimal.Parse(product.Price.ToString()),
-                    Producer = producer
+                    Producer = producer,
+                    Categories = new List<ProductCategory>()
                 };
+                if(product.CategoryId != null)
+                {
+                    foreach(string id in product.CategoryId)
+                    {
+                        entity.Categories.Add(_context.ProductCategories.Where(c => c.Guid == new Guid(id)).Select(c => c).First());
+                    }
+                }
 
                 productDetails.Description = product.Description;
                 productDetails.Creation_Date = DateTime.Now;
 
                 List<UploadedFile> images = new List<UploadedFile>();
-                foreach (IFormFile image in product.Images)
+                if(product.Images != null) 
                 {
-                    images.Add(await _fileUploader.UploadFile(image));
-                }
+                    foreach (IFormFile image in product.Images)
+                    {
+                        images.Add(await _fileUploader.UploadFile(image));
+                    }
 
-                productDetails.Images = images.Select(image => new Image()
-                {
-                    Title = image.File.FileName,
-                    Name = image.UploadedFileName
-                }).ToList();
+                    productDetails.Images = images.Select(image => new Image()
+                    {
+                        Title = image.File.FileName,
+                        Name = image.UploadedFileName
+                    }).ToList();
+                }
 
                 Product createdEntity = _context.Add(entity).Entity;
 
@@ -116,6 +127,11 @@ namespace Sklep_Internetowy.Controllers
         private List<SelectListItem> GetProducers()
         {
             return _context.Producers.Select(p => new SelectListItem() { Text = p.Name, Value = p.Guid.ToString()}).ToList();
+        }
+
+        private List<SelectListItem> GetCategories()
+        {
+            return _context.ProductCategories.Select(p => new SelectListItem() { Text = p.Name, Value = p.Name }).ToList();
         }
     }
 }

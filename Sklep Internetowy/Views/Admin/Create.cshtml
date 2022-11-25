@@ -37,6 +37,15 @@
                  </select>
             </div>
             <div class="form-group">
+                @foreach(var item in Model.Categories)
+                {
+                    <div>
+                        <input type="checkbox" name="CategoryId" value="@item.Guid.ToString()"/>
+                        <span> @item.Name </span>
+                    </div>
+                }
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>

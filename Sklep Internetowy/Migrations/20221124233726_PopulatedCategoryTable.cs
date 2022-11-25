@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SklepInternetowy.Migrations
 {
     /// <inheritdoc />
-    public partial class DetailsProducersRatings : Migration
+    public partial class PopulatedCategoryTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,20 @@ namespace SklepInternetowy.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Producers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Guid = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +209,30 @@ namespace SklepInternetowy.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductProductCategory",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductProductCategory", x => new { x.CategoriesId, x.ProductsId });
+                    table.ForeignKey(
+                        name: "FK_ProductProductCategory_ProductCategories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductProductCategory_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductsDetails",
                 columns: table => new
                 {
@@ -266,15 +304,36 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "Id", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("55b08ecd-94b4-455e-b282-9e57fc9d380c"), "Lays" },
-                    { 2, new Guid("eec8efca-3b76-4d48-bc30-42b6eeeed324"), "Samsung" },
-                    { 3, new Guid("ef27d49f-987b-4b65-8fa1-5f602bf17b6d"), "Default" }
+                    { 1, new Guid("b1668a70-c74e-42c3-a83d-e5217b54ac9f"), "Lays" },
+                    { 2, new Guid("6fef14b7-0ef9-4339-843b-866f66d20d0d"), "Samsung" },
+                    { 3, new Guid("b60223a2-0661-45dc-b513-20278293e143"), "Default" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductCategories",
+                columns: new[] { "Id", "Guid", "Name" },
+                values: new object[,]
+                {
+                    { 1, new Guid("684af741-0507-48ca-81f7-e9fb5d0d5642"), "Elektronika" },
+                    { 2, new Guid("6e81a7f0-a6c7-4cc2-b60b-820dd92d8d5b"), "Artykuły spożywcze" },
+                    { 3, new Guid("132af5bf-37e4-410b-bbe0-a1a221542a83"), "Budowlane" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_ProductDetailsId",
                 table: "Images",
                 column: "ProductDetailsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_Name",
+                table: "ProductCategories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductProductCategory_ProductsId",
+                table: "ProductProductCategory",
+                column: "ProductsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_ProducerId",
@@ -342,6 +401,9 @@ namespace SklepInternetowy.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "ProductProductCategory");
+
+            migrationBuilder.DropTable(
                 name: "ProductsRatings");
 
             migrationBuilder.DropTable(
@@ -361,6 +423,9 @@ namespace SklepInternetowy.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductsDetails");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "Roles");

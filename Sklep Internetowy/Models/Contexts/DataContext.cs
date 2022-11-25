@@ -16,6 +16,8 @@ namespace Sklep_Internetowy.Models.Contexts
 
         public DbSet<Producer> Producers { get; set; }
 
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+
         //public string DbPath { get; set; }
 
         //public readonly string _DbName = "app_data.db";
@@ -35,6 +37,25 @@ namespace Sklep_Internetowy.Models.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ProductDetail>().HasOne(p => p.Product).WithOne(p => p.ProductDetail);
+            modelBuilder.Entity<ProductCategory>().HasIndex(c => c.Name).IsUnique();
+            modelBuilder.Entity<ProductCategory>().HasData(
+                new ProductCategory
+                {
+                    Id = 1,
+                    Name = "Elektronika"
+
+                },
+                new ProductCategory
+                {
+                    Id = 2,
+                    Name = "Artykuły spożywcze"
+                },
+                new ProductCategory
+                {
+                    Id = 3,
+                    Name = "Budowlane"
+                }
+            );
             modelBuilder.Entity<Producer>().HasData(
                 new Producer
                 {

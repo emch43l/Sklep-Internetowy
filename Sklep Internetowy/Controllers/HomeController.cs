@@ -28,12 +28,13 @@ namespace Sklep_Internetowy.Controllers
         {
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
             return View(
-                new Tuple<IEnumerable<Product>, IEnumerable<Producer>>(
+                new Tuple<IEnumerable<Product>, IEnumerable<Producer>, IEnumerable<ProductCategory>>(
                 item1: _context.Products
                         .Include(x => x.Rating)
                         .Include(x => x.ProductDetail)
                         .ThenInclude(x => x.Images).ToList(),
-                item2: _context.Producers.ToList()
+                item2: _context.Producers.ToList(),
+                item3: _context.ProductCategories.ToList()
                 )
             );           
         }

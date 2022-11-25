@@ -11,8 +11,8 @@ using Sklep_Internetowy.Models.Contexts;
 namespace SklepInternetowy.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221124122515_DetailsProducersRatings")]
-    partial class DetailsProducersRatings
+    [Migration("20221124233726_PopulatedCategoryTable")]
+    partial class PopulatedCategoryTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,21 @@ namespace SklepInternetowy.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProductProductCategory", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CategoriesId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("ProductProductCategory");
+                });
+
             modelBuilder.Entity("Sklep_Internetowy.Models.Image", b =>
                 {
                     b.Property<Guid>("Id")
@@ -261,19 +276,19 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("55b08ecd-94b4-455e-b282-9e57fc9d380c"),
+                            Guid = new Guid("b1668a70-c74e-42c3-a83d-e5217b54ac9f"),
                             Name = "Lays"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("eec8efca-3b76-4d48-bc30-42b6eeeed324"),
+                            Guid = new Guid("6fef14b7-0ef9-4339-843b-866f66d20d0d"),
                             Name = "Samsung"
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("ef27d49f-987b-4b65-8fa1-5f602bf17b6d"),
+                            Guid = new Guid("b60223a2-0661-45dc-b513-20278293e143"),
                             Name = "Default"
                         });
                 });
@@ -302,6 +317,47 @@ namespace SklepInternetowy.Migrations
                     b.HasIndex("ProducerId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.ProductCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Guid = new Guid("684af741-0507-48ca-81f7-e9fb5d0d5642"),
+                            Name = "Elektronika"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Guid = new Guid("6e81a7f0-a6c7-4cc2-b60b-820dd92d8d5b"),
+                            Name = "Artykuły spożywcze"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Guid = new Guid("132af5bf-37e4-410b-bbe0-a1a221542a83"),
+                            Name = "Budowlane"
+                        });
                 });
 
             modelBuilder.Entity("Sklep_Internetowy.Models.ProductDetail", b =>
@@ -399,6 +455,21 @@ namespace SklepInternetowy.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProductProductCategory", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.ProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sklep_Internetowy.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

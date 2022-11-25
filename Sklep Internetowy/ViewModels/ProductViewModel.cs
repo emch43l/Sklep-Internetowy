@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Services;
 using Sklep_Internetowy.ViewModels.Validation;
 
@@ -28,8 +29,13 @@ namespace Sklep_Internetowy.ViewModels
         [ValidateNever]
         public List<SelectListItem> Producers { get; set; }
 
+        [ValidateNever]
+        public List<ProductCategory> Categories { get; set; }
+
         [Required]
         public string ProducerId { get; set; }
+
+        public List<string>? CategoryId { get; set; }
 
     }
 }

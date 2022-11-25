@@ -23,6 +23,8 @@ namespace Sklep_Internetowy.Models
 
         public ProductDetail ProductDetail { get; set; }
 
+        public ICollection<ProductCategory>? Categories { get; set; }
+
         public Product() 
         {
             Guid = Guid.NewGuid();
