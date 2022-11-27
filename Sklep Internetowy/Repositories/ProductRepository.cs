@@ -59,6 +59,16 @@ namespace Sklep_Internetowy.Repositories
             return null;
         }
 
+        public Product? GetCheapestProduct()
+        {
+            return _context.Products.OrderBy(p => (double)p.Price).FirstOrDefault();
+        }
+
+        public Product? GetMostExpensiveProduct()
+        {
+            return _context.Products.OrderByDescending(p => (double)p.Price).FirstOrDefault();
+        }
+
         public Product UpdateProduct(Product product)
         {
             throw new NotImplementedException();

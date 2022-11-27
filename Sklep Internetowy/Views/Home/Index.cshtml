@@ -1,10 +1,13 @@
 ﻿@using Sklep_Internetowy.Models;
+@using Sklep_Internetowy.Controllers;
+@using Sklep_Internetowy.ViewModels;
 
-@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,IEnumerable<SelectListItem>, IEnumerable<SelectListItem>>;
-
-@{
-    ViewData["Title"] = "Index";
+@section Scripts
+{
+    <script type="text/javascript" src="~/js/productTableManagement.js" /></script>
 }
+
+@model Tuple<IEnumerable<Product>,FilterProductsModel>;
 
 <h1 class="products-header">Produkty</h1>
 
@@ -13,14 +16,14 @@
 </p>
 <div class="products-section">
     <div class="product-filtering-container">
-        <form methot="GET">
+        <form methot="GET" id="filtering-form">
             <div class="category-filtering-container">
                 <h4>Kategorie</h4>
                 <div class="filtering-data-container">
-                    @foreach(var item in Model.Item3)
+                    @foreach(var item in Model.Item2.CategoriesList)
                     {
                         <div class="filtering-checkbox-container">
-                            <input name="ProductCategories" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
+                            <input name="Categories" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
                             <label for="@item.Value">@item.Text</label>
                         </div>
                     }
@@ -30,21 +33,46 @@
             <div class="producer-filtering-container">
                 <h4>Producenci</h4>
                 <div class="filtering-data-container">
-                    @foreach(var item in Model.Item2)
+                    @foreach(var item in Model.Item2.ProducersList)
                     {
                         <div class="filtering-checkbox-container">
-                            <input name="ProductProducers" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
+                            <input name="Producers" id="@item.Value" type="checkbox" value="@item.Value" checked="@item.Selected" />
                             <label for="@item.Value" >@item.Text</label>
                         </div>
                     }
                 </div>
             </div>
+            <div class="filtering-section-divider"></div>
+            <div class="producer-filtering-container">
+                <h4>Cena</h4>
+                <input id="product-max-price" type="range" min="@Model.Item2.InputRangeData.Min" max="@Model.Item2.InputRangeData.Max" step="0.01" value="@Model.Item2.InputRangeData.Current" name="MaxPrice" />
+                <div class="max-price-labels">
+                    <div class="max-price-label">
+                        @Model.Item2.InputRangeData.Min.ToString("0.00")
+                    </div>
+                    <div class="max-price-label" id="current-price">
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="SortOrder" id="sorting-order"/>
+            <input type="hidden" name="SortBy" id="sort-by"/>
+            <input type="hidden" name="Page" id="page-number" value="1"/>
             <div class="filtering-container-footer">
-                <button class="apply-filtering" type="submit">Filtruj</button>
+                <button class="apply-filtering" type="submit" id="apply-filtering">Filtruj</button>
             </div>
         </form>
     </div>
     <div class="products-container">
+        <div class="sorting-container">
+            <div>
+                Sortuj po: 
+                @Html.DropDownListFor(v => v.Item2.SortBy ,Model.Item2.SortProps, new {@class = "sort-by-select", id = "sort-by-select"})
+                @Html.DropDownListFor(v => v.Item2.SortingOrder, Model.Item2.Order, new {@class = "sort-by-select", id = "sort-order"})
+                <button id="apply-sorting" class="apply-sorting">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
         @foreach (var item in Model.Item1) {
             string path = 
                 (item.ProductDetail.Images.FirstOrDefault() == null) ? 
@@ -94,6 +122,24 @@
                     </div>
                 </div>
             </div>
-        }
+            }
+        <div class="page-change-container">
+            <div class="page-change-buttons">
+                @if(Model.Item2.NumberOfPages.Count() > 1)
+                {
+                    foreach(int i in Model.Item2.NumberOfPages)
+                    {
+                        if(i == Model.Item2.PageNumber)
+                        {
+                            <button class="change-page-button current-page" value="@i">@i</button>   
+                        }
+                        else
+                        {
+                            <button class="change-page-button" value="@i">@i</button>
+                        }
+                    }
+                }
+            </div>
+        </div>
     </div>
 </div>

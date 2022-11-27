@@ -34,6 +34,13 @@ builder.Services
     .AddScoped<IFileUploader, FileUploader>()
     .AddScoped<IDirectoryConfigurationReader,DirectoryConfigurationReader>();
 
+// Add repositories
+builder.Services
+    .AddScoped<IProducerRepository, ProducerRepository>()
+    .AddScoped<IProductRepository, ProductRepository>()
+    .AddScoped<IProductCategoryRepository, ProductCategoryRepository>()
+    .AddScoped<IImageRepository, ImageRepository>();
+
 
 builder.Services.AddControllersWithViews();
 

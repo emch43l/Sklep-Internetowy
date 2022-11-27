@@ -8,6 +8,7 @@ namespace Sklep_Internetowy.Models.Contexts
     public class DataContext: IdentityDbContext<IdentityUser>
     {
         public DbSet<Product> Products { get; set; }
+
         public DbSet<Image> Images { get; set; }
 
         public DbSet<ProductDetail> ProductsDetails { get; set; }

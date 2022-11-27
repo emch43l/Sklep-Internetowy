@@ -20,6 +20,10 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 
         public void Save();
 
+        public Product? GetMostExpensiveProduct();
+
+        public Product? GetCheapestProduct();
+
 
     }
 }
