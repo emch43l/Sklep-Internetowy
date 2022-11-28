@@ -61,17 +61,20 @@ namespace Sklep_Internetowy.Models.Contexts
                 new Producer
                 {
                     Id = 1,
-                    Name = "Lays"
+                    Name = "Lays",
+                    Description = "Lay's is a brand of potato chips, as well as the name of the company that founded the chip brand in the United States. The brand has also sometimes been referred to as Frito-Lay because both Lay's and Fritos are brands sold by the Frito-Lay company, which has been a wholly owned subsidiary of PepsiCo (Pepsi) since 1965. "
                 },
                 new Producer
                 {
                     Id = 2,
-                    Name = "Samsung"
+                    Name = "Samsung",
+                    Description = "The Samsung Group (or simply Samsung, stylized as SΛMSUNG) (Korean: 삼성 [samsʌŋ]) is a South Korean multinational manufacturing conglomerate headquartered in Samsung Town, Seoul, South Korea. It comprises numerous affiliated businesses, most of them united under the Samsung brand, and is the largest South Korean chaebol (business conglomerate). As of 2020, Samsung has the eighth highest global brand value."
                 },
                 new Producer
                 {
                     Id = 3,
-                    Name = "Default"
+                    Name = "Default",
+                    Description = "Dummy producer"
                 }
             );
             //modelBuilder.Entity<Producer>().HasData(
