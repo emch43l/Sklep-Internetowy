@@ -10,6 +10,8 @@
 
         public ICollection<Product> Products { get; set; }
 
+        public string Description { get; set; }
+
         public Producer()
         {
             Guid = Guid.NewGuid();

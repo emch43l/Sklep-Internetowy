@@ -42,7 +42,7 @@ namespace Sklep_Internetowy.Controllers
             _reader = uploader;
         }
 
-        public IActionResult Index(FilterProductsModel model)
+        public IActionResult Index(ManageProductListModel model)
         {
 
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
@@ -95,7 +95,7 @@ namespace Sklep_Internetowy.Controllers
                 new SelectListItem { Text = "Producent", Value = ((int) SortByProperty.Producer).ToString() }
             };
 
-            return View(new Tuple<IEnumerable<Product>, FilterProductsModel>(
+            return View(new Tuple<IEnumerable<Product>, ManageProductListModel>(
                             item1: products,
                             item2: model
                                 ));          

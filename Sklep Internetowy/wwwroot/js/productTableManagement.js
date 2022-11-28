@@ -2,11 +2,11 @@
 
 function InitializeFunctions() {
     InputRange();
-    FilteringSortingForm();
+    FormManagement();
+    UiUtitilites();
 }
 
 function InputRange() {
-    console.log("dasdadas");
     let input = document.getElementById("product-max-price");
     let output = document.getElementById("current-price");
     output.innerHTML = parseFloat(input.value).toFixed(2);
@@ -15,7 +15,7 @@ function InputRange() {
     })
 }
 
-function FilteringSortingForm() {
+function FormManagement() {
 
     let select = document.getElementById("sort-by-select");
     let order = document.getElementById("sort-order");

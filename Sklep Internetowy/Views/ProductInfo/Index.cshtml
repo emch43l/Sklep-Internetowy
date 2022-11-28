@@ -1,0 +1,54 @@
+﻿
+@model Sklep_Internetowy.Models.Product;
+
+@section Scripts
+{
+    <script src="~/js/productDetail.js" type="text/javascript"></script>
+}
+
+<div class="details-product-container">
+    <div class="details-product-data">
+        <div class="details-product-left">
+            <div class="owl-carousel owl-theme">
+                @if(Model.ProductDetail.Images.Count() == 0)
+                {
+                    <div class="carousel-item-container">
+                        <img src="~/placeholder.png"/>
+                    </div>
+                }
+                else
+                {
+                    @foreach(var item in Model.ProductDetail.Images)
+                    {
+                        string path = $"{ViewData["ImagesPath"]}/{item.Name}";
+                        <div class="carousel-item-container">
+                            <img src="~/@path" class="carousel-image"/>
+                        </div>
+                    }
+                }
+                    
+            </div>
+        </div>
+        <div class="details-product-right">
+            <div class="details-product-name">@Model.Name</div>
+            <div class="details-product-producer">
+                <span class="fileld-label">
+                    Producent: 
+                </span>
+                <span class="details-product-producer-text">
+                    @Model.Producer.Name
+                </span>
+            </div>
+                
+            <div class="details-product-desc">
+                <div class="fileld-label">
+                   Krótki opis: 
+                </div>
+                <span class="details-product-desc-text">
+                    @Model.ProductDetail.Description
+                </span>
+            </div>
+            <div class="details-product-price">@Model.Price.ToString("0.00")</div>
+        </div>
+    </div>
+</div>

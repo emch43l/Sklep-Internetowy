@@ -8,13 +8,13 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 
         public IEnumerable<Product>? GetProductsWithAditionalData();
 
-        public Product? GetProductByGuid(Guid id);
+        public Product? GetProductByGuid(string id);
 
-        public Product? GetProductWithAditionalData(Guid id);
+        public Product? GetProductWithAditionalData(string id);
 
         public Product AddProduct(Product product);
 
-        public Product? RemoveProduct(Guid id);
+        public Product? RemoveProduct(string id);
 
         public Product UpdateProduct(Product product);
 

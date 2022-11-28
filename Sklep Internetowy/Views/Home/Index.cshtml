@@ -7,7 +7,7 @@
     <script type="text/javascript" src="~/js/productTableManagement.js" /></script>
 }
 
-@model Tuple<IEnumerable<Product>,FilterProductsModel>;
+@model Tuple<IEnumerable<Product>,ManageProductListModel>;
 
 <h1 class="products-header">Produkty</h1>
 
@@ -79,49 +79,54 @@
                     path = "placeholder.png" : 
                     path = $"{ViewData["ImagesPath"]}/{item.ProductDetail.Images.FirstOrDefault().Name}";
 
-            <div class="product-row">
-                <div class="product-image-container">
-                    <img src="@path" class="product-image"/>
-                </div>
-                <div class="product-details-container">
-                    <div class="product-name">@item.Name</div>
-                    <div class="product-details">
-                        <div class="product-details-left">
-                            <div class="product-producer">
-                                <span class="product-producer-label">Producent:</span>
-                                <span class="product-producer-name">@item.Producer.Name</span>
-                                </div>
-                            <div class="product-categories">
-                                @if(item.Categories != null)
-                                {
-                                    <div class="product-categories-label">Kategorie: </div>
-                                    @foreach(var cat in item.Categories)
-                                    {
-                                        <span class="product-category">@cat.Name</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="product-categories-label">Brak kategorii.</span>
-                                }
-                            </div>
+            
+                <div class="product-row">
+                    <div class="product-image-container">
+                        <img src="@path" class="product-image"/>
+                    </div>
+                    <div class="product-details-container">
+                        <div class="product-name">
+                            <a asp-controller="ProductInfo" asp-action="Index" asp-route-id="@item.Guid" class="product-details-link">
+                                @item.Name
+                            </a>
                         </div>
-                        <div class="product-details-right">
-                            <div class="product-rating-container">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                        <div class="product-details">
+                            <div class="product-details-left">
+                                <div class="product-producer">
+                                    <span class="product-producer-label">Producent:</span>
+                                    <span class="product-producer-name">@item.Producer.Name</span>
+                                    </div>
+                                <div class="product-categories">
+                                    @if(item.Categories != null)
+                                    {
+                                        <div class="product-categories-label">Kategorie: </div>
+                                        @foreach(var cat in item.Categories)
+                                        {
+                                            <span class="product-category">@cat.Name</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="product-categories-label">Brak kategorii.</span>
+                                    }
+                                </div>
                             </div>
-                            <div class="product-price">@item.Price.ToString("0.00")
-                                <span class="product-currency">PLN</span>
+                            <div class="product-details-right">
+                                <div class="product-rating-container">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="product-price">@item.Price.ToString("0.00")
+                                    <span class="product-currency">PLN</span>
+                                </div>
+                                <button class="product-add-to-cart">Do koszyka</button>
                             </div>
-                            <button class="product-add-to-cart">Do koszyka</button>
                         </div>
                     </div>
                 </div>
-            </div>
             }
         <div class="page-change-container">
             <div class="page-change-buttons">

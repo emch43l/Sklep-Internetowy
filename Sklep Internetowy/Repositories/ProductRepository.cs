@@ -30,20 +30,22 @@ namespace Sklep_Internetowy.Repositories
                 .ThenInclude(pd => pd.Images);
         }
 
-        public Product? GetProductByGuid(Guid id)
+        public Product? GetProductByGuid(string id)
         {
+            id = id.ToUpper();
             return _context.Products
-                .FirstOrDefault(p => p.Guid == id);
+                .FirstOrDefault(p => p.Guid.ToString() == id);
         }
 
-        public Product? GetProductWithAditionalData(Guid id)
+        public Product? GetProductWithAditionalData(string id)
         {
+            id = id.ToUpper();
             return _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.Rating)
                 .Include(p => p.ProductDetail)
                 .ThenInclude(pd => pd.Images)
-                .FirstOrDefault(p => p.Guid == id);
+                .FirstOrDefault(p => p.Guid.ToString() == id);
         }
 
         public Product AddProduct(Product product)
@@ -51,7 +53,7 @@ namespace Sklep_Internetowy.Repositories
             return _context.Products.Add(product).Entity;
         }
 
-        public Product? RemoveProduct(Guid id)
+        public Product? RemoveProduct(string id)
         {
             Product? product = GetProductByGuid(id);
             if (product != null)

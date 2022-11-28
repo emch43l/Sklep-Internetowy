@@ -31,7 +31,7 @@ namespace Sklep_Internetowy.ViewModels
         public double? Current;
     }
 
-    public class FilterProductsModel
+    public class ManageProductListModel
     {
         [FromQuery(Name = "Producers")]
         public string[] ProductProducers { get; set; }
@@ -68,7 +68,7 @@ namespace Sklep_Internetowy.ViewModels
 
         [ValidateNever]
         public InputRangeData InputRangeData { get; set; }
-        public FilterProductsModel() 
+        public ManageProductListModel() 
         {
             ProductProducers = new string[0];
             ProductCategories = new string[0];
