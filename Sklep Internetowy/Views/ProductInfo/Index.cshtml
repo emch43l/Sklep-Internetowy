@@ -8,6 +8,10 @@
     <script src="~/js/productDetail.js" type="text/javascript"></script>
 }
 
+@{
+    int numOfOpinions = Model.Rating.Count();
+}
+
 <div class="details-product-container">
     <div class="details-product-data">
         <div class="details-product-left">
@@ -49,20 +53,11 @@
                         </span>
                         @foreach(var item in Model.Categories)
                         {
-                            <a asp-controller="home" asp-action="index" asp-
                             <span class="details-product-category">
                                 @item.Name
                             </span>
                         }
                     </div>
-                   @* <div>
-                        @foreach(var item in Model.Categories)
-                        {
-                            <span class="details-product-category">
-                                @item.Name
-                            </span>
-                        }
-                    </div>*@
                 </div>
                 <div>
                     <div class="product-rating-container details-rating" style="margin-right: 10px">
@@ -108,6 +103,64 @@
                 </select>
                 <button class="product-add-to-cart details-add-button">Dodaj do koszyka</button>
             </div>
+        </div>
+    </div>
+    <div class="details-product-user-ratings">
+        <div class="user-rating-container">
+            <div class="user-rating-chart-container">
+                <div class="user-rating-left-box">
+                    <div class="rating-star">
+                        @Html.GetRatingRepresentativeStar(Model.GetRating())
+                    </div>
+                    <div class="rating-star-desc">
+                        <span class="rating-current-rating">@Model.GetRating().ToString("0.0")</span>
+                        <span class="rating-max-rating">/ 5</span>
+                    </div>
+                    <div class="rating-opinion-count">
+                          ( @numOfOpinions ) Ocen
+                    </div>
+                </div>
+                <div class="user-rating-chart">
+                    <div class="rating-bar-data">
+                        <div class="star-count"><i class='fas fa-star'></i> 5</div>
+                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 5).Count(),numOfOpinions)
+                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 5).Count() </div>
+                    </div>
+                     <div class="rating-bar-data">
+                        <div class="star-count"><i class='fas fa-star'></i> 4</div>
+                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 4).Count(),numOfOpinions)
+                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 4).Count() </div>
+                    </div>
+                     <div class="rating-bar-data">
+                        <div class="star-count"><i class='fas fa-star'></i> 3</div>
+                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 3).Count(),numOfOpinions)
+                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 3).Count() </div>
+                    </div>
+                     <div class="rating-bar-data">
+                        <div class="star-count"><i class='fas fa-star'></i> 2</div>
+                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 2).Count(),numOfOpinions)
+                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 2).Count() </div>
+                    </div>
+                    <div class="rating-bar-data">
+                        <div class="star-count"><i class='fas fa-star'></i> 1</div>
+                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 1).Count(),numOfOpinions)
+                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 1).Count() </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-add-opinion-section">
+                <div class="add-opinion-container">
+                    <div class="opinion-header">
+                        <h4 class="opinion-header-text">Dodaj opinię !</h4>
+                    </div>
+                    <textarea class="opinion-text" >    
+
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        <div class="user-opinions-list">
+
         </div>
     </div>
 </div>

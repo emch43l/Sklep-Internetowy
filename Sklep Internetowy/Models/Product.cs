@@ -32,9 +32,8 @@ namespace Sklep_Internetowy.Models
 
         public double GetRating()
         {
-            if (Rating.Count == 0)
-                return 0;
-            return Rating.Sum(r => r.Rating) / Rating.Count();
+            return (Rating.Count() == 0) ? 0 
+                : Rating.Sum(r => r.Rating) / Rating.Count();
         }
 
     }
