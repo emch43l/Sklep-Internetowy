@@ -13,7 +13,7 @@
                 @if(Model.ProductDetail.Images.Count() == 0)
                 {
                     <div class="carousel-item-container">
-                        <img src="~/placeholder.png"/>
+                        <img src="~/placeholder.png" class="carousel-image"/>
                     </div>
                 }
                 else
@@ -30,25 +30,63 @@
             </div>
         </div>
         <div class="details-product-right">
-            <div class="details-product-name">@Model.Name</div>
-            <div class="details-product-producer">
-                <span class="fileld-label">
-                    Producent: 
-                </span>
-                <span class="details-product-producer-text">
-                    @Model.Producer.Name
-                </span>
+            <div class="details-product-header">
+                <div>
+                    <div class="details-product-name">@Model.Name</div>
+                    <div class="details-product-producer">
+                        <span class="fileld-label">
+                            Producent: 
+                        </span>
+                        <span class="details-product-producer-text">
+                            @Model.Producer.Name
+                        </span>
+                    </div>
+                   @* <div>
+                        @foreach(var item in Model.Categories)
+                        {
+                            <span class="details-product-category">
+                                @item.Name
+                            </span>
+                        }
+                    </div>*@
+                </div>
+                <div>
+                    <div class="product-rating-container" style="margin-right: 10px">
+                        <span class="rating-label">Ocena: </span>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                     </div>
+                    <div class="details-product-price">
+                        @Model.Price.ToString("0.00") <span class="details-product-currency"> zł</span>
+                     </div>
+                </div>
             </div>
                 
             <div class="details-product-desc">
-                <div class="fileld-label">
-                   Krótki opis: 
+                <div class="details-product-desc-left">
+                    <div class="fileld-label">
+                       <span class="text-bold">Informacje:</span> 
+                    </div>
+                    <div class="details-product-desc-text">
+                        - Hp DEskjet 250 <br/>
+                        - W zestawie 2 kardriże <br/>
+                        - Niski pobór prądbu <br/>
+                        - Szybkość drukowania 100 str / min <br />
+                    </div>
                 </div>
-                <span class="details-product-desc-text">
-                    @Model.ProductDetail.Description
-                </span>
+                <div class="product-desc-divider"></div>
+                <div class="details-product-desc-right">
+                    <div class="fileld-label">
+                        <span class="text-bold">Opis:</span>
+                    </div>
+                    <div class="details-product-desc-text">
+                        @Model.ProductDetail.Description
+                    </div>
+                </div>
             </div>
-            <div class="details-product-price">@Model.Price.ToString("0.00")</div>
         </div>
     </div>
 </div>

@@ -43,6 +43,7 @@ namespace Sklep_Internetowy.Repositories
             return _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.Rating)
+                .Include(p => p.Categories)
                 .Include(p => p.ProductDetail)
                 .ThenInclude(pd => pd.Images)
                 .FirstOrDefault(p => p.Guid.ToString() == id);
