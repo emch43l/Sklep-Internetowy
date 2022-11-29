@@ -1,4 +1,6 @@
-﻿
+﻿@using Sklep_Internetowy.Extensions;
+
+
 @model Sklep_Internetowy.Models.Product;
 
 @section Scripts
@@ -41,6 +43,18 @@
                             @Model.Producer.Name
                         </span>
                     </div>
+                    <div class="details-product-producer">
+                        <span class="fileld-label">
+                            Kategorie: 
+                        </span>
+                        @foreach(var item in Model.Categories)
+                        {
+                            <a asp-controller="home" asp-action="index" asp-
+                            <span class="details-product-category">
+                                @item.Name
+                            </span>
+                        }
+                    </div>
                    @* <div>
                         @foreach(var item in Model.Categories)
                         {
@@ -51,13 +65,10 @@
                     </div>*@
                 </div>
                 <div>
-                    <div class="product-rating-container" style="margin-right: 10px">
+                    <div class="product-rating-container details-rating" style="margin-right: 10px">
                         <span class="rating-label">Ocena: </span>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
+                        @Html.RenderRating(Model.GetRating())
+
                      </div>
                     <div class="details-product-price">
                         @Model.Price.ToString("0.00") <span class="details-product-currency"> zł</span>
@@ -86,6 +97,16 @@
                         @Model.ProductDetail.Description
                     </div>
                 </div>
+            </div>
+            <div class="details-product-footer">
+                <select class="product-number">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <button class="product-add-to-cart details-add-button">Dodaj do koszyka</button>
             </div>
         </div>
     </div>

@@ -26,8 +26,6 @@ namespace Sklep_Internetowy.Controllers
 
         private readonly IProductRepository _pRepo;
 
-
-
         public HomeController(
             ILogger<HomeController> logger,
             IConfiguration configuration, 
@@ -92,6 +90,7 @@ namespace Sklep_Internetowy.Controllers
             {
                 new SelectListItem { Text = "Nazwa", Value = ((int) SortByProperty.Name).ToString() },
                 new SelectListItem { Text = "Cena", Value = ((int) SortByProperty.Price).ToString() },
+                new SelectListItem { Text = "Ocena", Value = ((int) SortByProperty.Rating).ToString() },
                 new SelectListItem { Text = "Producent", Value = ((int) SortByProperty.Producer).ToString() }
             };
 
@@ -145,6 +144,10 @@ namespace Sklep_Internetowy.Controllers
                 case SortByProperty.Price:
                     products = (order == SortigOrder.Descending) ?
                        products.OrderByDescending(p => (long)p.Price) : products.OrderBy(p => (long)p.Price);
+                    break;
+                case SortByProperty.Rating:
+                    products = (order == SortigOrder.Descending) ?
+                       products.OrderByDescending(p => p.GetRating()) : products.OrderBy(p => p.GetRating());
                     break;
             }
 

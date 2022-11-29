@@ -13,7 +13,9 @@ namespace Sklep_Internetowy.ViewModels
         [Display(Name = "Cena")]
         Price = 1,
         [Display(Name = "Producent")]
-        Producer = 2
+        Producer = 2,
+        [Display(Name = "Ocena")]
+        Rating = 3,
     }
 
     public enum SortigOrder

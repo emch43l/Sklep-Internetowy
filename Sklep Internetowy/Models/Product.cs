@@ -30,5 +30,12 @@ namespace Sklep_Internetowy.Models
             Guid = Guid.NewGuid();
         }
 
+        public double GetRating()
+        {
+            if (Rating.Count == 0)
+                return 0;
+            return Rating.Sum(r => r.Rating) / Rating.Count();
+        }
+
     }
 }
