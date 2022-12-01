@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sklep_Internetowy.Models.Contexts;
 
@@ -10,9 +11,11 @@ using Sklep_Internetowy.Models.Contexts;
 namespace SklepInternetowy.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221130124103_RatingDescription")]
+    partial class RatingDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -281,21 +284,21 @@ namespace SklepInternetowy.Migrations
                         {
                             Id = 1,
                             Description = "Lay's is a brand of potato chips, as well as the name of the company that founded the chip brand in the United States. The brand has also sometimes been referred to as Frito-Lay because both Lay's and Fritos are brands sold by the Frito-Lay company, which has been a wholly owned subsidiary of PepsiCo (Pepsi) since 1965. ",
-                            Guid = new Guid("c5a991d2-08e0-45c4-9b24-54eacf97cd46"),
+                            Guid = new Guid("625cd361-ec29-4e07-86f2-1116aae5ffe3"),
                             Name = "Lays"
                         },
                         new
                         {
                             Id = 2,
                             Description = "The Samsung Group (or simply Samsung, stylized as SΛMSUNG) (Korean: 삼성 [samsʌŋ]) is a South Korean multinational manufacturing conglomerate headquartered in Samsung Town, Seoul, South Korea. It comprises numerous affiliated businesses, most of them united under the Samsung brand, and is the largest South Korean chaebol (business conglomerate). As of 2020, Samsung has the eighth highest global brand value.",
-                            Guid = new Guid("9284914a-3fd4-43f2-80f0-73d422bac95b"),
+                            Guid = new Guid("a7d5e0a1-d05f-4838-8996-ee045c85ae0a"),
                             Name = "Samsung"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Dummy producer",
-                            Guid = new Guid("a2a65adb-9edd-4cde-8f21-6dab27213dad"),
+                            Guid = new Guid("ed646d69-3dae-445e-a27d-52e96aa48de6"),
                             Name = "Default"
                         });
                 });
@@ -350,19 +353,19 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("a6f72201-844c-4f4f-9119-35bdf41fbb3d"),
+                            Guid = new Guid("b9a99395-df20-4bda-a5f4-107a36eb2112"),
                             Name = "Elektronika"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("b201edd2-4c1c-4814-a9af-46f5e99b7e0d"),
+                            Guid = new Guid("7654bd0c-33b0-4102-8045-664d27875f23"),
                             Name = "Artykuły spożywcze"
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("005c7923-37e9-4b69-a9b8-7f5ed3c56812"),
+                            Guid = new Guid("64b7e007-0982-4eb5-9dc5-24be106ba27e"),
                             Name = "Budowlane"
                         });
                 });
@@ -396,9 +399,6 @@ namespace SklepInternetowy.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()

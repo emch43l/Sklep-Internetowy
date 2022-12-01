@@ -11,7 +11,7 @@ namespace Sklep_Internetowy.Models
 
         public DateTime Creation_Date { get; set; }
 
-        public ICollection<Image>? Images { get; set; }
+        public ICollection<Image> Images { get; set; }
 
         public Product Product { get; set; }
 

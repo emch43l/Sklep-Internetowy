@@ -49,11 +49,65 @@ body {
     font-weight: bold;
 }
 
-/* product detail page stylization */
+/* product detail opinion list */
+
+.user-opinion-container {
+    display: flex;
+    margin: 5px 5px;
+    width: calc(50% - 10px);
+    padding: 10px 10px;
+}
 
 
-.carousel-item-image
+.user-opitnion-header {
+    margin-top: 30px;
+    font-size: 1.5em;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.opinion-left-box {
+    width: 80px;
+    margin-right: 20px;
+}
+
+.opinion-right-box
 {
+    width: calc(100% - 100px);
+    font-size: 0.8em;
+}
+
+.opinion-username
+{
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.opinion-username > i
+{
+    font-size: 0.9em;
+    margin-right: 8px;
+}
+
+.opinion-date {
+    color: #b3b3b3;
+    font-size: 0.6em;
+}
+
+.opinion-rating
+{
+    color: var(--card-rating);
+    font-size: 0.8em;
+}
+
+.user-opinions-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+}
+
+/* product detail page stylization */
+.carousel-item-image {
     display: block;
 }
 
@@ -87,19 +141,23 @@ body {
     background-color: white;
     margin-top: 10px;
     border-radius: 10px;
+    padding: 10px 60px;
 }
 
 .user-rating-container 
 {
     display: flex;
-    padding: 20px 50px;
+    padding: 20px 0;
     justify-content: space-between;
     width: 100%;
 }
 
-.user-rating-chart-container
+.rating-chart-container
 {
     display: flex;
+}
+
+.user-rating-chart-container {
     width: 530px;
 }
 
@@ -109,7 +167,7 @@ body {
     font-weight: bold;
 }
 
-.opinion-text {
+.add-opinion-text {
     width: 100%;
     display: block;
     resize: none;
@@ -119,7 +177,7 @@ body {
 
 .rating-bar-data {
     display: flex;
-    margin-top: 8px;
+    margin-top: 3px;
     justify-content: center;
     align-items: center;
 }
@@ -130,21 +188,21 @@ body {
 }
 
 .user-rating-left-box {
-    background-color: rgb(249, 249, 249);
+    /*background-color: rgb(249, 249, 249);*/
     border-radius: 5px;
     text-align: center;
     padding: 10px 5px;
-    width: 200px;
+    width: 150px;
 }
 
 .user-rating-chart
 {
-    margin-top: 15px;
+    margin-top: 5px;
     margin-left: 20px;
 }
 
 .chart-bar {
-    height: 7px;
+    height: 5px;
     border-radius: 1000px;
     width: 250px;
     background-color: #f9f9f9;
@@ -167,28 +225,33 @@ body {
     color: #515151;
 }
 
+.star-count {
+    font-weight: bold;
+    padding-right: 5px;
+}
+
 .rating-star {
     color: var(--card-rating);
-    font-size: 3.5em;
+    font-size: 2.2em;
 }
 
 .rating-star-desc
 {
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .rating-max-rating
 {
-    font-size: 1.3em;
+    font-size: 0.9em;
 }
 
 .rating-opinion-count {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: #717171;
 }
 
 .rating-current-rating {
-    font-size: 2.2em;
+    font-size: 1.5em;
 }
 
 .details-product-name {

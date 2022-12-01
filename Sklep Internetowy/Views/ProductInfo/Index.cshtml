@@ -1,4 +1,5 @@
 ﻿@using Sklep_Internetowy.Extensions;
+@using System.Globalization;
 
 
 @model Sklep_Internetowy.Models.Product;
@@ -108,43 +109,30 @@
     <div class="details-product-user-ratings">
         <div class="user-rating-container">
             <div class="user-rating-chart-container">
-                <div class="user-rating-left-box">
-                    <div class="rating-star">
-                        @Html.GetRatingRepresentativeStar(Model.GetRating())
+                <h3 class="user-opitnion-header">Średnie oceny produku</h3>
+                <div class="rating-chart-container">
+                    <div class="user-rating-left-box">
+                        <div class="rating-star">
+                            @Html.GetRatingRepresentativeStar(Model.GetRating())
+                        </div>
+                        <div class="rating-star-desc">
+                            <span class="rating-current-rating">@Model.GetRating().ToString("0.0")</span>
+                            <span class="rating-max-rating">/ 5</span>
+                        </div>
+                        <div class="rating-opinion-count">
+                              ( @numOfOpinions ) Ocen
+                        </div>
                     </div>
-                    <div class="rating-star-desc">
-                        <span class="rating-current-rating">@Model.GetRating().ToString("0.0")</span>
-                        <span class="rating-max-rating">/ 5</span>
-                    </div>
-                    <div class="rating-opinion-count">
-                          ( @numOfOpinions ) Ocen
-                    </div>
-                </div>
-                <div class="user-rating-chart">
-                    <div class="rating-bar-data">
-                        <div class="star-count"><i class='fas fa-star'></i> 5</div>
-                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 5).Count(),numOfOpinions)
-                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 5).Count() </div>
-                    </div>
-                     <div class="rating-bar-data">
-                        <div class="star-count"><i class='fas fa-star'></i> 4</div>
-                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 4).Count(),numOfOpinions)
-                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 4).Count() </div>
-                    </div>
-                     <div class="rating-bar-data">
-                        <div class="star-count"><i class='fas fa-star'></i> 3</div>
-                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 3).Count(),numOfOpinions)
-                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 3).Count() </div>
-                    </div>
-                     <div class="rating-bar-data">
-                        <div class="star-count"><i class='fas fa-star'></i> 2</div>
-                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 2).Count(),numOfOpinions)
-                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 2).Count() </div>
-                    </div>
-                    <div class="rating-bar-data">
-                        <div class="star-count"><i class='fas fa-star'></i> 1</div>
-                        @Html.GenerateChartBar(@Model.Rating.Where(r => r.Rating == 1).Count(),numOfOpinions)
-                        <div class="chart-opinion-count"> @Model.Rating.Where(r => r.Rating == 1).Count() </div>
+                    <div class="user-rating-chart">
+                        @for(int i = 5; i >= 1; i--)
+                        {
+                            int opinionCount = Model.Rating.Where(r => r.Rating == i).Count();
+                            <div class="rating-bar-data">
+                                <div class="star-count"><i class='fas fa-star'></i> @i</div>
+                                @Html.GenerateChartBar(opinionCount,numOfOpinions)
+                                <div class="chart-opinion-count"> @opinionCount </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -153,14 +141,31 @@
                     <div class="opinion-header">
                         <h4 class="opinion-header-text">Dodaj opinię !</h4>
                     </div>
-                    <textarea class="opinion-text" >    
+                    <textarea class="add-opinion-text" >    
 
                     </textarea>
                 </div>
             </div>
         </div>
-        <div class="user-opinions-list">
-
+        <div class="user-opitnion-list-container">
+            <h3 class="user-opitnion-header">Opinie naszych klientów: (@Model.Rating.Count()) </h3>
+            <div class="user-opinions-list">
+                @foreach(var opinion in Model.Rating)
+                {
+                    <div class="user-opinion-container">
+                        <div class="opinion-left-box">
+                            <div class="opinion-username"><i class="fas fa-user"></i> Maciek </div>
+                            <div class="opinion-rating"> @Html.RenderRating(opinion.Rating) </div>
+                            <div class="opinion-date"> @opinion.CreationDate.ToString("d MMMM yyyy",CultureInfo.GetCultureInfo("pl")) </div>
+                        </div>
+                        <div class="opinion-right-box">
+                            <div class="opinion-text">
+                                <span> @opinion.Description </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

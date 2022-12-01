@@ -17,13 +17,13 @@ namespace Sklep_Internetowy.Models
 
         public decimal Price { get; set; }
 
-        public ICollection<ProductRating>? Rating { get; set; }
+        public ICollection<ProductRating> Rating { get; set; }
 
         public Producer Producer { get; set; }
 
         public ProductDetail ProductDetail { get; set; }
 
-        public ICollection<ProductCategory>? Categories { get; set; }
+        public ICollection<ProductCategory> Categories { get; set; }
 
         public Product() 
         {
