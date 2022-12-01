@@ -107,6 +107,41 @@ body {
 }
 
 /* product detail page stylization */
+
+.add-opinion-input-stars {
+    display: flex;
+    margin-top: 10px;
+    font-size: 1.2em;
+    justify-content: flex-end;
+}
+
+.input-starts-label {
+    margin-right: 20px;
+    font-size: 0.9em
+}
+
+.input-star {
+    margin: 0 1px;
+    color: var(--card-rating);
+}
+
+.add-opinion-footer {
+    justify-content: space-between;
+}
+
+.add-opinion-submit-button {
+    background-color: var(--button-primary);
+    border: medium none;
+    margin-top: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 20px;
+    float: right;
+    padding: 5px 15px;
+    border-radius: 5px;
+    color: white;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
 .carousel-item-image {
     display: block;
 }
@@ -172,7 +207,10 @@ body {
     display: block;
     resize: none;
     height: 120px;
+    border: none;
     border: 2px solid rgb(236, 236, 236);
+    background-color: #f9f9f9;
+    border-radius: 5px;
 }
 
 .rating-bar-data {

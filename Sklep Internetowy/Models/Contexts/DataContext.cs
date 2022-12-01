@@ -39,6 +39,20 @@ namespace Sklep_Internetowy.Models.Contexts
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ProductDetail>().HasOne(p => p.Product).WithOne(p => p.ProductDetail);
             modelBuilder.Entity<ProductCategory>().HasIndex(c => c.Name).IsUnique();
+            PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
+
+            IdentityUser admin = new IdentityUser
+            {
+                Id = new Guid(),
+                UserName = "Admin",
+                Email = "admin@admin.com"
+            };
+
+            admin.PasswordHash = hasher.HashPassword(admin, "admin");
+
+            modelBuilder.Entity<IdentityUser>().HasData(
+                admin
+            );
             modelBuilder.Entity<ProductCategory>().HasData(
                 new ProductCategory
                 {
