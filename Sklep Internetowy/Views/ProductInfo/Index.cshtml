@@ -78,10 +78,12 @@
                        <span class="text-bold">Informacje:</span> 
                     </div>
                     <div class="details-product-desc-text">
-                        - Hp DEskjet 250 <br/>
-                        - W zestawie 2 kardriże <br/>
-                        - Niski pobór prądbu <br/>
-                        - Szybkość drukowania 100 str / min <br />
+                        <ul>
+                            @foreach(var text in Model.ProductDetail.Information)
+                            {
+                                <li>@text</li>
+                            }
+                        </ul>
                     </div>
                 </div>
                 <div class="product-desc-divider"></div>
@@ -138,33 +140,26 @@
             </div>
             <div class="user-add-opinion-section">
                 <h3 class="user-opitnion-header">Dodaj opinię</h3>
-                <div class="add-opinion-container">
-                    <textarea name="OpinionText" class="add-opinion-text"></textarea>
-                    <div class="add-opinion-footer">
-                        <div class="add-opinion-input-stars">
+                <form method="POST" asp-controller="ProductInfo" asp-action="AddOpinion">
+                    <div class="add-opinion-container">
+                        <textarea name="Text" class="add-opinion-text" required></textarea>
+                        <div class="add-opinion-footer">
+                            <div class="add-opinion-input-stars">
                                 <div class="input-starts-label">
                                     Twoja ocena: 
                                 </div>
-                                <div class="input-star">
-                                    <i class='far fa-star'></i>
-                                </div>
-                                <div class="input-star">
-                                    <i class='far fa-star'></i>
-                                </div>
-                                <div class="input-star">
-                                    <i class='far fa-star'></i>
-                                </div>
-                                <div class="input-star">
-                                    <i class='far fa-star'></i>
-                                </div>
-                                <div class="input-star">
-                                    <i class='far fa-star'></i>
-                                </div>
+                                <button class="input-star" data-value="1"><i class='far fa-star'></i></button>
+                                <button class="input-star" data-value="2"><i class='far fa-star'></i></button>
+                                <button class="input-star" data-value="3"><i class='far fa-star'></i></button>
+                                <button class="input-star" data-value="4"><i class='far fa-star'></i></button>
+                                <button class="input-star" data-value="5"><i class='far fa-star'></i></button>
+                            </div>
+                            <input type="hidden" value="0" id="product-rating" name="Rating"/>
+                            <input type="hidden" value="@Model.Guid.ToString()" name="Id" />
+                            <button type="submit" class="add-opinion-submit-button">Dodaj</button>
                         </div>
-                        <button type="submit" class="add-opinion-submit-button">Dodaj</button>
                     </div>
-                    <input name="OpinionRating" type="hidden" value="0" />
-                </div>
+                </form>
             </div>
         </div>
         <div class="user-opitnion-list-container">

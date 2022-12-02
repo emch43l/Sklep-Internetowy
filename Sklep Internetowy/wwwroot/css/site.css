@@ -108,6 +108,16 @@ body {
 
 /* product detail page stylization */
 
+.input-star {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+.input-star-selected {
+    color: var(--card-rating);
+}
+
 .add-opinion-input-stars {
     display: flex;
     margin-top: 10px;

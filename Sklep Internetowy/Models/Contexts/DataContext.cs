@@ -43,7 +43,7 @@ namespace Sklep_Internetowy.Models.Contexts
 
             IdentityUser admin = new IdentityUser
             {
-                Id = new Guid(),
+                Id = new Guid().ToString(),
                 UserName = "Admin",
                 Email = "admin@admin.com"
             };

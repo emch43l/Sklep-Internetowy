@@ -92,6 +92,7 @@ namespace Sklep_Internetowy.Controllers
 
                 productDetails.Description = product.Description;
                 productDetails.Creation_Date = DateTime.Now;
+                productDetails.Information = product.AditionalInformations.ToList();
 
                 if(product.CategoryId != null)
                 {

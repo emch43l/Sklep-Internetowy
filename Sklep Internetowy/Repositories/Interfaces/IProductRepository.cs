@@ -4,6 +4,7 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 {
     public interface IProductRepository
     {
+
         public IEnumerable<Product>? GetProducts();
 
         public IEnumerable<Product>? GetProductsWithAditionalData();
@@ -23,7 +24,6 @@ namespace Sklep_Internetowy.Repositories.Interfaces
         public Product? GetMostExpensiveProduct();
 
         public Product? GetCheapestProduct();
-
 
     }
 }

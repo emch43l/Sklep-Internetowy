@@ -33,7 +33,7 @@ namespace Sklep_Internetowy.Models
         public double GetRating()
         {
             return (Rating.Count() == 0) ? 0 
-                : Rating.Sum(r => r.Rating) / Rating.Count();
+                : (double)Rating.Sum(r => r.Rating) / Rating.Count();
         }
 
     }

@@ -26,6 +26,9 @@ namespace Sklep_Internetowy.ViewModels
         [MaxFileSize(100,Services.Type.KB)]
         public ICollection<IFormFile>? Images { get; set; }
 
+        [Required]
+        public ICollection<string> AditionalInformations { get; set; }
+
         [ValidateNever]
         public List<SelectListItem> Producers { get; set; }
 
