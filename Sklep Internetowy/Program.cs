@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
+using Sklep_Internetowy.Models;
 
 CultureInfo[] cultures = new CultureInfo[]
 {
@@ -23,7 +24,8 @@ builder.Services.
         );
 
 builder.Services
-    .AddDefaultIdentity<IdentityUser>()
+    .AddIdentity<AppUser,IdentityRole>()
+    .AddDefaultUI()
     .AddEntityFrameworkStores<DataContext>();
 
 //string connection = builder.Configuration.GetConnectionString("Connection") ?? throw new ArgumentException("Connection params not found !");

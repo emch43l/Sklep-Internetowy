@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Sklep_Internetowy.Models;
 using System.IO;
 
 namespace Sklep_Internetowy.Models.Contexts
 {
-    public class DataContext: IdentityDbContext<IdentityUser>
+    public class DataContext: IdentityDbContext<AppUser>
     {
         public DbSet<Product> Products { get; set; }
 
@@ -19,11 +21,12 @@ namespace Sklep_Internetowy.Models.Contexts
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
+
         //public string DbPath { get; set; }
 
         //public readonly string _DbName = "app_data.db";
 
-        public DataContext(DbContextOptions<DataContext> options): base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             //this.DbPath = Path.Join(
             //    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -37,22 +40,63 @@ namespace Sklep_Internetowy.Models.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ProductDetail>().HasOne(p => p.Product).WithOne(p => p.ProductDetail);
             modelBuilder.Entity<ProductCategory>().HasIndex(c => c.Name).IsUnique();
-            PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
 
-            IdentityUser admin = new IdentityUser
+            IdentityRole adminRole = new IdentityRole()
             {
-                Id = new Guid().ToString(),
-                UserName = "Admin",
-                Email = "admin@admin.com"
+                Name = "admin",
+                NormalizedName = "ADMIN"
+            };
+            IdentityRole userRole = new IdentityRole()
+            {
+                Name = "user",
+                NormalizedName = "USER"
             };
 
-            admin.PasswordHash = hasher.HashPassword(admin, "admin");
+            AppUser user = new()
+            {
+                FirstName = "Janusz",
+                LastName = "Kowalski",
+                UserName = "Kowalski",
+                Email = "Kowalski@wp.pl",
+                NormalizedUserName = "KOWALSKI@WP.PL",
+                NormalizedEmail = "KOWALSKI@WP.PL"
+            };
 
-            modelBuilder.Entity<IdentityUser>().HasData(
-                admin
+            AppUser admin = new()
+            {
+                FirstName = "Michał",
+                LastName = "Mierzwa",
+                UserName = "Admin",
+                Email = "Admin@admin.com",
+                NormalizedUserName = "ADMIN@ADMIN.COM",
+                NormalizedEmail = "ADMIN@ADMIN.COM"
+            };
+
+            PasswordHasher<AppUser> hasher = new PasswordHasher<AppUser>();
+
+            admin.PasswordHash = hasher.HashPassword(admin, "admin");
+            user.PasswordHash = hasher.HashPassword(user, "qaz");
+
+            modelBuilder.Entity<AppUser>().HasData(admin, user);
+            modelBuilder.Entity<IdentityRole>().HasData(userRole, adminRole);
+
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    UserId = user.Id,
+                    RoleId = userRole.Id
+                },
+                new IdentityUserRole<string>
+                {
+                    UserId = admin.Id,
+                    RoleId = adminRole.Id
+                }
             );
+
             modelBuilder.Entity<ProductCategory>().HasData(
                 new ProductCategory
                 {
@@ -91,84 +135,10 @@ namespace Sklep_Internetowy.Models.Contexts
                     Description = "Dummy producer"
                 }
             );
-            //modelBuilder.Entity<Producer>().HasData(
-            //    new Producer
-            //    {
-            //        Id = 1,
-            //        Name = "Tyskie"
-            //    },
-            //    new Producer
-            //    {
-            //        Id = 2,
-            //        Name = "Finlandia"
-            //    },
-            //    new Producer
-            //    {
-            //        Id = 3,
-            //        Name = "Lays"
-            //    },
-            //    new Producer
-            //    {
-            //        Id = 4,
-            //        Name = "Samsung"
-            //    }
-            //);
-            //modelBuilder.Entity<Product>().HasData(
-            //    new Product()
-            //    {
-            //        Id = 1,
-            //        Name = "Pwio",
-            //        Price = 2m,
-            //        ProductDetail = new ProductDetail
-            //        {
-            //            Id = 1,
-            //            Creation_Date = DateTime.Now,
-            //            Description = "Romper 7,9%",
-            //        }
-            //    },
-            //    new Product()
-            //    {
-            //        Id = 2,
-            //        Name = "Wódka",
-            //        Price = 29,
-            //        ProductDetail = new ProductDetail
-            //        {
-            //            Id = 2,
-            //            Creation_Date = DateTime.Now,
-            //            Description = "Eskimo 0,5 38%",
-            //        }
-            //    },
-            //    new Product()
-            //    {
-            //        Id = 3,
-            //        Name = "Czipsy",
-            //        Price = 5,
-            //        ProductDetail = new ProductDetail
-            //        {
-            //            Id = 3,
-            //            Creation_Date = DateTime.Now,
-            //            Description = "Lays zielona cebulka",
-            //        }
-            //    },
-            //    new Product()
-            //    {
-            //        Id = 4,
-            //        Name = "Bateria",
-            //        Price = 25,
-            //        ProductDetail = new ProductDetail
-            //        {
-            //            Id = 4,
-            //            Creation_Date = DateTime.Now,
-            //            Description = "Samsung 18650 3,7V MAX 20A, 3100 mAh",
-
-            //        }
-                    
-            //    }
-            //);
 
 
 
-            modelBuilder.Entity<IdentityUser>().ToTable("Users");
+            modelBuilder.Entity<AppUser>().ToTable("Users");
             modelBuilder.Entity<IdentityRole>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");

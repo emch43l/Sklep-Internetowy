@@ -16,7 +16,7 @@ namespace Sklep_Internetowy.Models
 
         public Product Product { get; set; }
 
-        public IdentityUser User { get; set; }
+        public AppUser User { get; set; }
 
         public ProductRating()
         {

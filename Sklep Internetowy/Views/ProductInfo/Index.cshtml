@@ -1,8 +1,11 @@
-﻿@using Sklep_Internetowy.Extensions;
+﻿@using Microsoft.AspNetCore.Identity;
+@using Sklep_Internetowy.Extensions;
 @using System.Globalization;
 
-
 @model Sklep_Internetowy.Models.Product;
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 @section Scripts
 {
@@ -139,7 +142,13 @@
                 </div>
             </div>
             <div class="user-add-opinion-section">
-                <h3 class="user-opitnion-header">Dodaj opinię</h3>
+                <h3 class="user-opitnion-header">
+                    Dodaj opinię
+                    @if(SignInManager.IsSignedIn(User))
+                    {
+                        <span class="user-opinion-username"><i class="fas fa-user"></i> @UserManager.GetUserAsync(User).Result?.FirstName</span>
+                    }
+                </h3>
                 <form method="POST" asp-controller="ProductInfo" asp-action="AddOpinion">
                     <div class="add-opinion-container">
                         <textarea name="Text" class="add-opinion-text" required></textarea>
@@ -156,7 +165,15 @@
                             </div>
                             <input type="hidden" value="0" id="product-rating" name="Rating"/>
                             <input type="hidden" value="@Model.Guid.ToString()" name="Id" />
-                            <button type="submit" class="add-opinion-submit-button">Dodaj</button>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <button type="submit" class="add-opinion-submit-button">Dodaj</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="add-opinion-submit-button button-disabled" disabled>Zaloguj się</button>
+                            }
+                            
                         </div>
                     </div>
                 </form>
@@ -169,7 +186,7 @@
                 {
                     <div class="user-opinion-container">
                         <div class="opinion-left-box">
-                            <div class="opinion-username"><i class="fas fa-user"></i> Maciek </div>
+                            <div class="opinion-username"> @opinion.User?.FirstName </div>
                             <div class="opinion-rating"> @Html.RenderRating(opinion.Rating) </div>
                             <div class="opinion-date"> @opinion.CreationDate.ToString("d MMMM yyyy",CultureInfo.GetCultureInfo("pl")) </div>
                         </div>

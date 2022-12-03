@@ -49,8 +49,8 @@ namespace Sklep_Internetowy.Controllers
 
             products = FindProduct(products, model.ProductProducers, model.ProductCategories );
 
-            double minPrice = (double)_pRepo.GetCheapestProduct()?.Price;
-            double maxPrice = (double)_pRepo.GetMostExpensiveProduct()?.Price;
+            double minPrice =  (double?)_pRepo.GetCheapestProduct()?.Price ?? 0;
+            double maxPrice =  (double?)_pRepo.GetMostExpensiveProduct()?.Price ?? 0;
 
             products = ProductsOrderBy(products, model.SortingOrder, model.SortBy);
 

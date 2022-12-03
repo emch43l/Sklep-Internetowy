@@ -17,9 +17,11 @@ using Sklep_Internetowy.Interfaces;
 using System.Dynamic;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sklep_Internetowy.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly DataContext _context;

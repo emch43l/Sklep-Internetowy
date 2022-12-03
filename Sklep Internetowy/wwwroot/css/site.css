@@ -8,6 +8,7 @@ html {
     --card-rating: rgb(250, 219, 134);
     --main-text: rgb(46, 46, 46);
     --button-primary: rgb(151, 211, 207);
+    --button-secondary: rgb(243, 211, 181);
 }
 
 @media (min-width: 768px) {
@@ -30,6 +31,11 @@ body {
   color:var(--main-text);
   background-color: rgba(0,0,0,0.05);
   font-family: "Rubik", sans-serif;
+}
+
+.button-disabled {
+    box-shadow: none !important;
+    filter:grayscale(0.5);
 }
 
 .products-container
@@ -113,6 +119,21 @@ body {
     background-color: transparent;
     padding: 0;
 }
+
+.user-opinion-username {
+    font-size: 0.6em;
+    font-weight: 500;
+    margin-left: 20px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: 2px solid var(--button-secondary);
+}
+
+
+    .user-opinion-username > i {
+        margin-right: 10px;
+        color: var(--button-secondary);
+    }
 
 .input-star-selected {
     color: var(--card-rating);

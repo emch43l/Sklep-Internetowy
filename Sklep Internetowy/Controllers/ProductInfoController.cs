@@ -1,5 +1,7 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Repositories.Interfaces;
@@ -15,13 +17,26 @@ namespace Sklep_Internetowy.Controllers
 
         private readonly IDirectoryConfigurationReader _reader;
 
-        public ProductInfoController(IProductRepository pRepo, IDirectoryConfigurationReader reader)
+        private readonly UserManager<AppUser> _userManager;
+
+        private readonly SignInManager<AppUser> _signInManager;
+
+        public ProductInfoController(
+            IProductRepository pRepo, 
+            IDirectoryConfigurationReader reader,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager)
         {
+            _userManager = userManager;
             _pRepo = pRepo;
             _reader = reader;
+            _signInManager = signInManager;
         }
 
-        public IActionResult AddOpinion(AddOpinionModel opinion) 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "user,admin")]
+        public async Task<IActionResult> AddOpinion(AddOpinionModel opinion) 
         {
             string referer = Request.Headers["Referer"].ToString();
             if(ModelState.IsValid)
@@ -32,7 +47,8 @@ namespace Sklep_Internetowy.Controllers
                     product.Rating.Add(new ProductRating
                     {
                         Description = opinion.Text,
-                        Rating = opinion.Rating
+                        Rating = opinion.Rating,
+                        User = await _userManager.GetUserAsync(Request.HttpContext.User)
                     });
 
                     _pRepo.Save();

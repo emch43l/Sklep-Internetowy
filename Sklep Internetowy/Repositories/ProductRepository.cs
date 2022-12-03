@@ -25,6 +25,7 @@ namespace Sklep_Internetowy.Repositories
             return _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.Rating)
+                .ThenInclude(r => r.User)
                 .Include(p => p.Categories)
                 .Include(p => p.ProductDetail)
                 .ThenInclude(pd => pd.Images);
@@ -43,6 +44,7 @@ namespace Sklep_Internetowy.Repositories
             return _context.Products
                 .Include(p => p.Producer)
                 .Include(p => p.Rating)
+                .ThenInclude(r => r.User)
                 .Include(p => p.Categories)
                 .Include(p => p.ProductDetail)
                 .ThenInclude(pd => pd.Images)
