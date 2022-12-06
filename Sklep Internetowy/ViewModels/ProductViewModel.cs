@@ -35,9 +35,11 @@ namespace Sklep_Internetowy.ViewModels
         [ValidateNever]
         public List<ProductCategory> Categories { get; set; }
 
+        [Display(Name = "Producent")]
         [Required]
         public string ProducerId { get; set; }
 
+        [Display(Name = "Kategorie")]
         public List<string>? CategoryId { get; set; }
 
     }

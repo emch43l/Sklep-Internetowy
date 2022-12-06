@@ -9,56 +9,83 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div>
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" ></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Images" class="control-label"></label>
-                <input asp-for="Images" class="form-control" />
-                <span asp-validation-for="Images" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                 <select asp-for="ProducerId" class="form-control" asp-items=@Model.Producers>
-                 </select>
-            </div>
-            <div class="form-group">
-                @foreach(var item in Model.Categories)
-                {
-                    <div>
-                        <input type="checkbox" name="CategoryId" value="@item.Guid.ToString()"/>
-                        <span> @item.Name </span>
-                    </div>
-                }
-            </div>
-            <div class="form-group">
-                <div class="aditional-information-container">
+            <div class="form-group-container">
+                <div class="form-group-secion">
+                    <div class="form-section-inner">
+                        <h1 class="inner-section-header">Dane podstawowe</h1>
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ProducerId" class="control-label"></label>
+                            <select asp-for="ProducerId" class="form-control" asp-items=@Model.Producers></select>
+                            <span asp-validation-for="ProducerId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CategoryId" class="control-label"></label><span id="num-of-selected-cat"></span>
+                            <div class="form-creation-cateogories-container">
+                                @foreach (var item in Model.Categories)
+                                {
+                                    <label class="category-selection-button" for="@item.Guid.ToString()">
+                                        <input id="@item.Guid.ToString()" type="checkbox" name="CategoryId" value="@item.Guid.ToString()" />
+                                        @item.Name
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="AditionalInformations" class="control-label"> Informacje Dodatkowe </label>
+                            <div class="aditional-informations-management-section">
+                                <button type="button" class="add-aditional-information" id="information-remove">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button type="button" class="add-aditional-information" id="information-add">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="aditional-information-container">
 
-                    <div class="aditional-informations-inputs" id="inputs-container">
-                        <input type="text" asp-for="AditionalInformations" class="aditional-information-input" />
-                    </div>
-                    <div class="aditional-informations-management-section">
-                        <button class="add-aditional-information" id="information-remove">Usuń</button>
-                        <button class="add-aditional-information" id="information-add">Dodaj</button>
-                    </div>
+                                <div class="aditional-informations-inputs" id="inputs-container">
+                                    <input type="text" asp-for="AditionalInformations" class="form-control aditional-information-input" />
+                                </div>
+                                
 
+                            </div>
+                            <span asp-validation-for="AditionalInformations" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-secion">
+                    <div class="form-section-inner">
+                        <h1 class="inner-section-header">Zdjęcia</h1>
+                        <div class="form-group">
+                            <label for="Images" class="control-label"> Zdjęcia </label>
+                            <input asp-for="Images" class="form-control" />
+                            <div class="selected-images-container" id="selected-images">
+                                <div class="owl-carousel owl-theme"></div>
+                            </div>
+                            <span asp-validation-for="Images" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="text-align: right">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
