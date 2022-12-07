@@ -4,17 +4,17 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 {
     public interface IProductCategoryRepository
     {
-        public IEnumerable<ProductCategory>? GetCategories();
+        public IEnumerable<ProductCategory> GetCategories();
 
-        public ProductCategory? GetProductCategoryByGuid(Guid id);
+        public ProductCategory? GetProductCategoryByGuid(string id);
 
-        public IEnumerable<Product>? GetCategoryProductsByCategoryGuid(Guid id); 
+        public IEnumerable<Product>? GetCategoryProductsByCategoryGuid(string id); 
 
         public ProductCategory AddProductCategory(ProductCategory category);
 
         public ProductCategory UpdateProductCategory(ProductCategory category);
 
-        public ProductCategory? RemoveProductCategory(Guid id);
+        public ProductCategory? RemoveProductCategory(string id);
 
         public void Save();
     }

@@ -79,7 +79,7 @@ namespace Sklep_Internetowy.Controllers
 
             if (ModelState.IsValid)
             {
-                Producer? producer = _prodRepo.GetProducerByGuid(Guid.Parse(product.ProducerId));
+                Producer? producer = _prodRepo.GetProducerByGuid(product.ProducerId);
                 if(producer == null)
                 {
                     ModelState.AddModelError("ProducerNotFound", "Selected producer doesnt exist !");
@@ -100,7 +100,7 @@ namespace Sklep_Internetowy.Controllers
                 {
                     foreach(string id in product.CategoryId)
                     {
-                        ProductCategory? productCategory = _pcRepo.GetProductCategoryByGuid(Guid.Parse(id));
+                        ProductCategory? productCategory = _pcRepo.GetProductCategoryByGuid(id);
                         if(productCategory != null)
                             entity.Categories.Add(productCategory);
                     }

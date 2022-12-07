@@ -4,17 +4,17 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 {
     public interface IProducerRepository
     {
-        public IEnumerable<Product>? GetProducerProducts(Guid id);
+        public IEnumerable<Product>? GetProducerProducts(string id);
 
-        public Producer? GetProducerByGuid(Guid id);
+        public Producer? GetProducerByGuid(string id);
 
-        public Producer? RemoveProducer(Guid id);
+        public Producer? RemoveProducer(string id);
 
         public Producer UpdateProducer(Producer producer);
 
         public Producer AddProducer(Producer producer);
 
-        public IEnumerable<Producer>? GetProducers();
+        public IEnumerable<Producer> GetProducers();
 
         public void Save();
     }

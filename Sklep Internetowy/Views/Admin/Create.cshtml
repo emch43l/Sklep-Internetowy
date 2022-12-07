@@ -38,6 +38,9 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="CategoryId" class="control-label"></label><span id="num-of-selected-cat"></span>
+                            <a asp-controller="ProductCategories" asp-action="Create" class="add-aditional-information" style="float: right">
+                                <i class="fas fa-plus"></i>
+                            </a>
                             <div class="form-creation-cateogories-container">
                                 @foreach (var item in Model.Categories)
                                 {

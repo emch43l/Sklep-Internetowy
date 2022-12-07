@@ -15,27 +15,29 @@ namespace Sklep_Internetowy.Repositories
         {
             _context = context;
         }
-        public IEnumerable<ProductCategory>? GetCategories()
+        public IEnumerable<ProductCategory> GetCategories()
         {
             return _context.ProductCategories.ToList();
         }
 
-        public ProductCategory? GetProductCategoryByGuid(Guid id)
+        public ProductCategory? GetProductCategoryByGuid(string id)
         {
-            return _context.ProductCategories.FirstOrDefault(pc => pc.Guid == id);
+            id = id.ToUpper();
+            return _context.ProductCategories.FirstOrDefault(pc => pc.Guid.ToString() == id);
         }
 
-        public IEnumerable<Product>? GetCategoryProductsByCategoryGuid(Guid id)
+        public IEnumerable<Product>? GetCategoryProductsByCategoryGuid(string id)
         {
+            id = id.ToUpper();
             return _context.ProductCategories
                 .Include(pc => pc.Products)
-                .FirstOrDefault(pc => pc.Guid == id)?
+                .FirstOrDefault(pc => pc.Guid.ToString() == id)?
                 .Products;
         }
 
         public ProductCategory AddProductCategory(ProductCategory category)
         {
-            throw new NotImplementedException();
+            return _context.ProductCategories.Add(category).Entity;
         }
 
         public ProductCategory UpdateProductCategory(ProductCategory category)
@@ -43,9 +45,10 @@ namespace Sklep_Internetowy.Repositories
             throw new NotImplementedException();
         }
 
-        public ProductCategory? RemoveProductCategory(Guid id)
+        public ProductCategory? RemoveProductCategory(string id)
         {
-            ProductCategory? entity = _context.ProductCategories.FirstOrDefault(pc => pc.Guid == id);
+            id = id.ToUpper();
+            ProductCategory? entity = _context.ProductCategories.FirstOrDefault(pc => pc.Guid.ToString() == id);
             if (entity != null)
                 return _context.ProductCategories.Remove(entity).Entity;
             return null;

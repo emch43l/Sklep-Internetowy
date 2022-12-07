@@ -42,13 +42,14 @@ namespace Sklep_Internetowy.Controllers
             if(ModelState.IsValid)
             {
                 Product? product = _pRepo.GetProductWithAditionalData(opinion.Id);
-                if(product != null)
+                AppUser? user = await _userManager.GetUserAsync(Request.HttpContext.User);
+                if (product != null && user != null)
                 {
                     product.Rating.Add(new ProductRating
                     {
                         Description = opinion.Text,
                         Rating = opinion.Rating,
-                        User = await _userManager.GetUserAsync(Request.HttpContext.User)
+                        User = user
                     });
 
                     _pRepo.Save();

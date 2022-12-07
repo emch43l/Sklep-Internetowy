@@ -18,29 +18,32 @@ namespace Sklep_Internetowy.Repositories
 
         public Producer AddProducer(Producer producer)
         {
-            throw new NotImplementedException();
+            return _context.Producers.Add(producer).Entity;
         }
 
-        public Producer? GetProducerByGuid(Guid id)
+        public Producer? GetProducerByGuid(string id)
         {
-            return _context.Producers.FirstOrDefault(p => p.Guid == id);
+            id = id.ToUpper();
+            return _context.Producers.FirstOrDefault(p => p.Guid.ToString() == id);
         }
 
-        public IEnumerable<Product>? GetProducerProducts(Guid id)
+        public IEnumerable<Product>? GetProducerProducts(string id)
         {
+            id = id.ToUpper();
             return _context.Producers
                 .Include(p => p.Products)
-                .FirstOrDefault(p => p.Guid == id)?
+                .FirstOrDefault(p => p.Guid.ToString() == id)?
                 .Products;
         }
-        public IEnumerable<Producer>? GetProducers()
+        public IEnumerable<Producer> GetProducers()
         {
             return _context.Producers.ToList();
         }
 
-        public Producer? RemoveProducer(Guid id)
+        public Producer? RemoveProducer(string id)
         {
-            Producer? entity = _context.Producers.FirstOrDefault(e => e.Guid == id);
+            id = id.ToUpper();
+            Producer? entity = _context.Producers.FirstOrDefault(e => e.Guid.ToString() == id);
             if (entity != null)
                 return _context.Producers.Remove(entity).Entity;
             return null;

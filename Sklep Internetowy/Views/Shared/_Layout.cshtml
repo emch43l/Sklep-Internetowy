@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Sklep_Internetowy.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,11 +15,48 @@
     <link rel="stylesheet" href="~/lib//owl-carousel/dist/assets/owl.theme.default.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Sklep_Internetowy.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
         <nav>
-            <a asp-controller="Admin" asp-action="Index">Panel Administracyjny</a>
+            <div class="nav-inner container">
+                <div class="nav-title">
+                    <span class="company-name">Sklep internetowy</span><br />
+                    <span class="company-name-bottom">Wielobranżowy</span>
+                </div>
+                <div class="nav-navigation">
+                    <div class="nav-navigation-buttons">
+
+                    </div>
+                    @if(SignInManager.IsSignedIn(User))
+                    {
+                        <div class="nav-user-management">
+                            <div class="user-management-button">
+
+                                <button class="user-management-about">
+                                    @UserManager.GetUserAsync(User).Result?.FirstName
+                                </button>
+                                <a class="user-management-logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        
+                    }
+                    <div class="nav-cart-button-container">
+                        <div class="cart-item-number">
+                            <span>1</span>
+                        </div>
+                        <button type="button" class="nav-cart-button">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </nav>
     </header>
     <div class="container">
