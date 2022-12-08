@@ -21,6 +21,8 @@ namespace Sklep_Internetowy.Models.Contexts
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+
 
         //public string DbPath { get; set; }
 
@@ -55,6 +57,16 @@ namespace Sklep_Internetowy.Models.Contexts
                 NormalizedName = "USER"
             };
 
+            Cart userCart = new Cart
+            {
+                Id = 1
+            };
+
+            Cart adminCart = new Cart
+            {
+                Id = 2
+            };
+
             AppUser user = new()
             {
                 FirstName = "Janusz",
@@ -62,7 +74,8 @@ namespace Sklep_Internetowy.Models.Contexts
                 UserName = "Kowalski",
                 Email = "Kowalski@wp.pl",
                 NormalizedUserName = "KOWALSKI@WP.PL",
-                NormalizedEmail = "KOWALSKI@WP.PL"
+                NormalizedEmail = "KOWALSKI@WP.PL",
+                CartId = 1
             };
 
             AppUser admin = new()
@@ -72,7 +85,8 @@ namespace Sklep_Internetowy.Models.Contexts
                 UserName = "Admin",
                 Email = "Admin@admin.com",
                 NormalizedUserName = "ADMIN@ADMIN.COM",
-                NormalizedEmail = "ADMIN@ADMIN.COM"
+                NormalizedEmail = "ADMIN@ADMIN.COM",
+                CartId = 2
             };
 
             PasswordHasher<AppUser> hasher = new PasswordHasher<AppUser>();
@@ -80,8 +94,11 @@ namespace Sklep_Internetowy.Models.Contexts
             admin.PasswordHash = hasher.HashPassword(admin, "admin");
             user.PasswordHash = hasher.HashPassword(user, "qaz");
 
+            modelBuilder.Entity<Cart>().HasData(userCart,adminCart);
             modelBuilder.Entity<AppUser>().HasData(admin, user);
             modelBuilder.Entity<IdentityRole>().HasData(userRole, adminRole);
+
+            modelBuilder.Entity<CartItem>().HasKey(ci => new { ci.ProductId, ci.CartId });
 
 
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(

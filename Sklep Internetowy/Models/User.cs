@@ -7,5 +7,9 @@ namespace Sklep_Internetowy.Models
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public Cart Cart { get; set; }
+
+        public int CartId { get; set; }
     }
 }

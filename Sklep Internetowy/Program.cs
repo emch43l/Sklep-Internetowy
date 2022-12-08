@@ -41,7 +41,8 @@ builder.Services
     .AddScoped<IProducerRepository, ProducerRepository>()
     .AddScoped<IProductRepository, ProductRepository>()
     .AddScoped<IProductCategoryRepository, ProductCategoryRepository>()
-    .AddScoped<IImageRepository, ImageRepository>();
+    .AddScoped<IImageRepository, ImageRepository>()
+    .AddScoped<ICartRepository,CartRepository>();
 
 
 builder.Services.AddControllersWithViews();

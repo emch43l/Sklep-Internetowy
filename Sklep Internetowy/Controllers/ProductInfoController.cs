@@ -62,12 +62,12 @@ namespace Sklep_Internetowy.Controllers
         public IActionResult Index(string id)
         {
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
-            Product? product = _pRepo.GetProductWithAditionalData(id);
+            Product? product = (id == null) ? null : _pRepo.GetProductWithAditionalData(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(new Tuple<Product,AddToCartModel>(product,new AddToCartModel() { ProductId = product.Guid.ToString() }));
         }
     }
 }

@@ -1,8 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Sklep_Internetowy.Models
+@using Sklep_Internetowy.Models.Contexts;
+@using Sklep_Internetowy.Repositories;
+@using Sklep_Internetowy.Repositories.Interfaces;
+@using Sklep_Internetowy.Extensions;
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+@inject ICartRepository CartRepo
+
+@{
+    AppUser? user = UserManager.GetUserAsync(User).Result;
+    Cart? cart = null;
+    if(user != null)
+    {
+        cart = CartRepo.GetUserCart(user ?? new AppUser());  
+    }
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +36,10 @@
         <nav>
             <div class="nav-inner container">
                 <div class="nav-title">
-                    <span class="company-name">Sklep internetowy</span><br />
-                    <span class="company-name-bottom">Wielobranżowy</span>
+                    <a asp-action="Index" asp-controller="Home" style="text-decoration: none">
+                        <span class="company-name">Sklep internetowy</span><br />
+                        <span class="company-name-bottom">Wielobranżowy</span>
+                    </a>
                 </div>
                 <div class="nav-navigation">
                     <div class="nav-navigation-buttons">
@@ -33,27 +49,29 @@
                     {
                         <div class="nav-user-management">
                             <div class="user-management-button">
-
                                 <button class="user-management-about">
                                     @UserManager.GetUserAsync(User).Result?.FirstName
                                 </button>
-                                <a class="user-management-logout">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </a>
+                                <form class="user-management-logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { controller = "Home" })" method="post">
+                                    <button type="submit" class="user-management-logout">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     }
                     else
                     {
-                        
+                        <div class="nav-user-management">
+                            <a asp-area="Identity" class="nav-login-button" asp-page="/Account/Login">Zaloguj się</a>
+                        </div>
                     }
                     <div class="nav-cart-button-container">
-                        <div class="cart-item-number">
-                            <span>1</span>
-                        </div>
-                        <button type="button" class="nav-cart-button">
+                        @Html.DisplayShoppingCartItemsNumber(cart)
+                        <a class="nav-cart-button" asp-controller="ShoppingCart" asp-action="Index" >
                             <i class="fas fa-shopping-cart"></i>
-                        </button>
+                            <span class="nav-shopping-cart-description">Koszyk</span>
+                        </a>
                     </div>
                 </div>
             </div>

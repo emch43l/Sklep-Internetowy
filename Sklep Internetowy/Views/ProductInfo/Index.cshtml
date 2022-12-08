@@ -2,7 +2,7 @@
 @using Sklep_Internetowy.Extensions;
 @using System.Globalization;
 
-@model Sklep_Internetowy.Models.Product;
+@model Tuple<Sklep_Internetowy.Models.Product,Sklep_Internetowy.ViewModels.AddToCartModel>;
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
@@ -13,14 +13,14 @@
 }
 
 @{
-    int numOfOpinions = Model.Rating.Count();
+    int numOfOpinions = Model.Item1.Rating.Count();
 }
 
 <div class="details-product-container">
     <div class="details-product-data">
         <div class="details-product-left">
             <div class="owl-carousel owl-theme">
-                @if(Model.ProductDetail.Images.Count() == 0)
+                @if(Model.Item1.ProductDetail.Images.Count() == 0)
                 {
                     <div class="carousel-item-container">
                         <img src="~/placeholder.png" class="carousel-image"/>
@@ -28,7 +28,7 @@
                 }
                 else
                 {
-                    @foreach(var item in Model.ProductDetail.Images)
+                    @foreach (var item in Model.Item1.ProductDetail.Images)
                     {
                         string path = $"{ViewData["ImagesPath"]}/{item.Name}";
                         <div class="carousel-item-container">
@@ -42,20 +42,20 @@
         <div class="details-product-right">
             <div class="details-product-header">
                 <div>
-                    <div class="details-product-name">@Model.Name</div>
+                    <div class="details-product-name">@Model.Item1.Name</div>
                     <div class="details-product-producer">
                         <span class="fileld-label">
                             Producent: 
                         </span>
                         <span class="details-product-producer-text">
-                            @Model.Producer.Name
+                            @Model.Item1.Producer.Name
                         </span>
                     </div>
                     <div class="details-product-producer">
                         <span class="fileld-label">
                             Kategorie: 
                         </span>
-                        @foreach(var item in Model.Categories)
+                        @foreach(var item in Model.Item1.Categories)
                         {
                             <span class="details-product-category">
                                 @item.Name
@@ -66,11 +66,11 @@
                 <div>
                     <div class="product-rating-container details-rating" style="margin-right: 10px">
                         <span class="rating-label">Ocena: </span>
-                        @Html.RenderRating(Model.GetRating())
+                        @Html.RenderRating(Model.Item1.GetRating())
 
                      </div>
                     <div class="details-product-price">
-                        @Model.Price.ToString("0.00") <span class="details-product-currency"> zł</span>
+                        @Model.Item1.Price.ToString("0.00") <span class="details-product-currency"> zł</span>
                      </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                     </div>
                     <div class="details-product-desc-text">
                         <ul>
-                            @foreach(var text in Model.ProductDetail.Information)
+                            @foreach (var text in Model.Item1.ProductDetail.Information)
                             {
                                 <li>@text</li>
                             }
@@ -95,19 +95,22 @@
                         <span class="text-bold">Opis:</span>
                     </div>
                     <div class="details-product-desc-text">
-                        @Model.ProductDetail.Description
+                        @Model.Item1.ProductDetail.Description
                     </div>
                 </div>
             </div>
             <div class="details-product-footer">
-                <select class="product-number">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <button class="product-add-to-cart details-add-button">Dodaj do koszyka</button>
+                <form method="POST" asp-controller="ShoppingCart" asp-action="Create">
+                    <input type="hidden" value="@Model.Item2.ProductId" name="ProductId" />
+                    <select class="product-number" name="Count">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <button class="product-add-to-cart details-add-button">Dodaj do koszyka</button>
+                </form>
             </div>
         </div>
     </div>
@@ -118,10 +121,10 @@
                 <div class="rating-chart-container">
                     <div class="user-rating-left-box">
                         <div class="rating-star">
-                            @Html.GetRatingRepresentativeStar(Model.GetRating())
+                            @Html.GetRatingRepresentativeStar(Model.Item1.GetRating())
                         </div>
                         <div class="rating-star-desc">
-                            <span class="rating-current-rating">@Model.GetRating().ToString("0.0")</span>
+                            <span class="rating-current-rating">@Model.Item1.GetRating().ToString("0.0")</span>
                             <span class="rating-max-rating">/ 5</span>
                         </div>
                         <div class="rating-opinion-count">
@@ -131,7 +134,7 @@
                     <div class="user-rating-chart">
                         @for(int i = 5; i >= 1; i--)
                         {
-                            int opinionCount = Model.Rating.Where(r => r.Rating == i).Count();
+                            int opinionCount = Model.Item1.Rating.Where(r => r.Rating == i).Count();
                             <div class="rating-bar-data">
                                 <div class="star-count"><i class='fas fa-star'></i> @i</div>
                                 @Html.GenerateChartBar(opinionCount,numOfOpinions)
@@ -164,7 +167,7 @@
                                 <button class="input-star" data-value="5"><i class='far fa-star'></i></button>
                             </div>
                             <input type="hidden" value="0" id="product-rating" name="Rating"/>
-                            <input type="hidden" value="@Model.Guid.ToString()" name="Id" />
+                            <input type="hidden" value="@Model.Item1.Guid.ToString()" name="Id" />
                             @if (SignInManager.IsSignedIn(User))
                             {
                                 <button type="submit" class="add-opinion-submit-button">Dodaj</button>
@@ -180,9 +183,9 @@
             </div>
         </div>
         <div class="user-opitnion-list-container">
-            <h3 class="user-opitnion-header">Opinie naszych klientów: (@Model.Rating.Count()) </h3>
+            <h3 class="user-opitnion-header">Opinie naszych klientów: (@Model.Item1.Rating.Count()) </h3>
             <div class="user-opinions-list">
-                @foreach(var opinion in Model.Rating)
+                @foreach(var opinion in Model.Item1.Rating)
                 {
                     <div class="user-opinion-container">
                         <div class="opinion-left-box">

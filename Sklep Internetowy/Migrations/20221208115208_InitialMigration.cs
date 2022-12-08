@@ -8,11 +8,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SklepInternetowy.Migrations
 {
     /// <inheritdoc />
-    public partial class FinallyFixedUserAndRoleSeeding : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Cart",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cart", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Producers",
                 columns: table => new
@@ -63,6 +75,7 @@ namespace SklepInternetowy.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    CartId = table.Column<int>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -81,6 +94,12 @@ namespace SklepInternetowy.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,6 +231,32 @@ namespace SklepInternetowy.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CartItem",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CartId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Count = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItem", x => new { x.ProductId, x.CartId });
+                    table.ForeignKey(
+                        name: "FK_CartItem_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CartItem_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductProductCategory",
                 columns: table => new
                 {
@@ -308,13 +353,22 @@ namespace SklepInternetowy.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Cart",
+                column: "Id",
+                values: new object[]
+                {
+                    1,
+                    2
+                });
+
+            migrationBuilder.InsertData(
                 table: "Producers",
                 columns: new[] { "Id", "Description", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Lay's is a brand of potato chips, as well as the name of the company that founded the chip brand in the United States. The brand has also sometimes been referred to as Frito-Lay because both Lay's and Fritos are brands sold by the Frito-Lay company, which has been a wholly owned subsidiary of PepsiCo (Pepsi) since 1965. ", new Guid("cfb9712c-c5ee-41e6-9253-b2ee51385c6f"), "Lays" },
-                    { 2, "The Samsung Group (or simply Samsung, stylized as SΛMSUNG) (Korean: 삼성 [samsʌŋ]) is a South Korean multinational manufacturing conglomerate headquartered in Samsung Town, Seoul, South Korea. It comprises numerous affiliated businesses, most of them united under the Samsung brand, and is the largest South Korean chaebol (business conglomerate). As of 2020, Samsung has the eighth highest global brand value.", new Guid("922224c1-2529-4cd4-a335-50921e084289"), "Samsung" },
-                    { 3, "Dummy producer", new Guid("85d8bc66-d883-4414-b9af-64a5cdce57bd"), "Default" }
+                    { 1, "Lay's is a brand of potato chips, as well as the name of the company that founded the chip brand in the United States. The brand has also sometimes been referred to as Frito-Lay because both Lay's and Fritos are brands sold by the Frito-Lay company, which has been a wholly owned subsidiary of PepsiCo (Pepsi) since 1965. ", new Guid("a77170d3-6056-4d08-a241-b69d743fc273"), "Lays" },
+                    { 2, "The Samsung Group (or simply Samsung, stylized as SΛMSUNG) (Korean: 삼성 [samsʌŋ]) is a South Korean multinational manufacturing conglomerate headquartered in Samsung Town, Seoul, South Korea. It comprises numerous affiliated businesses, most of them united under the Samsung brand, and is the largest South Korean chaebol (business conglomerate). As of 2020, Samsung has the eighth highest global brand value.", new Guid("f358913f-6790-4e76-8866-f26fd445ef4f"), "Samsung" },
+                    { 3, "Dummy producer", new Guid("f06e44db-186b-4f10-9ade-f84badbd62dc"), "Default" }
                 });
 
             migrationBuilder.InsertData(
@@ -322,9 +376,9 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "Id", "Guid", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("3e331785-76c4-4963-a772-59513b3b9aa6"), "Elektronika" },
-                    { 2, new Guid("04658af2-0f59-4fdd-9a62-484711ee407e"), "Artykuły spożywcze" },
-                    { 3, new Guid("8d842582-5dc7-4076-99f6-4411e44fa81d"), "Budowlane" }
+                    { 1, new Guid("3e83d6a0-eb9c-4fa3-bd4d-3954f822e26a"), "Elektronika" },
+                    { 2, new Guid("f51698ea-c3dc-4f0b-8c23-ecd01237d166"), "Artykuły spożywcze" },
+                    { 3, new Guid("cd56d5a3-3a95-43e0-8d77-d7769f6bd6c4"), "Budowlane" }
                 });
 
             migrationBuilder.InsertData(
@@ -332,17 +386,17 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "25a1b056-09d8-4f57-b0b3-840773e2e68f", null, "admin", "ADMIN" },
-                    { "8f5e93cc-a9bf-4ae4-bb1e-18a34f4e8288", null, "user", "USER" }
+                    { "7153ee35-9034-443b-b616-a12378ae8bcc", null, "admin", "ADMIN" },
+                    { "ce0874c5-93c2-4cbd-b6a4-b27d97d6937c", null, "user", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "CartId", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "573d145d-6bc0-4666-b61d-b2cba3f51a7d", 0, "89fb2c24-95c6-4f7e-8102-f1896e11dc77", "Kowalski@wp.pl", false, "Janusz", "Kowalski", false, null, "KOWALSKI@WP.PL", "KOWALSKI@WP.PL", "AQAAAAIAAYagAAAAEK26jebFoUmebfz+O8i3Zab0/CLXX+oURejJHLm2pfSNeBc1U55Hfcx1f7taxyuFRA==", null, false, "ee57571d-f815-453e-a148-fc9ea861c8c2", false, "Kowalski" },
-                    { "98687cf3-3fcf-4152-8a6b-c29279ef592e", 0, "e0d2a79b-0a50-4efd-b111-b0271ef9f1d2", "Admin@admin.com", false, "Michał", "Mierzwa", false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAIAAYagAAAAEI0giBohLuL3Fox9BidvtRW3CNVKjKAsBEaZf0USHtMWnbKI3RwjmXGwnjscqWDHlg==", null, false, "a6b3da9f-7927-4eeb-b3bd-3d8d5afb0187", false, "Admin" }
+                    { "32a45d92-56a3-4dea-a6f5-c33e04dd43a7", 0, 2, "c6de84ff-1a14-4511-b3db-fe30b846695b", "Admin@admin.com", false, "Michał", "Mierzwa", false, null, "ADMIN@ADMIN.COM", "ADMIN@ADMIN.COM", "AQAAAAIAAYagAAAAEEkq/yEqm4s1ZsKsEmIu/PkzwCnb5xxReQmxn1n1DM4NHoBqKe+9/vo+Dgc6L9opRQ==", null, false, "d3f5e8f9-d0db-4bfe-9a3e-3260549ad186", false, "Admin" },
+                    { "a93af916-e313-4ea2-b08e-017c3cf88d12", 0, 1, "192ee568-cabc-4eae-8cfd-a7cbc3ac4e75", "Kowalski@wp.pl", false, "Janusz", "Kowalski", false, null, "KOWALSKI@WP.PL", "KOWALSKI@WP.PL", "AQAAAAIAAYagAAAAEAJg3tcARzXYiymAVlvJgBhO9Lt9YMmPrSaqme3Jca4EpPlPFZrDDpVPRXkfWFpJ+A==", null, false, "e62b5aa9-df42-4f6e-8639-354821b69ea0", false, "Kowalski" }
                 });
 
             migrationBuilder.InsertData(
@@ -350,9 +404,14 @@ namespace SklepInternetowy.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { "8f5e93cc-a9bf-4ae4-bb1e-18a34f4e8288", "573d145d-6bc0-4666-b61d-b2cba3f51a7d" },
-                    { "25a1b056-09d8-4f57-b0b3-840773e2e68f", "98687cf3-3fcf-4152-8a6b-c29279ef592e" }
+                    { "7153ee35-9034-443b-b616-a12378ae8bcc", "32a45d92-56a3-4dea-a6f5-c33e04dd43a7" },
+                    { "ce0874c5-93c2-4cbd-b6a4-b27d97d6937c", "a93af916-e313-4ea2-b08e-017c3cf88d12" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItem_CartId",
+                table: "CartItem",
+                column: "CartId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_ProductDetailsId",
@@ -418,6 +477,12 @@ namespace SklepInternetowy.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_CartId",
+                table: "Users",
+                column: "CartId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "Users",
                 column: "NormalizedUserName",
@@ -432,6 +497,9 @@ namespace SklepInternetowy.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CartItem");
+
             migrationBuilder.DropTable(
                 name: "Images");
 
@@ -470,6 +538,9 @@ namespace SklepInternetowy.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Producers");

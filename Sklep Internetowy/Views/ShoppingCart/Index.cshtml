@@ -1,0 +1,42 @@
+﻿
+@using Sklep_Internetowy.Models;
+
+@model Cart;
+
+<h1 class="products-header">Twój koszyk</h1>
+
+<div class="cart-products-container">
+    <div class="cart-products-table">
+        @{ decimal total = 0; }
+        @if(Model.Items.Count == 0)
+        {
+            <div class="cart-no-items"> Brak produktów w koszyku.</div>
+        }
+        @foreach(var item in Model.Items)
+        {
+            total = item.Product.Price * item.Count;
+            <div class="cart-product-row">
+                <div class="cart-product-left">
+                    <div class="cart-product-details-name">
+                        <a asp-action="Index" asp-controller="ProductInfo" asp-route-id="@item.Product.Guid.ToString()">
+                            @item.Product.Name
+                        </a>
+                     </div>
+                    <div class="cart-product-details-price"> <span class="cart-product-details-desc">Cena</span> @item.Product.Price.ToString("0.00")zł</div>
+                    <div class="cart-product-details-quantity"> <span class="cart-product-details-desc">Ilość</span> @item.Count</div>
+                </div>
+                <div class="cart-product-right">
+                    <div class="cart-product-details-totalPrice"> <span class="cart-product-details-desc">Cena całkowita</span> @total.ToString("0.00")zł</div>
+                    <form asp-controller="ShoppingCart" asp-action="Delete" method="POST">
+                        <input type="hidden" value="@item.Product.Guid.ToString()" name="ProductId">
+                        <button type="submit" class="remove-cart-product"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        }
+        <div class="cart-products-footer">
+            <div class="cart-footer-title">Łączna wartość koszyka</div>
+            <div class="cart-footer-amount">@Model.GetTotal().ToString("0.00")zł</div>
+        </div>
+    </div>
+</div>

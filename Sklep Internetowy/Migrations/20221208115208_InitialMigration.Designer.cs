@@ -11,8 +11,8 @@ using Sklep_Internetowy.Models.Contexts;
 namespace SklepInternetowy.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221203203045_FinallyFixedUserAndRoleSeeding")]
-    partial class FinallyFixedUserAndRoleSeeding
+    [Migration("20221208115208_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,13 +48,13 @@ namespace SklepInternetowy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8f5e93cc-a9bf-4ae4-bb1e-18a34f4e8288",
+                            Id = "ce0874c5-93c2-4cbd-b6a4-b27d97d6937c",
                             Name = "user",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "25a1b056-09d8-4f57-b0b3-840773e2e68f",
+                            Id = "7153ee35-9034-443b-b616-a12378ae8bcc",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -145,13 +145,13 @@ namespace SklepInternetowy.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "573d145d-6bc0-4666-b61d-b2cba3f51a7d",
-                            RoleId = "8f5e93cc-a9bf-4ae4-bb1e-18a34f4e8288"
+                            UserId = "a93af916-e313-4ea2-b08e-017c3cf88d12",
+                            RoleId = "ce0874c5-93c2-4cbd-b6a4-b27d97d6937c"
                         },
                         new
                         {
-                            UserId = "98687cf3-3fcf-4152-8a6b-c29279ef592e",
-                            RoleId = "25a1b056-09d8-4f57-b0b3-840773e2e68f"
+                            UserId = "32a45d92-56a3-4dea-a6f5-c33e04dd43a7",
+                            RoleId = "7153ee35-9034-443b-b616-a12378ae8bcc"
                         });
                 });
 
@@ -195,6 +195,9 @@ namespace SklepInternetowy.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CartId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -251,6 +254,9 @@ namespace SklepInternetowy.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -263,9 +269,10 @@ namespace SklepInternetowy.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "98687cf3-3fcf-4152-8a6b-c29279ef592e",
+                            Id = "32a45d92-56a3-4dea-a6f5-c33e04dd43a7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e0d2a79b-0a50-4efd-b111-b0271ef9f1d2",
+                            CartId = 2,
+                            ConcurrencyStamp = "c6de84ff-1a14-4511-b3db-fe30b846695b",
                             Email = "Admin@admin.com",
                             EmailConfirmed = false,
                             FirstName = "Michał",
@@ -273,17 +280,18 @@ namespace SklepInternetowy.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI0giBohLuL3Fox9BidvtRW3CNVKjKAsBEaZf0USHtMWnbKI3RwjmXGwnjscqWDHlg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEkq/yEqm4s1ZsKsEmIu/PkzwCnb5xxReQmxn1n1DM4NHoBqKe+9/vo+Dgc6L9opRQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a6b3da9f-7927-4eeb-b3bd-3d8d5afb0187",
+                            SecurityStamp = "d3f5e8f9-d0db-4bfe-9a3e-3260549ad186",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         },
                         new
                         {
-                            Id = "573d145d-6bc0-4666-b61d-b2cba3f51a7d",
+                            Id = "a93af916-e313-4ea2-b08e-017c3cf88d12",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "89fb2c24-95c6-4f7e-8102-f1896e11dc77",
+                            CartId = 1,
+                            ConcurrencyStamp = "192ee568-cabc-4eae-8cfd-a7cbc3ac4e75",
                             Email = "Kowalski@wp.pl",
                             EmailConfirmed = false,
                             FirstName = "Janusz",
@@ -291,12 +299,56 @@ namespace SklepInternetowy.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "KOWALSKI@WP.PL",
                             NormalizedUserName = "KOWALSKI@WP.PL",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK26jebFoUmebfz+O8i3Zab0/CLXX+oURejJHLm2pfSNeBc1U55Hfcx1f7taxyuFRA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAJg3tcARzXYiymAVlvJgBhO9Lt9YMmPrSaqme3Jca4EpPlPFZrDDpVPRXkfWFpJ+A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ee57571d-f815-453e-a148-fc9ea861c8c2",
+                            SecurityStamp = "e62b5aa9-df42-4f6e-8639-354821b69ea0",
                             TwoFactorEnabled = false,
                             UserName = "Kowalski"
                         });
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cart");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1
+                        },
+                        new
+                        {
+                            Id = 2
+                        });
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.CartItem", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(0);
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(1);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ProductId", "CartId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItem");
                 });
 
             modelBuilder.Entity("Sklep_Internetowy.Models.Image", b =>
@@ -352,21 +404,21 @@ namespace SklepInternetowy.Migrations
                         {
                             Id = 1,
                             Description = "Lay's is a brand of potato chips, as well as the name of the company that founded the chip brand in the United States. The brand has also sometimes been referred to as Frito-Lay because both Lay's and Fritos are brands sold by the Frito-Lay company, which has been a wholly owned subsidiary of PepsiCo (Pepsi) since 1965. ",
-                            Guid = new Guid("cfb9712c-c5ee-41e6-9253-b2ee51385c6f"),
+                            Guid = new Guid("a77170d3-6056-4d08-a241-b69d743fc273"),
                             Name = "Lays"
                         },
                         new
                         {
                             Id = 2,
                             Description = "The Samsung Group (or simply Samsung, stylized as SΛMSUNG) (Korean: 삼성 [samsʌŋ]) is a South Korean multinational manufacturing conglomerate headquartered in Samsung Town, Seoul, South Korea. It comprises numerous affiliated businesses, most of them united under the Samsung brand, and is the largest South Korean chaebol (business conglomerate). As of 2020, Samsung has the eighth highest global brand value.",
-                            Guid = new Guid("922224c1-2529-4cd4-a335-50921e084289"),
+                            Guid = new Guid("f358913f-6790-4e76-8866-f26fd445ef4f"),
                             Name = "Samsung"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Dummy producer",
-                            Guid = new Guid("85d8bc66-d883-4414-b9af-64a5cdce57bd"),
+                            Guid = new Guid("f06e44db-186b-4f10-9ade-f84badbd62dc"),
                             Name = "Default"
                         });
                 });
@@ -421,19 +473,19 @@ namespace SklepInternetowy.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("3e331785-76c4-4963-a772-59513b3b9aa6"),
+                            Guid = new Guid("3e83d6a0-eb9c-4fa3-bd4d-3954f822e26a"),
                             Name = "Elektronika"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("04658af2-0f59-4fdd-9a62-484711ee407e"),
+                            Guid = new Guid("f51698ea-c3dc-4f0b-8c23-ecd01237d166"),
                             Name = "Artykuły spożywcze"
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("8d842582-5dc7-4076-99f6-4411e44fa81d"),
+                            Guid = new Guid("cd56d5a3-3a95-43e0-8d77-d7769f6bd6c4"),
                             Name = "Budowlane"
                         });
                 });
@@ -563,6 +615,36 @@ namespace SklepInternetowy.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Sklep_Internetowy.Models.AppUser", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.Cart", "Cart")
+                        .WithOne("User")
+                        .HasForeignKey("Sklep_Internetowy.Models.AppUser", "CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.CartItem", b =>
+                {
+                    b.HasOne("Sklep_Internetowy.Models.Cart", "Cart")
+                        .WithMany("Items")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sklep_Internetowy.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Sklep_Internetowy.Models.Image", b =>
                 {
                     b.HasOne("Sklep_Internetowy.Models.ProductDetail", "ProductDetails")
@@ -611,6 +693,14 @@ namespace SklepInternetowy.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Sklep_Internetowy.Models.Cart", b =>
+                {
+                    b.Navigation("Items");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Sklep_Internetowy.Models.Producer", b =>
