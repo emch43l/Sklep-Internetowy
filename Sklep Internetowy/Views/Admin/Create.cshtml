@@ -44,8 +44,9 @@
                             <div class="form-creation-cateogories-container">
                                 @foreach (var item in Model.Categories)
                                 {
+                                    string chckd = Model.CategoryId.Contains(item.Guid.ToString()) ? "checked='checked'" : string.Empty;
                                     <label class="category-selection-button" for="@item.Guid.ToString()">
-                                        <input id="@item.Guid.ToString()" type="checkbox" name="CategoryId" value="@item.Guid.ToString()" />
+                                        <input id="@item.Guid.ToString()" type="checkbox" name="CategoryId" value="@item.Guid.ToString()" @chckd />
                                         @item.Name
                                     </label>
                                 }
@@ -65,7 +66,18 @@
                             <div class="aditional-information-container">
 
                                 <div class="aditional-informations-inputs" id="inputs-container">
-                                    <input type="text" asp-for="AditionalInformations" class="form-control aditional-information-input" />
+                                    @if(Model.AditionalInformations.Count() == 0)
+                                    {
+                                        <input type="text" name="AdidtionalInformations" class="form-control aditional-information-input" />
+                                    }
+                                    else
+                                    {
+                                        @foreach(var item in Model.AditionalInformations)
+                                        {
+                                            <input type="text" name="AdidtionalInformations" value="@item" class="form-control aditional-information-input" />
+                                        }
+                                    }
+
                                 </div>
                                 
 

@@ -27,7 +27,7 @@ namespace Sklep_Internetowy.ViewModels
         public ICollection<IFormFile>? Images { get; set; }
 
         [Required]
-        public ICollection<string> AditionalInformations { get; set; }
+        public List<string> AditionalInformations { get; set; }
 
         [ValidateNever]
         public List<SelectListItem> Producers { get; set; }
@@ -40,7 +40,14 @@ namespace Sklep_Internetowy.ViewModels
         public string ProducerId { get; set; }
 
         [Display(Name = "Kategorie")]
-        public List<string>? CategoryId { get; set; }
+        public List<string> CategoryId { get; set; }
+
+        public ProductViewModel() 
+        {
+            CategoryId = new List<string>();
+            AditionalInformations = new List<string>();
+        }
+      
 
     }
 }

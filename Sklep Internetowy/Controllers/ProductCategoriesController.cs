@@ -35,7 +35,7 @@ namespace Sklep_Internetowy.Controllers
         {
             ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
             if (category == null)
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
             return View(category);
         }
 
@@ -69,7 +69,7 @@ namespace Sklep_Internetowy.Controllers
         {
             ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
             if (category == null)
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
 
             return View(category);
         }
@@ -88,7 +88,7 @@ namespace Sklep_Internetowy.Controllers
                 ProductCategory? entity = _pcRepo.GetProductCategoryByGuid(id);
 
                 if (entity == null)
-                    return NotFound();
+                    return RedirectToAction("Index", "Producers");
 
                 entity.Name = category.Name;
                 _pcRepo.Save();
@@ -107,7 +107,7 @@ namespace Sklep_Internetowy.Controllers
 
             if (category == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
             }
 
             return View(category);
@@ -122,7 +122,7 @@ namespace Sklep_Internetowy.Controllers
             ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
             if (category == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
             }
             _pcRepo.RemoveProductCategory(id);
             _pcRepo.Save();

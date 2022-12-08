@@ -126,6 +126,7 @@ namespace Sklep_Internetowy.Areas.Identity.Pages.Account
 
                 user.FirstName = Input.Name;
                 user.LastName = Input.Surname;
+                user.Cart = new Cart();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

@@ -38,11 +38,11 @@ namespace Sklep_Internetowy.Controllers
         [Authorize(Roles = "user,admin")]
         public async Task<IActionResult> AddOpinion(AddOpinionModel opinion) 
         {
-            string referer = Request.Headers["Referer"].ToString();
             if(ModelState.IsValid)
             {
                 Product? product = _pRepo.GetProductWithAditionalData(opinion.Id);
                 AppUser? user = await _userManager.GetUserAsync(Request.HttpContext.User);
+
                 if (product != null && user != null)
                 {
                     product.Rating.Add(new ProductRating
@@ -53,14 +53,19 @@ namespace Sklep_Internetowy.Controllers
                     });
 
                     _pRepo.Save();
+                    return RedirectToAction("Index", "ProductInfo" , new { id = opinion.Id });
                 }
+
             }
 
-            return Redirect(referer);
+            return RedirectToAction("Index", "Home");
+
         }
 
-        public IActionResult Index(string id)
+        public IActionResult Index(string id, string? ErrorMessage)
         {
+            if (ErrorMessage != null)
+                ModelState.AddModelError("errorMsg", ErrorMessage);
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
             Product? product = (id == null) ? null : _pRepo.GetProductWithAditionalData(id);
             if (product == null)

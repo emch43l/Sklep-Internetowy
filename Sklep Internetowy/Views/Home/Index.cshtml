@@ -84,9 +84,7 @@
                     </div>
                     <div class="product-details-container">
                         <div class="product-name">
-                            <a asp-controller="ProductInfo" asp-action="Index" asp-route-id="@item.Guid" class="product-details-link">
-                                @item.Name
-                            </a>
+                            @item.Name
                         </div>
                         <div class="product-details">
                             <div class="product-details-left">
@@ -116,7 +114,7 @@
                                 <div class="product-price">@item.Price.ToString("0.00")
                                     <span class="product-currency">PLN</span>
                                 </div>
-                                <button class="product-add-to-cart">Do koszyka</button>
+                                <a asp-controller="ProductInfo" asp-action="Index" asp-route-id="@item.Guid.ToString()" class="product-add-to-cart">Szczegóły</a>
                             </div>
                         </div>
                     </div>

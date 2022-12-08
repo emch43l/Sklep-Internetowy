@@ -35,7 +35,7 @@ namespace Sklep_Internetowy.Controllers
         {
             Producer? producer = _prodRepo.GetProducerByGuid(id);
             if (producer == null)
-                return NotFound();
+                return RedirectToAction("Index","Producers");
             return View(producer);
         }
 
@@ -69,8 +69,8 @@ namespace Sklep_Internetowy.Controllers
         {
             Producer? producer = _prodRepo.GetProducerByGuid(id);
             if (producer == null)
-                return NotFound();
-            
+                return RedirectToAction("Index", "Producers");
+
             return View(producer);
         }
 
@@ -88,7 +88,7 @@ namespace Sklep_Internetowy.Controllers
                 Producer? entity = _prodRepo.GetProducerByGuid(id);
 
                 if(entity == null)
-                    return NotFound();
+                    return RedirectToAction("Index", "Producers");
 
                 entity.Name = producer.Name;
                 entity.Description = producer.Description;
@@ -109,7 +109,7 @@ namespace Sklep_Internetowy.Controllers
 
             if (producer == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
             }
 
             return View(producer);
@@ -124,7 +124,7 @@ namespace Sklep_Internetowy.Controllers
             Producer? producer = _prodRepo.GetProducerByGuid(id);
             if(producer == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Producers");
             }
             _prodRepo.RemoveProducer(id);
             _prodRepo.Save();

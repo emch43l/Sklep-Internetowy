@@ -1048,6 +1048,11 @@ nav {
     color: white;
     font-size: 0.9em;
     font-weight: 500;
+    text-decoration: none;
+}
+
+.product-add-to-cart:hover {
+    color: white;
 }
 
 /* OLD */

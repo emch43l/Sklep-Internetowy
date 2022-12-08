@@ -84,12 +84,18 @@
     </div>
 
     <footer class="footer text-muted">
-        
     </footer>
+    <div class="model-state-error-container">
+        
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/owl-carousel/dist/owl.carousel.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        const MODELERRORS = "@string.Join("; ", ViewContext.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))";
+    </script>
     <script src="https://kit.fontawesome.com/8cb3256003.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
