@@ -10,6 +10,8 @@ namespace Sklep_Internetowy.Extensions
         {
             if (cart == null)
                 return new HtmlString(null);
+            if (cart.Items.Count == 0)
+                return new HtmlString(null);
             return new HtmlString($"<div class=\"cart-item-number\"><span>{cart.Items.Count()}</span></div>");
         }
     }
