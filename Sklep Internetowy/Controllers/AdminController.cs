@@ -49,15 +49,30 @@ namespace Sklep_Internetowy.Controllers
             _imgRepo = new ImageRepository(_context);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page)
         {
-            return View(_context.Products.Include(p => p.ProductDetail).ToList());
+            page = (page < 1) ? 1 : page;
+            EntityPaginator<Product> paginator = new EntityPaginator<Product>(_context.Products.Include(p => p.ProductDetail).ToList());
+            paginator.SetPageEntityNumber(5);
+            IEnumerable<Product> products = paginator.GetPaginatedData(page);
+            List<int> pagesNumber = paginator.GetPagesNumber(page);
+            return View(new Tuple<IEnumerable<Product>,List<int>,int>(products,pagesNumber,page));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(ProductDeleteModel model)
+        public IActionResult Delete(string id)
         {
+            Product? product = _pRepo.GetProductWithAditionalData(id);
+            if(product == null)
+                return RedirectToAction("Index");
+            _fileUploader.SetTargetFolderTo(TargetFolder.Images);
+            foreach(Image img in product.ProductDetail.Images)
+            {
+                if(product.ProductDetail.Images.Remove(img))
+                    _fileUploader.DeleteFile(img);
+            }
+            _pRepo.RemoveProduct(id);
+            _pRepo.Save();
+            
             return RedirectToAction("Index");
 
         }

@@ -1,51 +1,57 @@
 ﻿@using Sklep_Internetowy.ViewModels;
-@model IEnumerable<Sklep_Internetowy.Models.Product>
+@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,List<int>,int>;
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-               
-            </th>
-            <th>
-                
-            </th>
-            <th>
-                
-            </th>
-            <th>
-                
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @item.Name
-            </td>
-            <td>
-                @item.Price
-            </td>
-            <td>
-                @item.ProductDetail.Creation_Date
-            </td>
-            <td>
-                @item.ProductDetail.Description
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<div class="panel-product-item-list">
+@foreach (var item in Model.Item1) {
+    <div class="panel-product-item">
+        <div class="panel-product-item-name">
+            @item.Name
+        </div>
+        <div class="panel-product-item-price">
+            @item.Price.ToString("0.00")
+        </div>
+        <div class="panel-product-item-date">
+            @item.ProductDetail.Creation_Date.ToString("d")
+        </div>
+        <div class="panel-product-item-operations">
+            <div class="panel-button-list">
+                <button class="panel-product-item-edit" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
+                    <i class="fas fa-pen"></i> 
+                </button>
+                <button class="panel-product-item-remove -confirmation-window" data-name="@item.Name" asp-action="Delete" asp-route-id="@item.Guid.ToString()"> 
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div>
+                <button class="panel-product-item-details" asp-action="Details" asp-route-id="@item.Guid.ToString()">
+                    <span>Szczegóły</span> 
+                </button>
+            </div>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+</div>
+<div class="page-change-container">
+    <div class="page-change-buttons">
+        @if (Model.Item2.Count() > 1)
+        {
+            foreach (int i in Model.Item2)
+            {
+                <form style="display: inline-block">
+                    @if (i == Model.Item3)
+                    {
+                        <button class="change-page-button current-page" name="Page" value="@i">@i</button>
+                    }
+                    else
+                    {
+                        <button class="change-page-button" name="Page" value="@i">@i</button>
+                    }
+                </form>
+            }
+        }
+    </div>
+</div>
