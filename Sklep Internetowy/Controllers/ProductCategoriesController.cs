@@ -43,22 +43,24 @@ namespace Sklep_Internetowy.Controllers
         // GET: Producers/Create
         public IActionResult Create()
         {
+            string? from = HttpContext.Request.Headers["Referer"];
+            ViewData["Referer"] = from;
             return View();
         }
 
-        // POST: Producers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/categories/create")]
-        public IActionResult Create([Bind("Name")] ProductCategory category)
+        public IActionResult Create([Bind("Name")] ProductCategory category, string? From)
         {
             if (ModelState.IsValid)
             {
                 _pcRepo.AddProductCategory(category);
                 _pcRepo.Save();
-                return RedirectToAction(nameof(Index));
+                if(From == null)
+                    return RedirectToAction(nameof(Index));
+                return Redirect(From);
             }
             return View(category);
         }

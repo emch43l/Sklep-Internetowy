@@ -1,57 +1,56 @@
-﻿@using Sklep_Internetowy.ViewModels;
-@model Tuple<IEnumerable<Sklep_Internetowy.Models.Product>,List<int>,int>;
+﻿@model Sklep_Internetowy.ViewModels.AdminStatisticsModel;
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<div class="panel-product-item-list">
-@foreach (var item in Model.Item1) {
-    <div class="panel-product-item">
-        <div class="panel-product-item-name">
-            @item.Name
-        </div>
-        <div class="panel-product-item-price">
-            @item.Price.ToString("0.00")
-        </div>
-        <div class="panel-product-item-date">
-            @item.ProductDetail.Creation_Date.ToString("d")
-        </div>
-        <div class="panel-product-item-operations">
-            <div class="panel-button-list">
-                <button class="panel-product-item-edit" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
-                    <i class="fas fa-pen"></i> 
-                </button>
-                <button class="panel-product-item-remove -confirmation-window" data-name="@item.Name" asp-action="Delete" asp-route-id="@item.Guid.ToString()"> 
-                    <i class="fas fa-trash"></i>
-                </button>
+<h1 class="products-header">Panel administracyjny</h1>
+<div class="admin-panel-main">
+    <div class="admin-panel-right-section">
+        <div class="admin-panel-management">
+            <div class="admin-panel-ref-button">
+                <div class="button-z-index">
+                    <span class="admin-panel-ref-button-text">Produkty</span>
+                    <div class="panel-statistics">
+                        Liczba produktów: <span class="statistics-count"> @Model.NumberOfProducts </span>
+                    </div>
+                </div>
+                <a asp-action="Index" asp-controller="Products">
+                    Przejdź do sekcji<i class="fas fa-share"></i>
+                </a>
             </div>
-            <div>
-                <button class="panel-product-item-details" asp-action="Details" asp-route-id="@item.Guid.ToString()">
-                    <span>Szczegóły</span> 
-                </button>
+            <div class="panel-divier"></div>
+            <div class="admin-panel-ref-button">
+                <div class="button-z-index">
+                    <span class="admin-panel-ref-button-text">Kategorie</span>
+                    <div class="panel-statistics">
+                        Liczba kategorii: <span class="statistics-count"> @Model.NumberOfCategories </span>
+                    </div>
+                </div>
+                <a asp-action="Index" asp-controller="ProductCategories">
+                    Przejdź do sekcji <i class="fas fa-share"></i>
+                </a>
+            </div>
+            <div class="panel-divier"></div>
+            <div class="admin-panel-ref-button">
+                <div class="button-z-index">
+                    <span class="admin-panel-ref-button-text">Producenci</span>
+                    <div class="panel-statistics">
+                        Liczba producentów: <span class="statistics-count"> @Model.NumberOfProducers </span>
+                    </div>
+                </div>
+                <a asp-action="Index" asp-controller="Producers">
+                    Przejdź do sekcji <i class="fas fa-share"></i>
+                </a>
+            </div>
+            <div class="panel-divier"></div>
+            <div class="admin-panel-ref-button">
+                <div class="button-z-index">
+                    <span class="admin-panel-ref-button-text">Użytkownicy</span>
+                    <div class="panel-statistics">
+                        Liczba użytkowników: <span class="statistics-count"> @Model.NumberOfUsers </span>
+                    </div>
+                </div>
+                <a class="button-disabled">
+                    Przejdź do sekcji <i class="fas fa-share"></i>
+                </a>
             </div>
         </div>
-    </div>
-}
-</div>
-<div class="page-change-container">
-    <div class="page-change-buttons">
-        @if (Model.Item2.Count() > 1)
-        {
-            foreach (int i in Model.Item2)
-            {
-                <form style="display: inline-block">
-                    @if (i == Model.Item3)
-                    {
-                        <button class="change-page-button current-page" name="Page" value="@i">@i</button>
-                    }
-                    else
-                    {
-                        <button class="change-page-button" name="Page" value="@i">@i</button>
-                    }
-                </form>
-            }
-        }
     </div>
 </div>

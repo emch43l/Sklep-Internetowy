@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
@@ -43,6 +44,7 @@ namespace Sklep_Internetowy.Controllers
         // GET: Producers/Create
         public IActionResult Create()
         {
+            ViewData["Referer"] = HttpContext.Request.Headers["Referer"];
             return View();
         }
 
@@ -52,13 +54,15 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/producers/create")]
-        public IActionResult Create([Bind("Name,Description")] Producer producer)
+        public IActionResult Create([Bind("Name,Description")] Producer producer, string? From)
         {
             if (ModelState.IsValid)
             {
                 _prodRepo.AddProducer(producer);
                 _prodRepo.Save();
-                return RedirectToAction(nameof(Index));
+                if(From == null)
+                    return RedirectToAction(nameof(Index));
+                return Redirect(From);
             }
             return View(producer);
         }

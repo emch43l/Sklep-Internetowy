@@ -18,6 +18,10 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                @if(ViewData["Referer"] != null)
+                {
+                    <input type="hidden" value="@ViewData["Referer"]" name="From"/>
+                }
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -25,7 +29,14 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    @if (ViewData["Referer"] != null)
+    {
+        <a href="@ViewData["Referer"]"> Powrót </a>
+    }
+    else
+    {
+        <a asp-action="Index">Back to List</a>
+    }
 </div>
 
 @section Scripts {

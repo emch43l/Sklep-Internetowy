@@ -8,7 +8,12 @@ html {
     --card-rating: rgb(250, 219, 134);
     --main-text: rgb(46, 46, 46);
     --button-primary: rgb(151, 211, 207);
-    --button-secondary: rgb(243, 211, 181);
+    --button-secondary: rgb(224, 166, 139);
+}
+
+a:hover
+{
+    color: white;
 }
 
 @media (min-width: 768px) {
@@ -55,10 +60,101 @@ body {
     font-weight: bold;
 }
 
-/* modal stylization */
+/* admin landing page stylization */
 
-.confirmation-window 
+.admin-panel-main
 {
+    display: flex;
+}
+
+.admin-panel-left-section
+{
+    min-width: 250px;
+    width: 30%;
+}
+
+.admin-panel-right-section
+{
+    width: 100%;
+    margin-top: 30px;
+}
+
+.admin-panel-management
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.admin-panel-ref-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px 5px;
+    color: var(--main-text);
+    text-decoration: none;
+    transition: all ease-in-out 0.1s;
+    position: relative;
+}
+
+.panel-divier
+{   
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    margin: 5px auto;
+    width: 80%;
+}
+
+.button-z-index {
+    padding-top: 10px;
+}
+
+
+.admin-panel-ref-button > a
+{
+    background-color: var(--button-secondary);
+    text-decoration: none;
+    padding: 5px 15px;
+    color: white;
+    font-size: 0.9em;
+    font-weight: 500;
+    border-radius: 5px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.05);
+}
+
+.statistics-count 
+{
+    font-weight: bold;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.admin-panel-ref-button > a > i
+{
+    border-left: 2px solid rgba(0,0,0,0.1);
+    padding-left: 10px;
+    margin-left: 10px;
+}
+
+.admin-panel-ref-button:hover {
+    color: var(--main-text);
+}
+
+.admin-panel-ref-button-text {
+    font-weight: 400;
+    font-size: 1.5em;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.admin-panel-ref-button > div > i {
+    font-size: 1.5em;
+    text-align: center;
+    width: 100px;
+}
+
+/* modal stylization */
+.confirmation-window {
     display: none;
     position: absolute;
     top: 0;
@@ -137,11 +233,37 @@ body {
 .panel-product-item-list
 {
     width: 100%;
-
+    margin-top: 30px;
 }
 
-.panel-product-item
+.panel-products-header
 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel-product-create-new-icon
+{
+    margin-right: 15px;
+}
+
+.panel-product-create-new {
+    padding: 5px 15px;
+    background-color: var(--button-primary);
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0px 10px 20px rgb(0,0,0,0.10);
+    border-radius: 5px;
+}
+
+.panel-product-create-new:hover
+{
+    color: white;
+}
+
+.panel-product-item {
     display: flex;
     justify-content: space-between;
     padding: 10px 10px;
@@ -437,19 +559,82 @@ nav {
     width: 100%;
 }
 
+.form-creation-cateogories-container-label
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-aditional-information {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+    background-color: var(--button-primary);
+    color: white;
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.1);
+}
+
+.add-aditional-information-btn {
+/*    width: 50%;
+    display: inline-block;
+    text-align: center;
+    margin-top: 5px;
+    color: white;
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.1);
+    border: none;*/
+    margin-top: 5px;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0px 10px 20px rgb(0,0,0,0.10);
+    border-radius: 5px;
+    color: white;
+    font-size: 0.8em;
+    padding: 5px;
+    background-color: rgb(51, 51, 51);
+    border: none;
+}
+
 .form-section-inner {
-    padding: 30px 50px;
+    padding: 30px 30px;
 }
 
 .inner-section-header {
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     font-size: 20px;
+}
+
+.control-label
+{
+    font-weight: 300;
+    font-weight: 300;
+    font-size: 0.9em;
 }
 
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
 }
+
+.form-control {
+    width: 80%;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.05);
+    font-weight: 500;
+}
+
+
+
+.form-control:focus
+{
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.05);
+}
+
 
 .selected-image {
     margin: 5px 10px;
@@ -467,7 +652,7 @@ nav {
 
 #num-of-selected-cat {
     margin-left: 10px;
-    font-size: 0.9em;
+    font-size: 0.8em;
     padding: 3px 10px;
     border-radius: 3px;
     background-color: rgba(0,0,0,0.03);
@@ -485,18 +670,21 @@ nav {
     border-radius: 5px;
     background-color: transparent;
 }
-
+.aditional-information-container
+{
+    width: 80%;
+}
+/*
 #information-add {
     color: rgb(110, 183, 93);
 }
 
 #information-remove {
     color: rgb(222, 111, 111);
-}
+}*/
 
 .form-creation-cateogories-container {
-    margin-top: 10px;
-    background-color: rgba(0,0,0,0.03);
+    width: 80%;
     padding: 10px 20px;
     display: flex;
     flex-wrap: wrap;
@@ -512,9 +700,10 @@ nav {
     letter-spacing: 0.3px;
     user-select: none;
     cursor: pointer;
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(246, 246, 246);
     margin: 5px 10px;
-
+    border: 1px solid rgb(225, 225, 225);
+    filter:opacity(0.7) contrast(0.9);
 }
 
 .aditional-information-input {
@@ -524,8 +713,9 @@ nav {
 }
 
 .category-selected {
-    background-color: var(--button-secondary);
-    color: white;
+    filter: none;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.07);
+    font-weight: 500;
 }
 
 .category-selection-button > input {
