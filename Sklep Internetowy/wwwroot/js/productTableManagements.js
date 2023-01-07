@@ -3,7 +3,6 @@
 function InitializeFunctions() {
     InputRange();
     FormManagement();
-    UiUtitilites();
 }
 
 function InputRange() {

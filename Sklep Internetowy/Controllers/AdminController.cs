@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.ViewModels;
 
 namespace Sklep_Internetowy.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly DataContext _context;

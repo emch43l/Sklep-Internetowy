@@ -106,24 +106,7 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("admin/producers/delete/{id}")]
-        // GET: Producers/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            Producer? producer = _prodRepo.GetProducerByGuid(id);
-
-            if (producer == null)
-            {
-                return RedirectToAction("Index", "Producers");
-            }
-
-            return View(producer);
-        }
-
-        // POST: Producers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Route("admin/producers/delete")]
-        public IActionResult DeleteConfirmed(string id)
+        public IActionResult Delete(string id)
         {
             Producer? producer = _prodRepo.GetProducerByGuid(id);
             if(producer == null)

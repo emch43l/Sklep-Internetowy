@@ -25,6 +25,10 @@ namespace Sklep_Internetowy.Repositories
             id = id.ToUpper();
             return _context.ProductCategories.FirstOrDefault(pc => pc.Guid.ToString() == id);
         }
+        public ProductCategory? GetProductCategoryByName(string name)
+        {
+            return _context.ProductCategories.FirstOrDefault(pc => pc.Name.ToLower() == name.ToLower());
+        }
 
         public IEnumerable<Product>? GetCategoryProductsByCategoryGuid(string id)
         {

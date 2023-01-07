@@ -17,7 +17,7 @@ namespace Sklep_Internetowy.Repositories
         }
         public IEnumerable<Product>? GetProducts()
         {
-            return _context.Products;
+            return _context.Products.ToList();
         }
 
         public IEnumerable<Product>? GetProductsWithAditionalData()
@@ -53,7 +53,8 @@ namespace Sklep_Internetowy.Repositories
 
         public Product AddProduct(Product product)
         {
-            return _context.Products.Add(product).Entity;
+            Product entity = _context.Products.Add(product).Entity;
+            return entity;
         }
 
         public Product? RemoveProduct(string id)

@@ -17,7 +17,6 @@
         cart = CartRepo.GetUserCart(user ?? new AppUser());  
     }
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,9 +48,18 @@
                     {
                         <div class="nav-user-management">
                             <div class="user-management-button">
-                                <button class="user-management-about">
-                                    @UserManager.GetUserAsync(User).Result?.FirstName
-                                </button>
+                                @if (UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin").Result)
+                                {
+                                    <a asp-action="Index" asp-controller="Admin" class="user-management-about" id="open-profile-modal">
+                                        @UserManager.GetUserAsync(User).Result?.FirstName
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="user-management-about" id="open-profile-modal">
+                                        @UserManager.GetUserAsync(User).Result?.FirstName
+                                    </button>
+                                }
                                 <form class="user-management-logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { controller = "Home" })" method="post">
                                     <button type="submit" class="user-management-logout">
                                         <i class="fas fa-sign-out-alt"></i>
@@ -103,14 +111,10 @@
     <div class="model-state-error-container">
         
     </div>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/owl-carousel/dist/owl.carousel.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script type="text/javascript">
-        const MODELERRORS = "@string.Join("; ", ViewContext.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))";
-    </script>
+    <script src="~/js/site.js"></script>
     <script src="https://kit.fontawesome.com/8cb3256003.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

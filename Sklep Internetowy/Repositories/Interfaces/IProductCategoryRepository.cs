@@ -16,6 +16,8 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 
         public ProductCategory? RemoveProductCategory(string id);
 
+        public ProductCategory? GetProductCategoryByName(string name);
+
         public void Save();
     }
 }

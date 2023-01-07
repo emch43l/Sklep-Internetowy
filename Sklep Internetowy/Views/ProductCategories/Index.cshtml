@@ -1,35 +1,44 @@
-﻿@model IEnumerable<Sklep_Internetowy.Models.ProductCategory>
+﻿@model Tuple<IEnumerable<Sklep_Internetowy.Models.ProductCategory>,ProductCategory>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Guid">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Guid">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Guid">Delete</a>
-            </td>
-        </tr>
+@section Scripts {
+    <script src="~/js/editRow.js"></script>
 }
-    </tbody>
-</table>
+
+<div class="panel-products-header">
+    <div>
+        <h1 class="products-header">Kategorie</h1>
+    </div>
+    <div>
+        <a asp-action="Create" asp-controller="ProductCategories" class="panel-product-create-new">
+            <span class="panel-product-create-new-icon"><i class="fas fa-plus"></i></span>
+            Utwórz nową
+        </a>
+    </div>
+</div>
+    <div class="panel-product-item-list">
+        @foreach (var item in Model.Item1)
+        {
+            <form method="patch" asp-action="Edit">
+                <div class="panel-product-item">
+                    <div class="panel-product-item-name">
+                        @item.Name
+                    </div>
+                    <div class="panel-product-item-operations">
+                        <div class="panel-button-list">
+                            <a class="panel-product-item-edit -edit-row" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <button type="button" class="panel-product-item-remove -confirmation-window" data-name="@item.Name" asp-action="Delete" asp-route-id="@item.Guid.ToString()">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+

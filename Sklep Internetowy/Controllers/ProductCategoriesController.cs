@@ -22,24 +22,14 @@ namespace Sklep_Internetowy.Controllers
             _pcRepo = pcRepo;
         }
 
-        [Route("admin/categories")]
+        [Route("/admin/categories")]
         public async Task<IActionResult> Index()
         {
             IEnumerable<ProductCategory> categories = _pcRepo.GetCategories();
-            return View(categories);
+            return View(new Tuple<IEnumerable<ProductCategory>,ProductCategory>(categories,new ProductCategory()));
         }
 
-        [Route("admin/categories/details/{id}")]
-        // GET: Producers/Details/guid
-        public IActionResult Details(string id)
-        {
-            ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
-            if (category == null)
-                return RedirectToAction("Index", "Producers");
-            return View(category);
-        }
-
-        [Route("admin/categories/create")]
+        [Route("/admin/categories/create")]
         // GET: Producers/Create
         public IActionResult Create()
         {
@@ -51,27 +41,32 @@ namespace Sklep_Internetowy.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("admin/categories/create")]
+        [Route("/admin/categories/create")]
         public IActionResult Create([Bind("Name")] ProductCategory category, string? From)
         {
-            if (ModelState.IsValid)
+            if(!ModelState.IsValid)
+               return View(category);
+            if(IsCategoryExist(category.Name))
             {
-                _pcRepo.AddProductCategory(category);
-                _pcRepo.Save();
-                if(From == null)
-                    return RedirectToAction(nameof(Index));
-                return Redirect(From);
+                ModelState.AddModelError("Name", "Given category already exist !");
+                return View(category);
             }
-            return View(category);
+            
+            _pcRepo.AddProductCategory(category);
+            _pcRepo.Save();
+            if(From == null)
+               return RedirectToAction(nameof(Index));
+            return Redirect(From);
+            
         }
 
-        [Route("admin/categories/edit/{id}")]
+        [Route("/admin/categories/edit/{id}")]
         // GET: Producers/Edit/5
         public IActionResult Edit(string id)
         {
             ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
             if (category == null)
-                return RedirectToAction("Index", "Producers");
+                return RedirectToAction("Index", "ProductCategories");
 
             return View(category);
         }
@@ -81,54 +76,46 @@ namespace Sklep_Internetowy.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("admin/categories/edit/{id}")]
+        [Route("/admin/categories/edit/{id}")]
         public IActionResult Edit(string id, [Bind("Name")] ProductCategory category)
         {
 
-            if (ModelState.IsValid)
+            if(!ModelState.IsValid)
+                return View(category);
+            if (IsCategoryExist(category.Name))
             {
-                ProductCategory? entity = _pcRepo.GetProductCategoryByGuid(id);
-
-                if (entity == null)
-                    return RedirectToAction("Index", "Producers");
-
-                entity.Name = category.Name;
-                _pcRepo.Save();
-
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("Name", "Given category already exist !");
+                return View(category);
             }
+            ProductCategory? entity = _pcRepo.GetProductCategoryByGuid(id);
 
-            return View(category);
-        }
+            if (entity == null)
+                return RedirectToAction("Index", "ProductCategories");
 
-        [Route("admin/categories/delete/{id}")]
-        // GET: Producers/Delete/5
-        public IActionResult Delete(string id)
-        {
-            ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
+            entity.Name = category.Name;
+            _pcRepo.Save();
 
-            if (category == null)
-            {
-                return RedirectToAction("Index", "Producers");
-            }
+            return RedirectToAction(nameof(Index));
 
-            return View(category);
         }
 
         // POST: Producers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Route("admin/categories/delete/{id}")]
-        public IActionResult DeleteConfirmed(string id)
+        [Route("/admin/categories/delete/{id}")]
+        public IActionResult Delete(string id)
         {
             ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
             if (category == null)
             {
-                return RedirectToAction("Index", "Producers");
+                return RedirectToAction("Index", "ProductCategories");
             }
             _pcRepo.RemoveProductCategory(id);
             _pcRepo.Save();
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool IsCategoryExist(string name)
+        {
+            return _pcRepo.GetProductCategoryByName(name) == null ? false : true;
         }
     }
 }
