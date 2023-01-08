@@ -1,4 +1,6 @@
-﻿namespace Sklep_Internetowy.Services
+﻿using System.Configuration;
+
+namespace Sklep_Internetowy.Services
 {
     public interface IDirectoryConfigurationReader
     {
@@ -19,9 +21,16 @@
         private string _section = "Uploads";
 
         private bool _throwException = false;
+        private Configuration configuration;
+
         public DirectoryConfigurationReader(IConfiguration configuration)
         {
             _configuration = configuration.GetSection(_section) ?? configuration;
+        }
+
+        public DirectoryConfigurationReader(Configuration configuration)
+        {
+            this.configuration = configuration;
         }
 
         public void ThrowExceptionWhenParamMissing(bool value)
