@@ -465,6 +465,9 @@ body {
     width: 300px;
     padding-left: 30px;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .panel-product-item-date {
@@ -700,8 +703,29 @@ nav {
     width: 100%;
 }
 
-.form-creation-cateogories-container-label
+.form-group-inline-items
 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-image-button {
+    margin-left: 5px;
+    width: 70px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0px 10px 20px rgb(0,0,0,0.10);
+    border-radius: 5px;
+    color: white;
+    font-size: 0.8em;
+    padding: 5px;
+    background-color: rgb(51, 51, 51);
+    border: none;
+    height: 40px;
+}
+
+.form-creation-cateogories-container-label {
     display: flex;
     justify-content: space-between;
 }
@@ -780,7 +804,7 @@ nav {
 .selected-image {
     margin: 5px 10px;
     max-width: calc(100% - 40px);
-    height: 300px;
+    height: 100px;
     object-fit: contain;
 }
 

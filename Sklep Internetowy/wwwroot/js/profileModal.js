@@ -1,4 +1,4 @@
-﻿window.onload += EnableProfileModal;
+﻿
 
 function EnableProfileModal() {
     console.info("Sdad");

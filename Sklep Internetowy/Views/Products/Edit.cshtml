@@ -1,0 +1,171 @@
+﻿@model Sklep_Internetowy.ViewModels.ProductEditViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="products-header">Edytuj</h1>
+
+<div class="row">
+    <div class="form-group-container">
+        <form asp-action="Edit" class="form-group-secion" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" value="@Model.Id" />
+            <div>
+                <div>
+                    <div class="form-section-inner">
+                        @*<h1 class="inner-section-header">Dane podstawowe</h1>*@
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label">Nazwa</label>
+                            <input asp-for="Name" class="form-control" />
+                            @*<span asp-validation-for="Name" class="text-danger bottom-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Price" class="control-label">Cena</label>
+                            <input asp-for="Price" class="form-control" />
+                            @*<span asp-validation-for="Price" class="text-danger bottom-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            <div style="margin-right: 10px;">
+                                <div class="form-creation-cateogories-container-label">
+                                    <label asp-for="ProducerId" class="control-label">Producent</label>
+                                </div>
+                                <a asp-controller="Producers" asp-action="Create" class="add-aditional-information" style="float: right">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                            <select asp-for="ProducerId" class="form-control" asp-items=@Model.Producers></select>
+                            @*<span asp-validation-for="ProducerId" class="text-danger bottom-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label">Opis</label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            @*<span asp-validation-for="Description" class="text-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            <div style="margin-right: 10px;">
+                                <div class="form-creation-cateogories-container-label">
+                                    <label asp-for="CategoryId" class="control-label"></label><span id="num-of-selected-cat"></span>
+                                </div>
+                                <a asp-controller="ProductCategories" asp-action="Create" class="add-aditional-information" style="float: right">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                            <div class="form-creation-cateogories-container">
+                                @foreach (var item in Model.Categories)
+                                {
+                                    string chckd = Model.CategoryId.Contains(item.Guid.ToString()) ? "checked='checked'" : string.Empty;
+                                    <label class="category-selection-button" for="@item.Guid.ToString()">
+                                        <input id="@item.Guid.ToString()" type="checkbox" name="CategoryId" value="@item.Guid.ToString()" @chckd />
+                                        @item.Name
+                                    </label>
+                                }
+                            </div>
+                            @*<span asp-validation-for="CategoryId" class="text-danger bottom-danger"></span>*@
+                        </div>
+                        <div class="form-group">
+                            @*<label for="AditionalInformations" class="control-label"> Informacje Dodatkowe </label>*@
+                            <div class="aditional-informations-management-section">
+                                <div style="margin-right: 10px;">
+                                    <div class="form-creation-cateogories-container-label">
+                                        <label class="control-label">Informacje</label>
+                                    </div>
+                                    <div style="margin-top: 10px;">
+                                        <button type="button" class="add-aditional-information-btn" id="information-add">
+                                            Dodaj
+                                        </button>
+                                        <button type="button" class="add-aditional-information-btn" id="information-remove">
+                                            Usuń
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="aditional-information-container">
+
+                                <div class="aditional-informations-inputs" id="inputs-container">
+                                    @if (Model.AditionalInformations.Count() == 0)
+                                    {
+                                        <input type="text" name="AditionalInformations" class="form-control aditional-information-input" />
+                                    }
+                                    else
+                                    {
+                                        @foreach (var item in Model.AditionalInformations)
+                                        {
+                                            <input type="text" name="AditionalInformations" value="@item" class="form-control aditional-information-input" />
+                                        }
+                                    }
+
+                                </div>
+
+
+                            </div>
+                            @*<span asp-validation-for="AditionalInformations" class="text-danger"></span>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="text-align: right">
+                <input type="submit" value="Edytuj" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="form-group-secion">
+            @if(Model.Files.Count() != 0)
+            {
+                <div class="form-section-inner">
+                    <h1 class="inner-section-header">Zdjęcia</h1>
+                    <div class="form-group-non-flex">
+                        @foreach(var item in Model.Files)
+                        {
+                            <div class="panel-product-item">
+                                <div class="panel-product-item-name">
+                                    @item.Title
+                                </div>
+                                <div class="panel-product-item-operations">
+                                    <div class="panel-button-list">
+                                        <button style="width:unset" class="panel-product-item-remove -confirmation-window" data-name="@item.Title" formaction="/admin/products/image/delete/@Model.Id/@item.Guid.ToString()">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <div class="form-section-inner">
+                <h1 class="inner-section-header">Dodaj nowe zdjęcia</h1>
+                <div class="form-group-non-flex">
+                    <form action="/admin/products/image/add/@Model.Id" enctype="multipart/form-data" method="post">
+                        <div>
+                            <label for="Images" class="control-label"> Zdjęcia </label>
+                            <div class="form-group-inline-items">
+                                <input name="Images" type="file" id="Images" class="form-control" /> <button class="add-image-button" type="submit">Dodaj</button>
+                            </div>
+                        </div>
+                        <div class="selected-images-container" id="selected-images">
+                            <div class="owl-carousel owl-theme"></div>
+                        </div>
+                    </form>
+                    @*<span asp-validation-for="Images" class="text-danger bottom-danger"></span>*@
+                </div>
+            </div>
+        </div>
+</div>
+    </div>
+
+<div>
+    <a asp-action="Index" asp-controller="Admin">Back to List</a>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        const INPUTNAME = "@Html.DisplayNameFor(x => x.AditionalInformations)";
+    </script>
+    <script type="text/javascript" src="/js/confirmationWindow.js"></script>
+    <script type="text/javascript" src="/js/addProduct.js"></script>
+}
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }

@@ -5,6 +5,10 @@
     ViewData["Title"] = "Index";
 }
 
+@section Scripts {
+    <script type="text/javascript" src="~/js/confirmationWindow.js"></script>
+}
+
 <div class="panel-products-header">
     <div>
         <h1 class="products-header">Produkty</h1>
@@ -31,9 +35,9 @@
         </div>
         <div class="panel-product-item-operations">
             <div class="panel-button-list">
-                <button class="panel-product-item-edit" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
+                <a class="panel-product-item-edit" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
                     <i class="fas fa-pen"></i> 
-                </button>
+                </a>
                 <button class="panel-product-item-remove -confirmation-window" data-name="@item.Name" asp-action="Delete" asp-route-id="@item.Guid.ToString()"> 
                     <i class="fas fa-trash"></i>
                 </button>

@@ -18,6 +18,7 @@ using System.Dynamic;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -149,6 +150,113 @@ namespace Sklep_Internetowy.Controllers
             product.Categories = new List<ProductCategory>(_pcRepo.GetCategories());
             product.Producers = GetProducers();
             return View(product);
+        }
+
+        [HttpGet]
+        [Route("/admin/products/edit/{id}")]
+        public IActionResult Edit(string id)
+        {
+            Product? product = _pRepo.GetProductWithAditionalData(id);
+            if (product == null)
+                return NotFound();
+            return View(new ProductEditViewModel()
+            {
+                Id = product.Guid.ToString(),
+                Name = product.Name,
+                Price = (double)product.Price,
+                Categories = _pcRepo.GetCategories().ToList(),
+                Producers = GetProducers(),
+                AditionalInformations = product.ProductDetail.Information,
+                CategoryId = product.Categories.Select(p => p.Guid.ToString()).ToList(),
+                Description = product.ProductDetail.Description,
+                Files = product.ProductDetail.Images.ToList()
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("/admin/products/edit/{id}")]
+        public IActionResult Edit(ProductEditViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine("---------------------");
+                IEnumerable<ModelError> errors = ModelState.Values.SelectMany(v => v.Errors);
+                errors.Select(c => { System.Diagnostics.Debug.WriteLine(c.ErrorMessage); return 1; });
+                System.Diagnostics.Debug.WriteLine("---------------------");
+                return Edit(model.Id);
+            }
+
+            Product? product = _pRepo.GetProductWithAditionalData(model.Id);
+            if (product == null)
+                return RedirectToAction("Index");
+            Producer? producer = _prodRepo.GetProducerByGuid(model.ProducerId.ToLower());
+            if(producer == null)
+            {
+                System.Diagnostics.Debug.WriteLine("---------------------");
+                ModelState.AddModelError("ProducerId", "This producer doesnt exist !");
+                return Edit(model.Id);
+            }
+            IEnumerable<ProductCategory> categories = model.CategoryId.Select(c => _pcRepo.GetProductCategoryByGuid(c));
+            product.Categories = categories.ToList();
+            product.Name = model.Name;
+            product.Price = (decimal)model.Price;
+            product.ProductDetail.Description = model.Description;
+            product.ProductDetail.Information = model.AditionalInformations;
+            _pRepo.Save();
+            return RedirectToAction("Index");
+
+        }
+
+        [Route("/admin/products/image/delete/{pId}/{iId}")]
+        public IActionResult DeleteProductImage(string pId, string iId)
+        {
+            string? referer = HttpContext.Request.Headers["referer"];
+            if (referer == null)
+                referer = String.Empty;
+
+            _fileUploader.SetTargetFolderTo(TargetFolder.Images);
+            Product? product = _pRepo.GetProductWithAditionalData(pId);
+            if (product == null)
+                return Redirect(referer);
+
+            Image? image = product.ProductDetail.Images.Where(i => i.Guid.ToString() == iId).FirstOrDefault();
+            if(product.ProductDetail.Images.Remove(image))
+            {
+                _fileUploader.DeleteFile(image);
+            }
+
+            _pRepo.Save();
+            return Redirect(referer);
+            
+        }
+
+        [HttpPost]
+        [Route("/admin/products/image/add/{id}")]
+        public async Task<IActionResult> AddProductImage(string id, [FromForm] ImageModel image)
+        {
+            string? referer = HttpContext.Request.Headers["referer"];
+            if (referer == null)
+                referer = String.Empty;
+            if (!ModelState.IsValid)
+                return Redirect(referer);
+            _fileUploader.SetTargetFolderTo(TargetFolder.Images);
+            Product? product = _pRepo.GetProductWithAditionalData(id);
+            if (product == null)
+                return Redirect(referer);
+            foreach(var img in image.Images)
+            {
+                UploadedFile? file = await _fileUploader.UploadFile(img);
+                if (file != null)
+                    product.ProductDetail.Images.Add(new Image()
+                    {
+                        Title = file.File.FileName,
+                        Name = file.UploadedFileName
+                    });
+            }
+
+            _pRepo.Save();
+            return Redirect(referer);
         }
 
         private List<SelectListItem> GetProducers()

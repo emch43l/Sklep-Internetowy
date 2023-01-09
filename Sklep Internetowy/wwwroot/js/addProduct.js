@@ -1,6 +1,7 @@
-﻿window.onload = InitializeFunctions;
+﻿
+InitializeAddProductFunctions();
 
-function InitializeFunctions() {
+function InitializeAddProductFunctions() {
 
     CategorySelection();
 
@@ -16,7 +17,9 @@ function InitializeFunctions() {
     let inputContainer = document.getElementById("inputs-container");
     let imageInput = document.getElementById("Images");
 
-    imageInput.addEventListener("change", x => DisplaySelectedImages());
+    if (imageInput !== null) {
+        imageInput.addEventListener("change", x => DisplaySelectedImages());
+    }
 
     addBtn.addEventListener("click", e => {
         let child = CreateInput();
@@ -24,8 +27,11 @@ function InitializeFunctions() {
     })
 
     deleteBtn.addEventListener("click", e => {
-        if (inputContainer.children.length != 1) {
+        var length = inputContainer.children.length;
+        if (length !== 1) {
             inputContainer.lastChild.remove();
+            if (length === inputContainer.children.length)
+                inputContainer.lastChild.remove();
         }
     })
     
