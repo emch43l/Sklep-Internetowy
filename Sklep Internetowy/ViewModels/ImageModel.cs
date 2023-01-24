@@ -7,7 +7,7 @@ namespace Sklep_Internetowy.ViewModels
     {
         [Required]
         [AllowedFileExtensions(".jpg", ".png", ".jpeg", ".gif")]
-        [MaxFileSize(100, Services.Type.KB)]
+        [MaxFileSize(200, Services.Type.KB)]
         public List<IFormFile> Images { get; set; }
     }
 }

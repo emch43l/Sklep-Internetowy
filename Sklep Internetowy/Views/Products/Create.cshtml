@@ -17,13 +17,13 @@
                         <div class="form-group">
                             <label asp-for="Name" class="control-label">Nazwa</label>
                             <input asp-for="Name" class="form-control" />
-                            @*<span asp-validation-for="Name" class="text-danger bottom-danger"></span>*@
                         </div>
+                            <span asp-validation-for="Name" class="text-danger bottom-danger"></span>
                         <div class="form-group">
                             <label asp-for="Price" class="control-label">Cena</label>
                             <input asp-for="Price" class="form-control" />
-                            @*<span asp-validation-for="Price" class="text-danger bottom-danger"></span>*@
                         </div>
+                            <span asp-validation-for="Price" class="text-danger bottom-danger"></span>
                         <div class="form-group">
                             <div style="margin-right: 10px;">
                                 <div class="form-creation-cateogories-container-label">
@@ -34,17 +34,17 @@
                                 </a>
                             </div>
                             <select asp-for="ProducerId" class="form-control" asp-items=@Model.Producers></select>
-                            @*<span asp-validation-for="ProducerId" class="text-danger bottom-danger"></span>*@
                         </div>
+                            <span asp-validation-for="ProducerId" class="text-danger bottom-danger"></span>
                         <div class="form-group">
                             <label asp-for="Description" class="control-label">Opis</label>
                             <textarea asp-for="Description" class="form-control"></textarea>
-                            @*<span asp-validation-for="Description" class="text-danger"></span>*@
                         </div>
+                            <span asp-validation-for="Description" class="text-danger"></span>
                         <div class="form-group">
                             <div style="margin-right: 10px;">
                                 <div class="form-creation-cateogories-container-label">
-                                    <label asp-for="CategoryId" class="control-label"></label><span id="num-of-selected-cat"></span>
+                                    <label class="control-label">Kategorie</label><span id="num-of-selected-cat"></span>
                                 </div>
                                 <a asp-controller="ProductCategories" asp-action="Create" class="add-aditional-information" style="float: right">
                                     <i class="fas fa-plus"></i>
@@ -60,7 +60,7 @@
                                     </label>
                                 }
                             </div>
-                            @*<span asp-validation-for="CategoryId" class="text-danger bottom-danger"></span>*@
+                            <span asp-validation-for="CategoryId" class="text-danger bottom-danger"></span>
                         </div>
                         <div class="form-group">
                             @*<label for="AditionalInformations" class="control-label"> Informacje Dodatkowe </label>*@
@@ -99,8 +99,8 @@
                                 
 
                             </div>
-                            @*<span asp-validation-for="AditionalInformations" class="text-danger"></span>*@
                         </div>
+                            <span asp-validation-for="AditionalInformations" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group-secion">
@@ -111,23 +111,23 @@
                                 <label for="Images" class="control-label"> Zdjęcia </label>
                                 <input asp-for="Images" class="form-control" />
                             </div>
+                            <span asp-validation-for="Images" class="text-danger bottom-danger"></span>
                             <div class="selected-images-container" id="selected-images">
                                 <div class="owl-carousel owl-theme"></div>
                             </div>
-                            @*<span asp-validation-for="Images" class="text-danger bottom-danger"></span>*@
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group" style="text-align: right">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Stwórz" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Admin">Back to List</a>
+    <a asp-action="Index" asp-controller="Admin">Powrót</a>
 </div>
 
 @section Scripts {

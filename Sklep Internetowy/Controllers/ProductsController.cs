@@ -238,12 +238,15 @@ namespace Sklep_Internetowy.Controllers
             string? referer = HttpContext.Request.Headers["referer"];
             if (referer == null)
                 referer = String.Empty;
+
             if (!ModelState.IsValid)
                 return Redirect(referer);
+
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
             Product? product = _pRepo.GetProductWithAditionalData(id);
             if (product == null)
                 return Redirect(referer);
+
             foreach(var img in image.Images)
             {
                 UploadedFile? file = await _fileUploader.UploadFile(img);
