@@ -23,7 +23,7 @@ namespace Sklep_Internetowy.ViewModels
         public string Description { get; set; }
 
         [AllowedFileExtensions(".jpg",".png",".jpeg",".gif")]
-        [MaxFileSize(100,Services.Type.KB)]
+        [MaxFileSize(200,Services.Type.KB)]
         public ICollection<IFormFile>? Images { get; set; }
 
         [Required]
