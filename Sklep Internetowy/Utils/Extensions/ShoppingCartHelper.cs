@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sklep_Internetowy.Models;
 
-namespace Sklep_Internetowy.Extensions
+namespace Sklep_Internetowy.Utils.Extensions
 {
     public static class ShoppingCartHelper
     {

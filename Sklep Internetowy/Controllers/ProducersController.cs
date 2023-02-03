@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
-using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.Repositories.Interfaces;
+using Sklep_Internetowy.ViewModels.DTO;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -26,15 +26,15 @@ namespace Sklep_Internetowy.Controllers
         [Route("admin/producers")]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Producer> producers = _prodRepo.GetProducers();
+            IEnumerable<Producer> producers = await _prodRepo.GetAll();
             return View(producers);
         }
 
         [Route("admin/producers/details/{id}")]
         // GET: Producers/Details/guid
-        public IActionResult Details(string id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            Producer? producer = _prodRepo.GetProducerByGuid(id);
+            Producer? producer = await _prodRepo.GetOneByGuid(id);
             if (producer == null)
                 return RedirectToAction("Index","Producers");
             return View(producer);
@@ -54,24 +54,24 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/producers/create")]
-        public IActionResult Create([Bind("Name,Description")] Producer producer, string? From)
+        public async Task<IActionResult> Create(ProducerDTO producer, string? From)
         {
             if (ModelState.IsValid)
             {
-                _prodRepo.AddProducer(producer);
-                _prodRepo.Save();
+                await _prodRepo.Add(producer.MapTo());
+                await _prodRepo.SaveChanges();
                 if(From == null)
                     return RedirectToAction(nameof(Index));
                 return Redirect(From);
             }
-            return View(producer);
+            return View(producer.MapTo());
         }
 
         [Route("admin/producers/edit/{id}")]
         // GET: Producers/Edit/5
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            Producer? producer = _prodRepo.GetProducerByGuid(id);
+            Producer? producer = await _prodRepo.GetOneByGuid(id);
             if (producer == null)
                 return RedirectToAction("Index", "Producers");
 
@@ -84,12 +84,12 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/producers/edit/{id}")]
-        public IActionResult Edit(string id, [Bind("Guid,Name,Description")] Producer producer)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Guid,Name,Description")] Producer producer)
         {
 
             if (ModelState.IsValid)
             {
-                Producer? entity = _prodRepo.GetProducerByGuid(id);
+                Producer? entity = await _prodRepo.GetOneByGuid(id);
 
                 if(entity == null)
                     return RedirectToAction("Index", "Producers");
@@ -97,7 +97,7 @@ namespace Sklep_Internetowy.Controllers
                 entity.Name = producer.Name;
                 entity.Description = producer.Description;
 
-                _prodRepo.Save();
+                await _prodRepo.SaveChanges();
   
                 return RedirectToAction(nameof(Index));
             }
@@ -106,15 +106,15 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("admin/producers/delete/{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            Producer? producer = _prodRepo.GetProducerByGuid(id);
+            Producer? producer = await _prodRepo.GetOneByGuid(id);
             if(producer == null)
             {
                 return RedirectToAction("Index", "Producers");
             }
-            _prodRepo.RemoveProducer(id);
-            _prodRepo.Save();
+            await _prodRepo.Remove(producer.Guid);
+            await _prodRepo.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
     }

@@ -4,9 +4,8 @@ namespace Sklep_Internetowy.Repositories.Interfaces
 {
     public interface ICartRepository
     {
-        public Cart GetUserCart(AppUser user);
+        Task<Cart?> GetCartByUser(AppUser user);
 
-        public void Save();
-
+        Task SaveChanges(CancellationToken cancellation = default);
     }
 }

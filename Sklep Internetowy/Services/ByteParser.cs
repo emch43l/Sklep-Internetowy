@@ -1,11 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using Sklep_Internetowy.Services.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace Sklep_Internetowy.Services
 {
-    public interface IByteParser
-    {
-        public long ToBytes(int value, Type size);
-    }
     public class ByteParser : IByteParser
     {
         public long ToBytes(int value, Type size)

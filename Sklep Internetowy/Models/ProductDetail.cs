@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Sklep_Internetowy.Models.Interfaces;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

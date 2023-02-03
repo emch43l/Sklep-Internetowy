@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Sklep_Internetowy.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sklep_Internetowy.Models
 {
-    public class Product
+    public class Product : IEntity
     {
 
         public int Id { get; set; }
@@ -30,9 +31,9 @@ namespace Sklep_Internetowy.Models
             Guid = Guid.NewGuid();
         }
 
-        public double GetRating()
+        public double? GetRating()
         {
-            return (Rating.Count() == 0) ? 0 
+            return (Rating.Count() == 0) ? null 
                 : (double)Rating.Sum(r => r.Rating) / Rating.Count();
         }
 

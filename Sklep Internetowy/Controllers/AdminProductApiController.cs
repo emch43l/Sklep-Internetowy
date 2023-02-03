@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Services;
+using Sklep_Internetowy.Services.Interfaces;
+using Sklep_Internetowy.Utils.Validation;
 using Sklep_Internetowy.ViewModels;
+using Sklep_Internetowy.ViewModels.DTO;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -30,35 +33,41 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("{id}")]
-        public IActionResult GetProduct(string id)
+        public async Task<IActionResult> GetProduct(Guid id)
         {
-            Product? product = _pRepo.GetProductWithAditionalData(id);
-            if(product == null)
+            if(ModelState.IsValid)
             {
-                return NotFound();
+                Product? product = await _pRepo.GetProductWithAssociatedEntities(id);
+                if(product == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(ToObject(product));
             }
 
-            return Ok(ToObject(product));
+            return BadRequest();
         }
 
         [Route("all/{page}")]
-        public IActionResult GetProducts(int page)
+        public async Task<IActionResult> GetProducts(int page)
         {
-            if (page == null || page < 1)
+            if (page < 1)
                 return BadRequest();
-            IEnumerable<Product> products = _pRepo.GetProducts();
-            EntityPaginator<Product> paginator = new EntityPaginator<Product>(products);
-            products = paginator.GetPaginatedData((int)page);
+
+            EntityPaginator<Product> paginator = new EntityPaginator<Product>(await _pRepo.GetAll());
+            IEnumerable<Product> paginatedEntities = paginator.GetPaginatedData((int)page);
+
             return Ok( new { 
-                products = products.Select( p => new { id = p.Guid.ToString(), p.Name, p.Price } ) 
+                products = paginatedEntities.Select( p => new { id = p.Guid.ToString(), p.Name, p.Price } ) 
             });
 
         }
 
         [Route("delete/{id}")]
-        public IActionResult DeleteProduct(string id)
+        public async Task<IActionResult> DeleteProduct(Guid id)
         {
-            Product? removedProduct = _pRepo.RemoveProduct(id);
+            Product removedProduct = await _pRepo.Remove(id);
             if (removedProduct == null)
                 return NotFound();
             return Ok();
@@ -66,15 +75,15 @@ namespace Sklep_Internetowy.Controllers
 
         [HttpPost]
         [Route("create")]
-        public IActionResult CreateProduct(ApiProductCreateModel model)
+        public async Task<IActionResult> CreateProduct(APICreateProductDTO model)
         {
             if(ModelState.IsValid)
             {
-                Producer? producer = _prodRepo.GetProducerByGuid(model.Producer);
+                Producer? producer = await _prodRepo.GetOneByGuid(model.Producer);
                 if(producer == null)
                     return BadRequest();
 
-                ICollection<ProductCategory> categories = model.Categories.Select(c => GetCategoryByNameAndCreateIfNotExist(c)).ToList();
+                ICollection<ProductCategory> categories = model.Categories.Select(c => GetCategoryByNameAndCreateIfNotExist(c).Result).ToList();
 
                 Product product = model.MapTo();
                 product.Producer = producer;
@@ -85,8 +94,8 @@ namespace Sklep_Internetowy.Controllers
                     Information = model.Informations.ToList()
                 };
                 product.Categories = categories;
-                Product created = _pRepo.AddProduct(product);
-                _pRepo.Save();
+                Product created = await _pRepo.Add(product);
+                await _pRepo.SaveChanges();
                 return Created(Request.PathBase + "/" +  created.Guid.ToString(), new
                 {
                     id = created.Guid.ToString(),
@@ -107,22 +116,22 @@ namespace Sklep_Internetowy.Controllers
         [HttpPut]
         [Route("update/{id}")]
 
-        public IActionResult UpdateProduct(string id, [FromBody] ApiProductCreateModel model)
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] APICreateProductDTO model)
         {
             if (ModelState.IsValid)
             {
-                Producer? producer = _prodRepo.GetProducerByGuid(model.Producer);
-                Product? product = _pRepo.GetProductWithAditionalData(id);
+                Producer? producer = await _prodRepo.GetOneByGuid(model.Producer);
+                Product? product = await _pRepo.GetProductWithAssociatedEntities(id);
                 if(product == null || producer == null)
                     return BadRequest();
 
-                product.Categories = model.Categories.Select(c => GetCategoryByNameAndCreateIfNotExist(c)).ToList();
+                product.Categories = model.Categories.Select(c => GetCategoryByNameAndCreateIfNotExist(c).Result).ToList();
                 product.Name = model.Name;
                 product.Price = (decimal)model.Price;
                 product.Producer = producer;
                 product.ProductDetail.Description = model.Description;
                 product.ProductDetail.Information = model.Informations.ToList();
-                _pRepo.Save();
+                await _pRepo.SaveChanges();
                 return Ok(ToObject(product));
             }
             else
@@ -131,9 +140,9 @@ namespace Sklep_Internetowy.Controllers
             }
         }
 
-        private ProductCategory GetCategoryByNameAndCreateIfNotExist(string name)
+        private async Task<ProductCategory> GetCategoryByNameAndCreateIfNotExist(string name)
         {
-            ProductCategory? category = _pcRepo.GetProductCategoryByName(name);
+            ProductCategory? category = await _pcRepo.GetCategoryByName(name);
             if (category == null)
                 return new ProductCategory() { Name = name };
             return category;

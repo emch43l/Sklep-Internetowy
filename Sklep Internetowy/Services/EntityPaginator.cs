@@ -17,7 +17,7 @@
                 throw new ArgumentException("Page number cannot be less than 1 !");
             return _entities
                 .Skip(_pageEntityNum * (pageNum - 1))
-                .Take(_pageEntityNum);
+                .Take(_pageEntityNum).ToList();
         }
 
         public int GetPagesNumber()

@@ -1,9 +1,9 @@
 ﻿using Sklep_Internetowy.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Sklep_Internetowy.ViewModels
+namespace Sklep_Internetowy.ViewModels.DTO
 {
-    public class ApiProductCreateModel
+    public class APICreateProductDTO
     {
         [Required]
         public string Name { get; set; }
@@ -19,18 +19,18 @@ namespace Sklep_Internetowy.ViewModels
         public double? Price { get; set; }
 
         [Required]
-        public string Producer { get; set; }
+        public Guid Producer { get; set; }
 
         [Required]
-        public IEnumerable<string> Categories { get; set; }
+        public ICollection<string> Categories { get; set; }
 
         public Product MapTo()
         {
             ISet<ProductCategory> productCategories = Categories.Select(c => new ProductCategory() { Name = c }).ToHashSet();
             return new Product
             {
-                Name = this.Name,
-                Price = (decimal)this.Price,
+                Name = Name,
+                Price = (decimal)Price,
             };
         }
     }

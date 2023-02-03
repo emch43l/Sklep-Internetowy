@@ -1,4 +1,6 @@
-﻿namespace Sklep_Internetowy.Models
+﻿using Sklep_Internetowy.Models.Interfaces;
+
+namespace Sklep_Internetowy.Models
 {
     public class Cart
     {

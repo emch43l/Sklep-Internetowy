@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
-using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.Repositories.Interfaces;
+using Sklep_Internetowy.ViewModels.DTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -25,7 +26,7 @@ namespace Sklep_Internetowy.Controllers
         [Route("/admin/categories")]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ProductCategory> categories = _pcRepo.GetCategories();
+            IEnumerable<ProductCategory> categories = await _pcRepo.GetAll();
             return View(new Tuple<IEnumerable<ProductCategory>,ProductCategory>(categories,new ProductCategory()));
         }
 
@@ -42,18 +43,21 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/admin/categories/create")]
-        public IActionResult Create([Bind("Name")] ProductCategory category, string? From)
+        public async Task<IActionResult> Create(CategoryDTO data, string? From)
         {
+            ProductCategory category = data.MapTo();
+
             if(!ModelState.IsValid)
                return View(category);
-            if(IsCategoryExist(category.Name))
+            if(await IsCategoryExist(category.Name))
             {
                 ModelState.AddModelError("Name", "Given category already exist !");
                 return View(category);
             }
-            
-            _pcRepo.AddProductCategory(category);
-            _pcRepo.Save();
+
+            await _pcRepo.Add(category);
+            await _pcRepo.SaveChanges();
+
             if(From == null)
                return RedirectToAction(nameof(Index));
             return Redirect(From);
@@ -62,9 +66,10 @@ namespace Sklep_Internetowy.Controllers
 
         [Route("/admin/categories/edit/{id}")]
         // GET: Producers/Edit/5
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
+            ProductCategory? category = await _pcRepo.GetOneByGuid(id);
+
             if (category == null)
                 return RedirectToAction("Index", "ProductCategories");
 
@@ -77,23 +82,25 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/admin/categories/edit/{id}")]
-        public IActionResult Edit(string id, [Bind("Name")] ProductCategory category)
+        public async Task<IActionResult> Edit(Guid id, CategoryDTO data)
         {
+            ProductCategory category = data.MapTo();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return View(category);
-            if (IsCategoryExist(category.Name))
+
+            if (await IsCategoryExist(category.Name))
             {
                 ModelState.AddModelError("Name", "Given category already exist !");
                 return View(category);
             }
-            ProductCategory? entity = _pcRepo.GetProductCategoryByGuid(id);
+            ProductCategory? entity = await _pcRepo.GetOneByGuid(id);
 
             if (entity == null)
                 return RedirectToAction("Index", "ProductCategories");
 
             entity.Name = category.Name;
-            _pcRepo.Save();
+            _pcRepo.SaveChanges();
 
             return RedirectToAction(nameof(Index));
 
@@ -101,21 +108,21 @@ namespace Sklep_Internetowy.Controllers
 
         // POST: Producers/Delete/5
         [Route("/admin/categories/delete/{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            ProductCategory? category = _pcRepo.GetProductCategoryByGuid(id);
+            ProductCategory? category = await _pcRepo.GetOneByGuid(id);
             if (category == null)
             {
                 return RedirectToAction("Index", "ProductCategories");
             }
-            _pcRepo.RemoveProductCategory(id);
-            _pcRepo.Save();
+            await _pcRepo.Remove(id);
+            await _pcRepo.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool IsCategoryExist(string name)
+        private async Task<bool> IsCategoryExist(string name)
         {
-            return _pcRepo.GetProductCategoryByName(name) == null ? false : true;
+            return await _pcRepo.GetCategoryByName(name) == null ? false : true;
         }
     }
 }

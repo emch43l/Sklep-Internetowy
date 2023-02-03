@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Services;
-using Sklep_Internetowy.ViewModels;
-using System.Reflection.PortableExecutable;
+using Sklep_Internetowy.Services.Interfaces;
+using Sklep_Internetowy.ViewModels.Models;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -40,7 +40,7 @@ namespace Sklep_Internetowy.Controllers
         {
             if(ModelState.IsValid)
             {
-                Product? product = _pRepo.GetProductWithAditionalData(opinion.Id);
+                Product? product = await _pRepo.GetProductWithAssociatedEntities(opinion.Id);
                 AppUser? user = await _userManager.GetUserAsync(Request.HttpContext.User);
 
                 if (product != null && user != null)
@@ -52,7 +52,7 @@ namespace Sklep_Internetowy.Controllers
                         User = user
                     });
 
-                    _pRepo.Save();
+                    await _pRepo.SaveChanges();
                     return RedirectToAction("Index", "ProductInfo" , new { id = opinion.Id });
                 }
 
@@ -62,17 +62,17 @@ namespace Sklep_Internetowy.Controllers
 
         }
 
-        public IActionResult Index(string id, string? ErrorMessage)
+        public async Task<IActionResult> Index(Guid id, string? ErrorMessage)
         {
             if (ErrorMessage != null)
                 ModelState.AddModelError("errorMsg", ErrorMessage);
             ViewData["ImagesPath"] = _reader.GetDirectory(TargetFolder.Images);
-            Product? product = (id == null) ? null : _pRepo.GetProductWithAditionalData(id);
+            Product? product = await _pRepo.GetProductWithAssociatedEntities(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return View(new Tuple<Product,AddToCartModel>(product,new AddToCartModel() { ProductId = product.Guid.ToString() }));
+            return View(new Tuple<Product,AddToCartViewModel>(product,new AddToCartViewModel() { ProductId = product.Guid.ToString() }));
         }
     }
 }

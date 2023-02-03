@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Models;
-using Sklep_Internetowy.Models.Contexts;
-using Sklep_Internetowy.ViewModels;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
 using Sklep_Internetowy.Services;
-using Sklep_Internetowy.Interfaces;
-using System.Dynamic;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Sklep_Internetowy.ViewModels.Models;
+using Sklep_Internetowy.Contexts;
+using Sklep_Internetowy.Services.Interfaces;
+using Sklep_Internetowy.ViewModels;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -63,9 +56,9 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("/admin/products/delete/{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            Product? product = _pRepo.GetProductWithAditionalData(id);
+            Product? product = await _pRepo.GetProductWithAssociatedEntities(id);
             if(product == null)
                 return RedirectToAction("Index");
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
@@ -74,8 +67,8 @@ namespace Sklep_Internetowy.Controllers
                 if(product.ProductDetail.Images.Remove(img))
                     _fileUploader.DeleteFile(img);
             }
-            _pRepo.RemoveProduct(id);
-            _pRepo.Save();
+            await _pRepo.Remove(id);
+            await _pRepo.SaveChanges();
             
             return RedirectToAction("Index");
 
@@ -84,13 +77,13 @@ namespace Sklep_Internetowy.Controllers
         [Route("/admin/products/create")]
         public IActionResult Create()
         {
-            return View(new ProductViewModel { Producers = GetProducers(), Categories = _context.ProductCategories.ToList()});
+            return View(new CreateProductViewModel { Producers = GetProducers(), Categories = _context.ProductCategories.ToList()});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/admin/products/create")]
-        public async Task<IActionResult> Create(ProductViewModel product)
+        public async Task<IActionResult> Create(CreateProductViewModel product)
         {
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
 
@@ -159,7 +152,7 @@ namespace Sklep_Internetowy.Controllers
             Product? product = _pRepo.GetProductWithAditionalData(id);
             if (product == null)
                 return NotFound();
-            return View(new ProductEditViewModel()
+            return View(new EditProductDTO()
             {
                 Id = product.Guid.ToString(),
                 Name = product.Name,
@@ -176,7 +169,7 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/admin/products/edit/{id}")]
-        public IActionResult Edit(ProductEditViewModel model)
+        public IActionResult Edit(EditProductDTO model)
         {
             if (!ModelState.IsValid)
             {

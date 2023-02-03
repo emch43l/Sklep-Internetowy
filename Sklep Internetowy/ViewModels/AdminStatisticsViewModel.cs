@@ -1,6 +1,6 @@
 ﻿namespace Sklep_Internetowy.ViewModels
 {
-    public class AdminStatisticsModel
+    public class AdminStatisticsViewModel
     {
         public int NumberOfProducts { get; set; }
 

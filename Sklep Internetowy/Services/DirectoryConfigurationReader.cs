@@ -1,17 +1,8 @@
-﻿using System.Configuration;
+﻿using Sklep_Internetowy.Services.Interfaces;
+using System.Configuration;
 
 namespace Sklep_Internetowy.Services
 {
-    public interface IDirectoryConfigurationReader
-    {
-        public void ThrowExceptionWhenParamMissing(bool value);
-
-        public string GetFolderName(TargetFolder folder);
-
-        public void SetSection(string sectionName);
-
-        public string GetDirectory(TargetFolder folder);
-    }
     public class DirectoryConfigurationReader : IDirectoryConfigurationReader
     {
         private readonly IConfiguration _configuration;
@@ -21,6 +12,7 @@ namespace Sklep_Internetowy.Services
         private string _section = "Uploads";
 
         private bool _throwException = false;
+
         private Configuration configuration;
 
         public DirectoryConfigurationReader(IConfiguration configuration)

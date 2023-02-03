@@ -5,9 +5,9 @@ using Microsoft.Extensions.Options;
 using Sklep_Internetowy.Models;
 using System.IO;
 
-namespace Sklep_Internetowy.Models.Contexts
+namespace Sklep_Internetowy.Contexts
 {
-    public class DataContext: IdentityDbContext<AppUser>
+    public class DataContext : IdentityDbContext<AppUser>
     {
         public DbSet<Product> Products { get; set; }
 
@@ -94,7 +94,7 @@ namespace Sklep_Internetowy.Models.Contexts
             admin.PasswordHash = hasher.HashPassword(admin, "admin");
             user.PasswordHash = hasher.HashPassword(user, "qaz");
 
-            modelBuilder.Entity<Cart>().HasData(userCart,adminCart);
+            modelBuilder.Entity<Cart>().HasData(userCart, adminCart);
             modelBuilder.Entity<AppUser>().HasData(admin, user);
             modelBuilder.Entity<IdentityRole>().HasData(userRole, adminRole);
 

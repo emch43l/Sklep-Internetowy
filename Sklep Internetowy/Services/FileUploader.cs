@@ -1,23 +1,8 @@
 ﻿using Sklep_Internetowy.Interfaces;
+using Sklep_Internetowy.Services.Interfaces;
 
 namespace Sklep_Internetowy.Services
 {
-    public interface IFileUploader
-    {
-        public string GetDirectory();
-
-        public void SetTargetFolderTo(TargetFolder folder);
-
-        public void SetTargetFolderName(string name);
-
-        public Task<UploadedFile> UploadFile(IFormFile file);
-
-        public List<FileUploaderError> GetErrors();
-
-        public IFile DeleteFile(IFile file);
-
-    }
-
     public enum TargetFolder
     {
         Root = 0,
@@ -62,7 +47,7 @@ namespace Sklep_Internetowy.Services
             {
                 CreatDirectoryIfNotExists(GetDirectory());
                 uniqueFileName = CreateUniqueFileName(file);
-                using (Stream stream = System.IO.File.Create(GetDirectory() + "/" + uniqueFileName))
+                using (Stream stream = File.Create(GetDirectory() + "/" + uniqueFileName))
                 {
                     await file.CopyToAsync(stream);
                     return new UploadedFile(File: file, UploadedFileName: uniqueFileName);
@@ -107,15 +92,15 @@ namespace Sklep_Internetowy.Services
         }
 
         private bool FileExists(string filePath)
-            => System.IO.File.Exists(filePath);
+            => File.Exists(filePath);
 
         private string CreateUniqueFileName(IFormFile file)
          => Guid.NewGuid() + "_" + string.Join('_', file.FileName.Split(Path.GetInvalidFileNameChars()));
 
         private void CreatDirectoryIfNotExists(string path)
         {
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
 
         public void SetTargetFolderName(string name)

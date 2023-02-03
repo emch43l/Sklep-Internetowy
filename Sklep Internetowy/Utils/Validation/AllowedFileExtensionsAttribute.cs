@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sklep_Internetowy.ViewModels.Validation
+namespace Sklep_Internetowy.Utils.Validation
 {
     public class AllowedFileExtensionsAttribute : ValidationAttribute
     {
         private readonly string[] _allowedFileExtensions;
-        public AllowedFileExtensionsAttribute(params string[] allowedFileExtensions) 
+        public AllowedFileExtensionsAttribute(params string[] allowedFileExtensions)
         {
             _allowedFileExtensions = allowedFileExtensions;
-            this.ErrorMessage = $"Invalid file ! Supported file extensions: {String.Join(", ",_allowedFileExtensions)}"; 
+            ErrorMessage = $"Invalid file ! Supported file extensions: {string.Join(", ", _allowedFileExtensions)}";
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
@@ -19,14 +19,14 @@ namespace Sklep_Internetowy.ViewModels.Validation
                 return ValidationResult.Success;
 
             foreach (var file in files)
-                if(!FileExtensionIsAllowed(file))
-                    return new ValidationResult(this.ErrorMessage);
+                if (!FileExtensionIsAllowed(file))
+                    return new ValidationResult(ErrorMessage);
 
             return ValidationResult.Success;
         }
 
-        protected bool FileExtensionIsAllowed(IFormFile file) 
-            => _allowedFileExtensions.Contains(System.IO.Path.GetExtension(file.FileName.ToLower()));
-        
+        protected bool FileExtensionIsAllowed(IFormFile file)
+            => _allowedFileExtensions.Contains(Path.GetExtension(file.FileName.ToLower()));
+
     }
 }

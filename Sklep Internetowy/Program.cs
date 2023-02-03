@@ -3,10 +3,10 @@ using System.Globalization;
 using Sklep_Internetowy.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
 using Sklep_Internetowy.Models;
+using Sklep_Internetowy.Contexts;
 
 CultureInfo[] cultures = new CultureInfo[]
 {

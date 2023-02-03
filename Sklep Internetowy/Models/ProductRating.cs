@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Sklep_Internetowy.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sklep_Internetowy.Models

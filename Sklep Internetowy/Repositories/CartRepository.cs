@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sklep_Internetowy.Contexts;
 using Sklep_Internetowy.Models;
-using Sklep_Internetowy.Models.Contexts;
 using Sklep_Internetowy.Repositories.Interfaces;
 
 namespace Sklep_Internetowy.Repositories
@@ -12,18 +12,19 @@ namespace Sklep_Internetowy.Repositories
         {
             _context = context;
         }
-        public Cart GetUserCart(AppUser user)
+
+        public async Task<Cart?> GetCartByUser(AppUser user)
         {
-            return _context.Carts
+            return await _context.Carts
+                .Where(c => c.User == user)
                 .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
-                .ThenInclude(p => p.ProductDetail)
-                .FirstOrDefault(c => c.User == user) ?? new Cart() { User = user };
+                .FirstOrDefaultAsync();
         }
 
-        public void Save()
+        public async Task SaveChanges(CancellationToken cancellationToken = default)
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

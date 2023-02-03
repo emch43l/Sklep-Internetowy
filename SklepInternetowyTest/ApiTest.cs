@@ -288,7 +288,7 @@ namespace SklepInternetowyTest
             toUpdateCategories.Add("Budowlane");
             toUpdateCategories.Add("Kolorowanki");
 
-            ApiProductCreateModel toUpdate = new ApiProductCreateModel()
+            APICreateProductDTO toUpdate = new APICreateProductDTO()
             {
                 Name = "Butelka wody",
                 Producer = prodId,
@@ -330,7 +330,7 @@ namespace SklepInternetowyTest
             controller.ControllerContext = new ControllerContext();
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
 
-            ApiProductCreateModel toCreate = new ApiProductCreateModel()
+            APICreateProductDTO toCreate = new APICreateProductDTO()
             {
                 Name = "Butelka wody",
                 Producer = dummyProducer.Guid.ToString(),
@@ -347,7 +347,7 @@ namespace SklepInternetowyTest
             Assert.Equal(toCreate.Name, data?.GetType().GetProperty("name").GetValue(data));
             Assert.Equal(1, product.GetProducts().Count());
 
-            toCreate = new ApiProductCreateModel()
+            toCreate = new APICreateProductDTO()
             {
                 Name = null,
                 Producer = Guid.NewGuid().ToString(),

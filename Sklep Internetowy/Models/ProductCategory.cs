@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Sklep_Internetowy.Models.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sklep_Internetowy.Models
 {
-    public class ProductCategory
+    public class ProductCategory : IEntity
     {
-        [ValidateNever]
         public int Id { get; set; }
 
-        [ValidateNever]
         public Guid Guid { get; private set; }
+
         public string Name { get; set; }
 
-        [ValidateNever]
         public ICollection<Product> Products { get; set; }
 
         public ProductCategory()

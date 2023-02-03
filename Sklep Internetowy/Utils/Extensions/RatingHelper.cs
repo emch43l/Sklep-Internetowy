@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Sklep_Internetowy.Models;
 
 
-namespace Sklep_Internetowy.Extensions
+namespace Sklep_Internetowy.Utils.Extensions
 {
     public static class RatingHelper
     {
-        public static HtmlString RenderRating (this IHtmlHelper helper, double? current, int max = 5) 
+        public static HtmlString RenderRating(this IHtmlHelper helper, double? current, int max = 5)
         {
 
             string fullStar = "<i class='fas fa-star'></i>";
@@ -17,17 +17,17 @@ namespace Sklep_Internetowy.Extensions
             string output = "";
 
             if (current == null)
-                return new HtmlString(String.Join("",Enumerable.Range(1, 5).Select(n => emptyStar)));
+                return new HtmlString(string.Join("", Enumerable.Range(1, 5).Select(n => emptyStar)));
 
-            for(int i = 1; i <= max; i++)
+            for (int i = 1; i <= max; i++)
             {
-                if(i <= current)
+                if (i <= current)
                 {
                     output += fullStar;
                 }
                 else
                 {
-                    if(current >= (double)i - 0.5)
+                    if (current >= i - 0.5)
                         output += halfStar;
                     else
                         output += emptyStar;
@@ -43,14 +43,14 @@ namespace Sklep_Internetowy.Extensions
             HtmlString halfStar = new HtmlString("<i class='fas fa-star-half-alt'></i>");
             HtmlString emptyStar = new HtmlString("<i class='far fa-star'></i>");
 
-            return (current == null) ? emptyStar : (current < 2) ? emptyStar : (current < 4) ? halfStar : fullStar;
+            return current == null ? emptyStar : current < 2 ? emptyStar : current < 4 ? halfStar : fullStar;
         }
 
         public static HtmlString GenerateChartBar(this IHtmlHelper helper, int current, int max)
         {
             double percentage;
             if (max != 0)
-                percentage = ((double)current / max) * 100;
+                percentage = (double)current / max * 100;
             else
                 percentage = 0;
 

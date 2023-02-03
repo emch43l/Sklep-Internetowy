@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sklep_Internetowy.Models.Contexts;
+using Sklep_Internetowy.Contexts;
 using Sklep_Internetowy.ViewModels;
 
 namespace Sklep_Internetowy.Controllers
@@ -16,7 +16,7 @@ namespace Sklep_Internetowy.Controllers
         }
         public IActionResult Index()
         {
-            return View(new AdminStatisticsModel()
+            return View(new AdminStatisticsViewModel()
             {
                 NumberOfCategories = _context.ProductCategories.Count(),
                 NumberOfProducers = _context.Producers.Count(),

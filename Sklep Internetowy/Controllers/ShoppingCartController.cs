@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.ViewModels;
+using Sklep_Internetowy.ViewModels.Models;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -32,24 +33,24 @@ namespace Sklep_Internetowy.Controllers
             {
                 return NotFound();
             }
-            return View(_cRepo.GetUserCart(user));
+            return View(await _cRepo.GetCartByUser(user));
         }
 
         [Route("cart/add")]
         [HttpPost]
-        public async Task<IActionResult> Create(AddToCartModel item)
+        public async Task<IActionResult> Create(AddToCartViewModel item)
         {
             if(ModelState.IsValid)
             {
                 AppUser? user = await _userManager.GetUserAsync(HttpContext.User);
-                Product? product = _pRepo.GetProductByGuid(item.ProductId);
+                Product? product = await _pRepo.GetOneByGuid(item.ProductId);
 
                 if (user == null || product == null)
                 {
                     return NotFound();
                 }
 
-                Cart cart = _cRepo.GetUserCart(user);
+                Cart? cart = await _cRepo.GetCartByUser(user);
                 CartItem? cartItem = cart.Items.FirstOrDefault(c => c.Product == product);
 
                 if (cartItem == null)
@@ -67,7 +68,7 @@ namespace Sklep_Internetowy.Controllers
                 }
 
 
-                _cRepo.Save();
+                await _cRepo.SaveChanges();
 
                 return RedirectToAction("Index", "ShoppingCart");
             }
@@ -75,19 +76,23 @@ namespace Sklep_Internetowy.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Delete(string ProductId)
+        public async Task<IActionResult> Delete(Guid ProductId)
         {
 
             AppUser? user = await _userManager.GetUserAsync(HttpContext.User);
-            Product? product = _pRepo.GetProductByGuid(ProductId);
+            Product? product = await _pRepo.GetOneByGuid(ProductId);
             if (user == null || product == null)
             {
                 return RedirectToAction("Index");
             }
 
-            Cart cart = _cRepo.GetUserCart(user);
+            Cart? cart = await _cRepo.GetCartByUser(user);
+
+            if(cart == null)
+                return RedirectToAction("Index");
+
             cart.Items.Remove(cart.Items.Where(c => c.ProductId == product.Id).FirstOrDefault());
-            _cRepo.Save();
+            await _cRepo.SaveChanges();
             return RedirectToAction("Index");
         }
     }

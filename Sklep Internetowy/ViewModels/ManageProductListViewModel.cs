@@ -33,7 +33,7 @@ namespace Sklep_Internetowy.ViewModels
         public double? Current;
     }
 
-    public class ManageProductListModel
+    public class ManageProductListViewModel
     {
         [FromQuery(Name = "Producers")]
         public string[] ProductProducers { get; set; }
@@ -57,20 +57,20 @@ namespace Sklep_Internetowy.ViewModels
         public List<int> NumberOfPages { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> ProducersList { get; set; }
+        public ICollection<SelectListItem> ProducersList { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> CategoriesList { get; set; }
+        public ICollection<SelectListItem> CategoriesList { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> SortProps { get; set; }
+        public ICollection<SelectListItem> SortProps { get; set; }
 
         [ValidateNever]
-        public IEnumerable<SelectListItem> Order { get; set; }
+        public ICollection<SelectListItem> Order { get; set; }
 
         [ValidateNever]
         public InputRangeData InputRangeData { get; set; }
-        public ManageProductListModel() 
+        public ManageProductListViewModel() 
         {
             ProductProducers = new string[0];
             ProductCategories = new string[0];

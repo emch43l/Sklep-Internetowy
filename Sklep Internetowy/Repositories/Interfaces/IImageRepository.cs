@@ -2,18 +2,7 @@
 
 namespace Sklep_Internetowy.Repositories.Interfaces
 {
-    public interface IImageRepository
+    public interface IImageRepository : IRepositoryBase<Image>
     {
-        public Image? GetImageByGuid(Guid id);
-
-        public IEnumerable<Image>? GetImages();
-
-        public Product? GetProductByImageGuid(Guid id);
-
-        public Image AddImage(Image image);
-
-        public Image? RemoveImage(Guid id);
-
-        public void Save();
     }
 }
