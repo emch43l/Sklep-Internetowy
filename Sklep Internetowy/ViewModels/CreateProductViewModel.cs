@@ -24,7 +24,7 @@ namespace Sklep_Internetowy.ViewModels
         [StringLength(500, MinimumLength = 2, ErrorMessage = "Dłgość opisu produktu powinna mieścić się pomiędzy 2 a 500 znakami !")]
         public string Description { get; set; }
 
-        public ImageModel? Images { get; set; }
+        public ImageModel Images { get; set; }
 
         [Required(ErrorMessage = "Dodatkowe informacje są wymagane !")]
         [CollectionLength(10, ErrorMessage = "Maksymalna ilość dodatkowych informacji nie może być większa niż 10 !")]

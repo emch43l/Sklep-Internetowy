@@ -4,7 +4,7 @@ using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Utils.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Sklep_Internetowy.ViewModels.Models
+namespace Sklep_Internetowy.ViewModels
 {
     public class ProductEditViewModel : IValidatableObject
     {

@@ -1,5 +1,6 @@
 ﻿using Sklep_Internetowy.Models;
 using System.ComponentModel.DataAnnotations;
+using Sklep_Internetowy.Utils.Validation;
 
 namespace Sklep_Internetowy.ViewModels.DTO
 {
@@ -12,16 +13,18 @@ namespace Sklep_Internetowy.ViewModels.DTO
         public string Description { get; set; }
 
         [Required]
-        public IEnumerable<string> Informations { get; set; }
+        public ICollection<string> Informations { get; set; }
 
         [Required]
         [Range(0, 100000)]
         public double? Price { get; set; }
 
         [Required]
+        [EmailAddress]
         public Guid Producer { get; set; }
 
         [Required]
+        [CollectionLength(5, ErrorMessage = "Maksymalna liczba kategorii przypisanych do jednego produktu to 5 !")]
         public ICollection<string> Categories { get; set; }
 
         public Product MapTo()

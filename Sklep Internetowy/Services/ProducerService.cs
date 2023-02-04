@@ -1,6 +1,6 @@
 ﻿namespace Sklep_Internetowy.Services
 {
-    public class ProducerService
+    public class ProducerService : EntityServiceBase
     {
     }
 }
