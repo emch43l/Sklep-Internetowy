@@ -20,6 +20,6 @@ namespace Sklep_Internetowy.Services.Interfaces
 
         Task<bool> DeleteImage(Guid pId, Guid iId);
 
-        Task<Image> AddImage(Guid id, ImageModel image);
+        Task<Product?> AddImage(Guid id, ImageModel image);
     }
 }

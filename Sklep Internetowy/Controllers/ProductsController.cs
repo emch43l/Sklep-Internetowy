@@ -80,12 +80,7 @@ namespace Sklep_Internetowy.Controllers
 
                 if (_pService.GetErrorsCount() > 0)
                 {
-                    foreach (var error in _pService.GetErrors())
-                        ModelState.AddModelError(error.Key, error.Value);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Could not create product !");
+                    _pService.AddErrorsToModelState(ModelState);
                 }
 
             }
@@ -115,12 +110,7 @@ namespace Sklep_Internetowy.Controllers
 
                 if (_pService.GetErrorsCount() > 0)
                 {
-                    foreach (var error in _pService.GetErrors())
-                        ModelState.AddModelError(error.Key, error.Value);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Could not update product !");
+                    _pService.AddErrorsToModelState(ModelState);
                 }
             }
 

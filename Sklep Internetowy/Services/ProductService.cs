@@ -38,7 +38,7 @@ namespace Sklep_Internetowy.Services
 
             if (producer == null)
             {
-                this.AddError(string.Empty, "Selected producer doesnt exist !");
+                AddError(new ServiceError(ErrorType.Major,string.Empty, "Selected producer doesnt exist !"));
                 return null;
             }
 
@@ -57,7 +57,13 @@ namespace Sklep_Internetowy.Services
             {
                 ProductCategory? productCategory = await _productCategoryRepository.GetOneByGuid(id);
                 if (productCategory != null)
-                        product.Categories.Add(productCategory);
+                {
+                    product.Categories.Add(productCategory);
+                }
+                else
+                {
+                    AddError(new ServiceError(ErrorType.Minor, string.Empty, $"Could not find category with id: {id} !"));
+                }
             }
 
 
@@ -79,6 +85,7 @@ namespace Sklep_Internetowy.Services
 
             Product createdEntity = await _productRepository.Add(product);
             await _productRepository.SaveChanges();
+
             return createdEntity;
 
         }
@@ -89,7 +96,10 @@ namespace Sklep_Internetowy.Services
 
             Product? product = await _productRepository.GetProductWithAssociatedEntities(id);
             if (product == null)
+            {
+                AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not find product with id: {id} !"));
                 return null;
+            }
 
             foreach (var img in image.Images)
             {
@@ -104,7 +114,7 @@ namespace Sklep_Internetowy.Services
                 }
                 else
                 {
-                    this.AddError(string.Empty, $"Could not uplad file: {img.Name} !");
+                    AddError(new ServiceError(ErrorType.Minor, string.Empty, $"Could not uplad file: {img.Name} !"));
                 }
             }
 
@@ -118,7 +128,7 @@ namespace Sklep_Internetowy.Services
 
             if (product == null)
             {
-                this.AddError(string.Empty, "Could not delete entity !");
+                AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not find product with id: {id} !"));
                 return null;
             }
 
@@ -142,7 +152,7 @@ namespace Sklep_Internetowy.Services
             Product? product = await _productRepository.GetProductWithAssociatedEntities(pId);
             if (product == null)
             {
-                this.AddError(string.Empty, "Could not remove image !");
+                AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not find product with id: {pId} !"));
                 return false;
             }
             
@@ -156,9 +166,9 @@ namespace Sklep_Internetowy.Services
                 return true;
             }
 
-            this.AddError(string.Empty, "Could not remove image !");
-            return false;
+            AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not remove image: {image.Name} !"));
 
+            return false;
     
         }
 
@@ -168,7 +178,7 @@ namespace Sklep_Internetowy.Services
 
             if (product == null)
             {
-                this.AddError(string.Empty, "Could not create model !");
+                AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not create model !"));
                 return null;
             }
 
@@ -200,18 +210,30 @@ namespace Sklep_Internetowy.Services
 
             if (product == null)
             {
-                this.AddError(nameof(product.Guid), "Could not find target product !");
-                return product;
+                AddError(new ServiceError(ErrorType.Major, nameof(product.Guid), "Could not find target product !"));
+                return null;
             }
 
             Producer? producer = await _producerRepository.GetOneByGuid(model.ProducerId);
             if (producer == null)
             {
-                this.AddError(nameof(model.ProducerId), "Could not find target producer !");
+                AddError(new ServiceError(ErrorType.Major, nameof(model.ProducerId), "Could not find target producer !"));
                 return null;
             }
 
-            IEnumerable<ProductCategory> categories = model.CategoryId.Select(c => _productCategoryRepository.GetOneByGuid(c).Result);
+            #pragma warning disable CS8619 // Obsługa wartości null dla typów referencyjnych w wartości jest niezgodna z typem docelowym.
+            IEnumerable<ProductCategory> categories = model.CategoryId.Select(c => 
+            {
+                ProductCategory? category = _productCategoryRepository.GetOneByGuid(c).Result;
+                if(category == null)
+                {
+                    AddError(new ServiceError(ErrorType.Major, nameof(model.ProducerId), $"Could not find category with id: {c} !"));
+                }
+
+                return category;
+
+             }).Where(c => c != null).ToList();
+            #pragma warning restore CS8619 // Obsługa wartości null dla typów referencyjnych w wartości jest niezgodna z typem docelowym.
 
             product.Categories = categories.ToList();
             product.Name = model.Name;
