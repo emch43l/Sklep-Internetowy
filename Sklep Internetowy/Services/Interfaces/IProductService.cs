@@ -8,15 +8,15 @@ namespace Sklep_Internetowy.Services.Interfaces
     {
         Task<Product?> Add(Product product);
 
-        Task<Product?> Add(CreateProductViewModel model);
+        Task<Product?> Add(ProductViewModel model);
 
-        Task<Product?> Update(ProductEditViewModel product);
+        Task<Product?> Update(ProductViewModel product);
 
         Task<Product?> Delete(Guid id, bool deleteImages = false);
 
-        Task<ProductEditViewModel?> GetModel(Guid id);
+        Task<ProductViewModel?> GetModel(Guid id);
 
-        Task<CreateProductViewModel> GetModel(CreateProductViewModel model);
+        Task<ProductViewModel> GetModel(ProductViewModel model);
 
         Task<bool> DeleteImage(Guid pId, Guid iId);
 

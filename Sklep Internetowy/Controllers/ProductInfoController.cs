@@ -72,7 +72,7 @@ namespace Sklep_Internetowy.Controllers
             {
                 return NotFound();
             }
-            return View(new Tuple<Product,AddToCartViewModel>(product,new AddToCartViewModel() { ProductId = product.Guid.ToString() }));
+            return View(new Tuple<Product,AddToCartViewModel>(product,new AddToCartViewModel() { ProductId = product.Guid }));
         }
     }
 }

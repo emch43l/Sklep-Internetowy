@@ -31,7 +31,7 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("admin/producers/details/{id}")]
-        // GET: Producers/Details/guid
+
         public async Task<IActionResult> Details(Guid id)
         {
             Producer? producer = await _prodRepo.GetOneByGuid(id);
@@ -41,16 +41,14 @@ namespace Sklep_Internetowy.Controllers
         }
 
         [Route("admin/producers/create")]
-        // GET: Producers/Create
+
         public IActionResult Create()
         {
             ViewData["Referer"] = HttpContext.Request.Headers["Referer"];
             return View();
         }
 
-        // POST: Producers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/producers/create")]
@@ -67,8 +65,9 @@ namespace Sklep_Internetowy.Controllers
             return View(producer.MapTo());
         }
 
+        [HttpGet]
         [Route("admin/producers/edit/{id}")]
-        // GET: Producers/Edit/5
+
         public async Task<IActionResult> Edit(Guid id)
         {
             Producer? producer = await _prodRepo.GetOneByGuid(id);
@@ -78,9 +77,7 @@ namespace Sklep_Internetowy.Controllers
             return View(producer);
         }
 
-        // POST: Producers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("admin/producers/edit/{id}")]

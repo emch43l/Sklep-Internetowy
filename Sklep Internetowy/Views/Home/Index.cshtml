@@ -1,15 +1,14 @@
-﻿@    using Sklep_Internetowy.Models;
-@    using Sklep_Internetowy.Controllers;
-@    using Sklep_Internetowy.ViewModels;
-@    using Sklep_Internetowy.Extensions;
-    using Sklep_Internetowy.Utils.Extensions;
+﻿@using Sklep_Internetowy.Models;
+@using Sklep_Internetowy.Controllers;
+@using Sklep_Internetowy.ViewModels;
+@using Sklep_Internetowy.Utils.Extensions;
 
 @section Scripts
 {
     <script type="text/javascript" src="~/js/productTableManagement.js" /></script>
 }
 
-@model Tuple<IEnumerable<Product>,ManageProductListModel>;
+@model Tuple<IEnumerable<Product>,ManageProductListViewModel>;
 
 <h1 class="products-header">Produkty</h1>
 

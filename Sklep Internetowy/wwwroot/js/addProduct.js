@@ -3,7 +3,7 @@ InitializeAddProductFunctions();
 
 function InitializeAddProductFunctions() {
 
-    CategorySelection();
+    //CategorySelection();
 
     $('.owl-carousel').owlCarousel({
         items: 2,
@@ -17,18 +17,24 @@ function InitializeAddProductFunctions() {
     let inputContainer = document.getElementById("inputs-container");
     let imageInput = document.getElementById("Images");
 
+    let input = document.getElementById("information-input");
+
     if (imageInput !== null) {
         imageInput.addEventListener("change", x => DisplaySelectedImages());
     }
 
     addBtn.addEventListener("click", e => {
-        let child = CreateInput();
+        
+        if (input.value.length === 0 || input.value.length === null)
+            return;
+        let child = CreateInput(input.value);
         inputContainer.appendChild(child);
+        input.value = "";
     })
 
     deleteBtn.addEventListener("click", e => {
         var length = inputContainer.children.length;
-        if (length !== 1) {
+        if (length > 0) {
             inputContainer.lastChild.remove();
             if (length === inputContainer.children.length)
                 inputContainer.lastChild.remove();
@@ -108,11 +114,13 @@ function CategorySelection() {
     CountSelection();
 }
 
-function CreateInput() {
+function CreateInput(data) {
+
     let element = document.createElement("input");
     element.setAttribute("name", INPUTNAME);
     element.setAttribute("type", "text");
+    element.setAttribute("readonly","readonly");
     element.classList.add("aditional-information-input");
-    element.classList.add("form-control");
+    element.value = data;
     return element;
 }

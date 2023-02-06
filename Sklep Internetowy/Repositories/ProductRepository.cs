@@ -33,12 +33,12 @@ namespace Sklep_Internetowy.Repositories
 
         public async Task<Product?> GetCheapest()
         {
-            return await _context.Products.OrderBy(p => p.Price).FirstOrDefaultAsync();
+            return await _context.Products.OrderBy(p => (double)p.Price).FirstOrDefaultAsync();
         }
 
         public async Task<Product?> GetMostExpensive()
         {
-            return await _context.Products.OrderByDescending(p => p.Price).FirstOrDefaultAsync();
+            return await _context.Products.OrderByDescending(p => (double)p.Price).FirstOrDefaultAsync();
         }
 
     }

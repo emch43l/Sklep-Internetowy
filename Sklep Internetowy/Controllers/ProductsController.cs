@@ -9,6 +9,7 @@ using Sklep_Internetowy.ViewModels.Models;
 using Sklep_Internetowy.Contexts;
 using Sklep_Internetowy.Services.Interfaces;
 using Sklep_Internetowy.ViewModels;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Sklep_Internetowy.Controllers
 {
@@ -19,8 +20,6 @@ namespace Sklep_Internetowy.Controllers
         private readonly DataContext _context;
 
         private readonly string _appEnviroment;
-
-        private readonly IFileUploader _fileUploader;
 
         private readonly IProductService _pService;
 
@@ -56,21 +55,13 @@ namespace Sklep_Internetowy.Controllers
         [Route("/admin/products/create")]
         public async Task<IActionResult> Create()
         {
-            List<SelectListItem> producersSelectList = new List<SelectListItem>();
-
-            (await _context.Producers.ToListAsync())
-                .ForEach(p => producersSelectList.Add( new SelectListItem( p.Name, p.Guid.ToString() )));
-
-            return View(new CreateProductViewModel { 
-                Producers = producersSelectList, 
-                Categories = _context.ProductCategories.ToList()
-            });
+            return View(await _pService.GetModel(new ProductViewModel()));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/admin/products/create")]
-        public async Task<IActionResult> Create(CreateProductViewModel model)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
 
             if (ModelState.IsValid)
@@ -85,28 +76,32 @@ namespace Sklep_Internetowy.Controllers
 
             }
 
-            return View(_pService.GetModel(model));
+            return View(await _pService.GetModel(model));
         }
 
         [HttpGet]
         [Route("/admin/products/edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
-            ProductEditViewModel? model = await _pService.GetModel(id);
+            ProductViewModel? model = await _pService.GetModel(id);
+
             if(model == null)
                 return NotFound();
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("/admin/products/edit/")]
-        public async Task<IActionResult> Edit(ProductEditViewModel model)
+        [Route("/admin/products/edit/{id}")]
+        public async Task<IActionResult> Edit(ProductViewModel data)
         {
             if (ModelState.IsValid)
             {
-                if (await _pService.Update(model) != null)
+                if (await _pService.Update(data) != null)
+                {
                     return RedirectToAction("Index");
+                }
 
                 if (_pService.GetErrorsCount() > 0)
                 {
@@ -114,13 +109,18 @@ namespace Sklep_Internetowy.Controllers
                 }
             }
 
-            return await this.Edit(model.Id);
+            ProductViewModel? model = await _pService.GetModel(data.Id);
+
+            if (model == null)
+                return NotFound();
+
+            return View(model);
 
 
         }
 
-        [Route("/admin/products/image/delete/{pId}/{iId}")]
-        public async Task<IActionResult> DeleteProductImage(Guid pId, Guid iId)
+        [Route("/admin/products/edit/{pId}/{iId}")]
+        public async Task<IActionResult> DeletImage(Guid pId, Guid iId)
         {
             string? referer = HttpContext.Request.Headers["referer"];
             if (referer == null)
@@ -128,21 +128,20 @@ namespace Sklep_Internetowy.Controllers
 
             await _pService.DeleteImage(pId, iId);
 
+            return View(await _pService.GetModel(pId));
 
-            return Redirect(referer);
-            
         }
 
         [HttpPost]
-        [Route("/admin/products/image/add/{id}")]
-        public async Task<IActionResult> AddProductImage(Guid id, [FromForm] ImageModel images)
+        [Route("/admin/products/images/edit/{id}")]
+        public async Task<IActionResult> AddImages(Guid id, [FromForm] ImageModel image)
         {
             string? referer = HttpContext.Request.Headers["referer"];
             if (referer == null)
                 referer = string.Empty;
 
-            await _pService.AddImage(id, images);
-            return Redirect(referer);
+            await _pService.AddImage(id, image);
+            return View(await _pService.GetModel(id));
         }
     }
 }

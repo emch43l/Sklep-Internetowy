@@ -1,4 +1,6 @@
-﻿@model AddProductDTO
+﻿@using Sklep_Internetowy.ViewModels;
+
+@model ProductViewModel;
 
 @{
     ViewData["Title"] = "Create";
@@ -53,9 +55,9 @@
                             <div class="form-creation-cateogories-container">
                                 @foreach (var item in Model.Categories)
                                 {
-                                    string chckd = Model.CategoryId.Contains(item.Guid.ToString()) ? "checked='checked'" : string.Empty;
-                                    <label class="category-selection-button" for="@item.Guid.ToString()">
-                                        <input id="@item.Guid.ToString()" type="checkbox" name="CategoryId" value="@item.Guid.ToString()" @chckd />
+                                    string chckd = Model.CategoryId.Contains(item.Guid) ? "checked='checked'" : string.Empty;
+                                    <label class="category-selection-button" for="@item.Guid">
+                                        <input id="@item.Guid" type="checkbox" name="CategoryId" value="@item.Guid)" @chckd />
                                         @item.Name
                                     </label>
                                 }

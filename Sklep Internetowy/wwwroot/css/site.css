@@ -871,13 +871,19 @@ nav {
     filter:opacity(0.7) contrast(0.9);
 }
 
-.aditional-information-input {
-    background-color: white;
-    margin: 5px 0px;
-    width: 100%;
+#inputs-container > input
+{
+    border-color: lightgray;
 }
 
-.category-selected {
+.aditional-information-input {
+    background-color: transparent !important;
+    width: 100%;
+    border-radius: 5px !important;
+    font-weight: bold;
+}
+
+/*.category-selected {
     filter: none;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.07);
     font-weight: 500;
@@ -889,7 +895,7 @@ nav {
     width: 0px;
     padding: 0;
     margin: 0;
-}
+}*/
 
 .form-group-secion {
     width: calc(50% - 20px);

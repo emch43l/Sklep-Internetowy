@@ -31,9 +31,9 @@ namespace Sklep_Internetowy.Models
             Guid = Guid.NewGuid();
         }
 
-        public double? GetRating()
+        public double GetRating()
         {
-            return (Rating.Count() == 0) ? null 
+            return (Rating.Count() == 0) ? 0 
                 : (double)Rating.Sum(r => r.Rating) / Rating.Count();
         }
 

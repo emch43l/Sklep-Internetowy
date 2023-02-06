@@ -7,6 +7,7 @@ using Sklep_Internetowy.Repositories.Interfaces;
 using Sklep_Internetowy.Repositories;
 using Sklep_Internetowy.Models;
 using Sklep_Internetowy.Contexts;
+using Sklep_Internetowy.Services.Interfaces;
 
 CultureInfo[] cultures = new CultureInfo[]
 {
@@ -34,7 +35,8 @@ builder.Services
 builder.Services
     .AddScoped<IByteParser, ByteParser>()
     .AddScoped<IFileUploader, FileUploader>()
-    .AddScoped<IDirectoryConfigurationReader,DirectoryConfigurationReader>();
+    .AddScoped<IDirectoryConfigurationReader,DirectoryConfigurationReader>()
+    .AddScoped<IProductService, ProductService>();
 
 // Add repositories
 builder.Services

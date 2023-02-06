@@ -1,10 +1,8 @@
-﻿@    using Microsoft.AspNetCore.Identity
-@    using Sklep_Internetowy.Models
-@    using Sklep_Internetowy.Models.Contexts;
-@    using Sklep_Internetowy.Repositories;
-@    using Sklep_Internetowy.Repositories.Interfaces;
-@    using Sklep_Internetowy.Extensions;
-    using Sklep_Internetowy.Utils.Extensions;
+﻿@using Microsoft.AspNetCore.Identity
+@using Sklep_Internetowy.Models
+@using Sklep_Internetowy.Repositories;
+@using Sklep_Internetowy.Repositories.Interfaces;
+@using Sklep_Internetowy.Utils.Extensions;
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
@@ -15,7 +13,7 @@
     Cart? cart = null;
     if(user != null)
     {
-        cart = CartRepo.GetUserCart(user ?? new AppUser());  
+        cart = await CartRepo.GetCartByUser(user ?? new AppUser());  
     }
 }
 <!DOCTYPE html>
@@ -29,6 +27,7 @@
     <link rel="stylesheet" href="~/lib//owl-carousel/dist/assets/owl.theme.default.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Sklep_Internetowy.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.css" rel="stylesheet" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -115,6 +114,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/owl-carousel/dist/owl.carousel.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.3/flowbite.min.js"></script>
     <script src="~/js/site.js"></script>
     <script src="https://kit.fontawesome.com/8cb3256003.js" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -9,6 +9,6 @@ namespace Sklep_Internetowy.ViewModels.Models
         [MaxFileSize(200, Services.Type.KB, ErrorMessage = "Maksymalny rozmiar pojedynczego pliku to 200KB !")]
         [MaxFilesSize(100, Services.Type.MB, ErrorMessage = "Maksymalny rozmiar wszystkich plików to 100MB !")]
         [MaxFiles(5, ErrorMessage = "Maksymalna ilość plików to 5 !")]
-        public ICollection<IFormFile> Images { get; set; }
+        public ICollection<IFormFile>? Images { get; set; }
     }
 }

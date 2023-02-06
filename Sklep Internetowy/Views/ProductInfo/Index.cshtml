@@ -1,9 +1,10 @@
-﻿@    using Microsoft.AspNetCore.Identity;
-@    using Sklep_Internetowy.Extensions;
-@    using System.Globalization;
-    using Sklep_Internetowy.Utils.Extensions;
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Globalization;
+@using Sklep_Internetowy.Utils.Extensions;
+@using Sklep_Internetowy.Models;
+@using Sklep_Internetowy.ViewModels.Models;
 
-@model Tuple<Sklep_Internetowy.Models.Product,Sklep_Internetowy.ViewModels.AddToCartModel>;
+@model Tuple<Product,AddToCartViewModel>;
 
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager

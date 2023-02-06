@@ -30,7 +30,7 @@ namespace Sklep_Internetowy.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Product?> Add(CreateProductViewModel model)
+        public async Task<Product?> Add(ProductViewModel model)
         {
             Producer? producer = await _producerRepository.GetOneByGuid(model.ProducerId);
             Product product = new Product();
@@ -67,11 +67,11 @@ namespace Sklep_Internetowy.Services
             }
 
 
-            if (model.Images.Images.Count() != 0)
+            if (model.Images.Count() != 0)
             {
                 List<UploadedFile> images = new List<UploadedFile>();
 
-                foreach (IFormFile image in model.Images.Images)
+                foreach (IFormFile image in model.Images)
                     images.Add(await _fileUploader.UploadFile(image));
 
                 productDetail.Images = images.Select(image =>
@@ -93,6 +93,9 @@ namespace Sklep_Internetowy.Services
         public async Task<Product?> AddImage(Guid id, ImageModel image)
         {
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
+
+            if (image.Images == null)
+                return null;
 
             Product? product = await _productRepository.GetProductWithAssociatedEntities(id);
             if (product == null)
@@ -166,13 +169,13 @@ namespace Sklep_Internetowy.Services
                 return true;
             }
 
-            AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not remove image: {image.Name} !"));
+            AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not remove image with id: {iId} !"));
 
             return false;
     
         }
 
-        public async Task<ProductEditViewModel?> GetModel(Guid id)
+        public async Task<ProductViewModel?> GetModel(Guid id)
         {
             Product? product = await _productRepository.GetProductWithAssociatedEntities(id);
 
@@ -182,7 +185,7 @@ namespace Sklep_Internetowy.Services
                 return null;
             }
 
-            return new ProductEditViewModel()
+            return new ProductViewModel()
             {
                 Id = product.Guid,
                 Name = product.Name,
@@ -192,11 +195,11 @@ namespace Sklep_Internetowy.Services
                 AditionalInformations = product.ProductDetail.Information,
                 CategoryId = product.Categories.Select(p => p.Guid).ToList(),
                 Description = product.ProductDetail.Description,
-                Files = product.ProductDetail.Images.ToList()
+                CurrentImages = product.ProductDetail.Images.ToList()
             };
         }
 
-        public async Task<CreateProductViewModel> GetModel(CreateProductViewModel model)
+        public async Task<ProductViewModel> GetModel(ProductViewModel model)
         {
             model.Categories = await _productCategoryRepository.GetAll();
             model.Producers = GetProducersSelectist();
@@ -204,7 +207,7 @@ namespace Sklep_Internetowy.Services
             return model;
         }
 
-        public async Task<Product?> Update(ProductEditViewModel model)
+        public async Task<Product?> Update(ProductViewModel model)
         {
             Product? product = await _productRepository.GetProductWithAssociatedEntities(model.Id);
 
@@ -239,7 +242,7 @@ namespace Sklep_Internetowy.Services
             product.Name = model.Name;
             product.Price = (decimal)model.Price;
             product.ProductDetail.Description = model.Description;
-            product.ProductDetail.Information = model.AditionalInformations;
+            product.ProductDetail.Information = model.AditionalInformations.ToList();
             
             await _productRepository.SaveChanges();
 
