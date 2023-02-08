@@ -4,132 +4,92 @@
 
 @{
     ViewData["Title"] = "Create";
+    int categoryCounter = 0;
 }
 
-<h1 class="products-header">Stwórz</h1>
+<div class="row max-w-2xl mx-auto">
+    <h3 class="text-3xl font-bold dark:text-white mb-5">Dodaj produkt</h3>
+    <form asp-action="Create" method="post">
+        <input asp-for="Id" />
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+                <label asp-for="Name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nazwa</label>
+                <input type="text" asp-for="Name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="Name"></span>
 
-<div class="row">
-    <div>
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group-container">
-                <div class="form-group-secion">
-                    <div class="form-section-inner">
-                        @*<h1 class="inner-section-header">Dane podstawowe</h1>*@
-                        <div class="form-group">
-                            <label asp-for="Name" class="control-label">Nazwa</label>
-                            <input asp-for="Name" class="form-control" />
-                        </div>
-                            <span asp-validation-for="Name" class="text-danger bottom-danger"></span>
-                        <div class="form-group">
-                            <label asp-for="Price" class="control-label">Cena</label>
-                            <input asp-for="Price" class="form-control" />
-                        </div>
-                            <span asp-validation-for="Price" class="text-danger bottom-danger"></span>
-                        <div class="form-group">
-                            <div style="margin-right: 10px;">
-                                <div class="form-creation-cateogories-container-label">
-                                    <label asp-for="ProducerId" class="control-label"></label>
-                                </div>
-                                <a asp-controller="Producers" asp-action="Create" class="add-aditional-information" style="float: right">
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                            </div>
-                            <select asp-for="ProducerId" class="form-control" asp-items=@Model.Producers></select>
-                        </div>
-                            <span asp-validation-for="ProducerId" class="text-danger bottom-danger"></span>
-                        <div class="form-group">
-                            <label asp-for="Description" class="control-label">Opis</label>
-                            <textarea asp-for="Description" class="form-control"></textarea>
-                        </div>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        <div class="form-group">
-                            <div style="margin-right: 10px;">
-                                <div class="form-creation-cateogories-container-label">
-                                    <label class="control-label">Kategorie</label><span id="num-of-selected-cat"></span>
-                                </div>
-                                <a asp-controller="ProductCategories" asp-action="Create" class="add-aditional-information" style="float: right">
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                            </div>
-                            <div class="form-creation-cateogories-container">
-                                @foreach (var item in Model.Categories)
-                                {
-                                    string chckd = Model.CategoryId.Contains(item.Guid) ? "checked='checked'" : string.Empty;
-                                    <label class="category-selection-button" for="@item.Guid">
-                                        <input id="@item.Guid" type="checkbox" name="CategoryId" value="@item.Guid)" @chckd />
-                                        @item.Name
-                                    </label>
-                                }
-                            </div>
-                            <span asp-validation-for="CategoryId" class="text-danger bottom-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            @*<label for="AditionalInformations" class="control-label"> Informacje Dodatkowe </label>*@
-                            <div class="aditional-informations-management-section">
-                                <div style="margin-right: 10px;">
-                                    <div class="form-creation-cateogories-container-label">
-                                        <label class="control-label">Informacje</label>
-                                    </div>
-                                    <div style="margin-top: 10px;">
-                                        <button type="button" class="add-aditional-information-btn" id="information-add">
-                                            Dodaj
-                                        </button>
-                                        <button type="button" class="add-aditional-information-btn" id="information-remove">
-                                            Usuń
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <div class="aditional-information-container">
+            </div>
+            <div>
+                <label asp-for="Price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cena</label>
+                <input type="number" min="0.01" max="49999.99" step="0.01" asp-for="Price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="Price"></span>
+            </div>
+        </div>
+        <div class="mb-6">
+            <label asp-for="Description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Opis produktu</label>
+            <textarea asp-for="Description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+            <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="Description"></span>
 
-                                <div class="aditional-informations-inputs" id="inputs-container">
-                                    @if(Model.AditionalInformations.Count() == 0)
-                                    {
-                                        <input type="text" name="AdidtionalInformations" class="form-control aditional-information-input" />
-                                    }
-                                    else
-                                    {
-                                        @foreach(var item in Model.AditionalInformations)
-                                        {
-                                            <input type="text" name="AdidtionalInformations" value="@item" class="form-control aditional-information-input" />
-                                        }
-                                    }
-
-                                </div>
-                                
-
-                            </div>
-                        </div>
-                            <span asp-validation-for="AditionalInformations" class="text-danger"></span>
-                    </div>
+        </div>
+        <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div class="w-4/5">
+                <label for="select-producer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Producent</label>
+                <div class="flex items-center">
+                    <select asp-for="ProducerId" asp-items="@Model.Producers" id="select-producer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </select>
+                    <a asp-controller="Producers" asp-action="Create" class="ml-1 text-white bg-blue-700 cursor-pointer hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fas fa-plus"></i></a>
                 </div>
-                <div class="form-group-secion">
-                    <div class="form-section-inner">
-                        <h1 class="inner-section-header">Zdjęcia</h1>
-                        <div class="form-group-non-flex">
-                            <div>
-                                <label for="Images" class="control-label"> Zdjęcia </label>
-                                <input asp-for="Images" class="form-control" />
-                            </div>
-                            <span asp-validation-for="Images" class="text-danger bottom-danger"></span>
-                            <div class="selected-images-container" id="selected-images">
-                                <div class="owl-carousel owl-theme"></div>
-                            </div>
-                        </div>
-                    </div>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="ProducerId"></span>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategorie</label>
+                <div class="flex items-center">
+                    <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" class="inline-flex items-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="button">Wybierz kategorie</button>
+                    <a asp-controller="ProductCategories" asp-action="Create" class="ml-1 text-white bg-blue-700 cursor-pointer hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fas fa-plus"></i></a>
+                </div>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="CategoryId"></span>
+
+                <!-- Dropdown menu -->
+                <div id="dropdownSearch" class="z-10 hidden bg-white rounded-lg shadow dark:bg-gray-700">
+                    <ul class="px-3 pb-3 pt-3 mx-auto overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+                        @foreach (ProductCategory category in Model.Categories)
+                        {
+                            string chckd = Model.CategoryId.Contains(category.Guid) ? "checked='checked'" : string.Empty;
+                            categoryCounter++;
+                            <li>
+                                <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                    <input name="CategoryId" id="category-@categoryCounter" type="checkbox" @chckd value="@category.Guid" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    <label for="category-@categoryCounter" class="w-full ml-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">@category.Name</label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
-            <div class="form-group" style="text-align: right">
-                <input type="submit" value="Stwórz" class="btn btn-primary" />
+        </div>
+        <div class="mb-6">
+            <div>
+                <label asp-for="AditionalInformations" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Informacje dodatkowe</label>
+                <div class="flex justify-content-between items-center">
+                    <input id="information-input" type="text" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <div class="flex ml-2">
+                        <button type="button" id="information-add" class="ml-1 text-white bg-blue-700 cursor-pointer hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fas fa-plus"></i></button>
+                        <button type="button" id="information-remove" class="ml-1 text-white bg-blue-700 cursor-pointer hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="AditionalInformations"></span>
+                <div id="inputs-container" class="grid gap-1 md:grid-cols-2 mt-3">
+                    @foreach (var item in Model.AditionalInformations)
+                    {
+                        <input type="text" readonly="readonly" name="AditionalInformations" value="@item" class="aditional-information-input">
+                    }
+                </div>
             </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index" asp-controller="Admin">Powrót</a>
+        </div>
+        <div class="flex justify-content-between align-items-center mt-10">
+            <a asp-action="Index" asp-controller="Products" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Powrót</a>
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Stwórz</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

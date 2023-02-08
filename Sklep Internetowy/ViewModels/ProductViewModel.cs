@@ -10,7 +10,7 @@ using Sklep_Internetowy.ViewModels.Models;
 
 namespace Sklep_Internetowy.ViewModels
 {
-    public class ProductViewModel : ImageModel, IValidatableObject
+    public class ProductViewModel : IValidatableObject
     {
 
         [Required]
@@ -34,10 +34,16 @@ namespace Sklep_Internetowy.ViewModels
         [CollectionLength(10, ErrorMessage = "Maksymalna ilość dodatkowych informacji nie może być większa niż 10 !")]
         public ICollection<string> AditionalInformations { get; set; }
 
+        [AllowedFileExtensions(".jpg", ".png", ".jpeg", ".gif", ErrorMessage = "Niedopuszczalne rozszerzenie pliku ! Dozwolone typy plików to: .jpg, .png, .jpeg, .gif")]
+        [MaxFileSize(200, Services.Type.KB, ErrorMessage = "Maksymalny rozmiar pojedynczego pliku to 200KB !")]
+        [MaxFilesSize(100, Services.Type.MB, ErrorMessage = "Maksymalny rozmiar wszystkich plików to 100MB !")]
+        [CollectionLength(5, ErrorMessage = "Maksymalna ilość plików to 5 !")]
+        public ICollection<IFormFile>? Images { get; set; }
+
         [Required]
         public Guid ProducerId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Proszę wybrać przynajmniej 1 kategorię !")]
         [CollectionLength(5, ErrorMessage = "Maksymalna ilość przypisanych kategorii to 5 !")]
         public ICollection<Guid> CategoryId { get; set; }
 

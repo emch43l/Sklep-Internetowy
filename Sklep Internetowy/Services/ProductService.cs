@@ -66,22 +66,25 @@ namespace Sklep_Internetowy.Services
                 }
             }
 
-
-            if (model.Images.Count() != 0)
+            if(model.Images != null)
             {
-                List<UploadedFile> images = new List<UploadedFile>();
+                if (model.Images.Count() != 0)
+                {
+                    List<UploadedFile> images = new List<UploadedFile>();
 
-                foreach (IFormFile image in model.Images)
-                    images.Add(await _fileUploader.UploadFile(image));
+                    foreach (IFormFile image in model.Images)
+                        images.Add(await _fileUploader.UploadFile(image));
 
-                productDetail.Images = images.Select(image =>
-                    new Image()
-                    {
-                        Title = image.File.FileName,
-                        Name = image.UploadedFileName
-                    }
-                ).ToList();
+                    productDetail.Images = images.Select(image =>
+                        new Image()
+                        {
+                            Title = image.File.FileName,
+                            Name = image.UploadedFileName
+                        }
+                    ).ToList();
+                }
             }
+
 
             Product createdEntity = await _productRepository.Add(product);
             await _productRepository.SaveChanges();
@@ -94,7 +97,7 @@ namespace Sklep_Internetowy.Services
         {
             _fileUploader.SetTargetFolderTo(TargetFolder.Images);
 
-            if (image.Images == null)
+            if (image.Files == null)
                 return null;
 
             Product? product = await _productRepository.GetProductWithAssociatedEntities(id);
@@ -104,7 +107,7 @@ namespace Sklep_Internetowy.Services
                 return null;
             }
 
-            foreach (var img in image.Images)
+            foreach (var img in image.Files)
             {
                 UploadedFile? file = await _fileUploader.UploadFile(img);
                 if (file != null)
@@ -158,11 +161,11 @@ namespace Sklep_Internetowy.Services
                 AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not find product with id: {pId} !"));
                 return false;
             }
-            
-            Image? image = product.ProductDetail.Images.Where(i => i.Guid == iId).FirstOrDefault();
-            bool isRemoved = product.ProductDetail.Images.Remove(image);
 
-            if(isRemoved)
+            Image? image = product.ProductDetail.Images.Where(i => i.Guid == iId).FirstOrDefault();
+            bool isRemoved = image != null && product.ProductDetail.Images.Remove(image);
+
+            if (isRemoved)
             {
                 _fileUploader.DeleteFile(image);
                 await _producerRepository.SaveChanges();
@@ -172,7 +175,7 @@ namespace Sklep_Internetowy.Services
             AddError(new ServiceError(ErrorType.Major, string.Empty, $"Could not remove image with id: {iId} !"));
 
             return false;
-    
+
         }
 
         public async Task<ProductViewModel?> GetModel(Guid id)
@@ -203,6 +206,8 @@ namespace Sklep_Internetowy.Services
         {
             model.Categories = await _productCategoryRepository.GetAll();
             model.Producers = GetProducersSelectist();
+            model.CategoryId = (model.CategoryId == null) ? new List<Guid>() : model.CategoryId;
+            model.AditionalInformations = (model.AditionalInformations == null) ? new List<string>() : model.AditionalInformations;
 
             return model;
         }

@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Sklep_Internetowy.Controllers
 {
     [Authorize(Roles = "admin")]
-    [Route("/admin/products")]
+    [Route("admin/products")]
     public class ProductsController : Controller
     {
         private readonly DataContext _context;
@@ -30,7 +30,8 @@ namespace Sklep_Internetowy.Controllers
             _pService = pService; 
         }
 
-        [Route("/admin/products")]
+        [Route("")]
+        [HttpGet]
         public IActionResult Index(int page)
         {
             page = (page < 1) ? 1 : page;
@@ -43,7 +44,8 @@ namespace Sklep_Internetowy.Controllers
             return View(new Tuple<IEnumerable<Product>,List<int>,int>(products,pagesNumber,page));
         }
 
-        [Route("/admin/products/delete/{id}")]
+        [Route("delete/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _pService.Delete(id);
@@ -52,22 +54,26 @@ namespace Sklep_Internetowy.Controllers
 
         }
 
-        [Route("/admin/products/create")]
+        [Route("create")]
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             return View(await _pService.GetModel(new ProductViewModel()));
         }
 
+        [Route("create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("/admin/products/create")]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
 
             if (ModelState.IsValid)
             {
+                Product? product = await _pService.Add(model);
                 if (await _pService.Add(model) != null)
-                    RedirectToAction("Index");
+                {
+                    return RedirectToRoute("Images_Index", new { id = product.Guid });
+                }
 
                 if (_pService.GetErrorsCount() > 0)
                 {
@@ -79,8 +85,8 @@ namespace Sklep_Internetowy.Controllers
             return View(await _pService.GetModel(model));
         }
 
+        [Route("edit/{id}")]
         [HttpGet]
-        [Route("/admin/products/edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             ProductViewModel? model = await _pService.GetModel(id);
@@ -91,9 +97,9 @@ namespace Sklep_Internetowy.Controllers
             return View(model);
         }
 
+        [Route("edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("/admin/products/edit/{id}")]
         public async Task<IActionResult> Edit(ProductViewModel data)
         {
             if (ModelState.IsValid)
@@ -119,29 +125,29 @@ namespace Sklep_Internetowy.Controllers
 
         }
 
-        [Route("/admin/products/edit/{pId}/{iId}")]
-        public async Task<IActionResult> DeletImage(Guid pId, Guid iId)
-        {
-            string? referer = HttpContext.Request.Headers["referer"];
-            if (referer == null)
-                referer = string.Empty;
+        //[Route("/admin/products/images/{id}")]
+        //public async Task<IActionResult> DeletImage(Guid pId, Guid iId)
+        //{
+        //    string? referer = HttpContext.Request.Headers["referer"];
+        //    if (referer == null)
+        //        referer = string.Empty;
 
-            await _pService.DeleteImage(pId, iId);
+        //    await _pService.DeleteImage(pId, iId);
 
-            return View(await _pService.GetModel(pId));
+        //    return View(await _pService.GetModel(pId));
 
-        }
+        //}
 
-        [HttpPost]
-        [Route("/admin/products/images/edit/{id}")]
-        public async Task<IActionResult> AddImages(Guid id, [FromForm] ImageModel image)
-        {
-            string? referer = HttpContext.Request.Headers["referer"];
-            if (referer == null)
-                referer = string.Empty;
+        //[HttpPost]
+        //[Route("/admin/products/images/edit/{id}")]
+        //public async Task<IActionResult> AddImages(Guid id, [FromForm] ImageModel image)
+        //{
+        //    string? referer = HttpContext.Request.Headers["referer"];
+        //    if (referer == null)
+        //        referer = string.Empty;
 
-            await _pService.AddImage(id, image);
-            return View(await _pService.GetModel(id));
-        }
+        //    await _pService.AddImage(id, image);
+        //    return View(await _pService.GetModel(id));
+        //}
     }
 }

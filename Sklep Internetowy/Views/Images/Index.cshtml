@@ -1,0 +1,99 @@
+﻿@using Sklep_Internetowy.ViewModels.Models;
+
+@model ImageModel;
+
+<div class="row max-w-2xl mx-auto">
+    <h4 class="text-xl font-bold dark:text-white mt-5 mb-6">Dodaj zdjęcia</h4>
+    <div class="flex items-center justify-center w-full mb-5">
+        <form class="w-100" method="post" enctype="multipart/form-data">
+             <div>
+                <span class=" mb-1 block font-normal text-s text-red-600 dark:text-red-400" asp-validation-for="Files"></span>
+                <input asp-for="Files" multiple="multiple" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file">
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG or GIF</p>
+             </div>
+             <button type="submit"  class="mt-3 w-100 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Dodaj</button>
+        </form>
+    </div>
+
+    <h4 class="text-xl font-bold dark:text-white mt-5 mb-2">Aktualne zdjęcia</h4>
+    <div class="current-images-table relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-50 dark:text-white dark:bg-gray-800">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+            <tbody>
+                @foreach(Image img in ViewData["Images"] as IEnumerable<Image>)
+                {
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <th scope="row" class="px-4 py-4 font-medium whitespace-nowrap text-ellipsis ">
+                            <div class="text-m text-gray-900">
+                                @img.Title
+                            </div>
+                            <div class="text-2xs">
+                                @img.Name
+                            </div>
+                        </th>
+                        <td class="px-4 py-4">
+                            <form method="post" asp-action="DeleteImage" asp-controller="Images">
+                                <input name="Id" value="@ViewData["ProductId"]" type="hidden">
+                                <input value="@img.Guid" name="imageId" type="hidden">
+                                <button type="submit" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-xs px-3 py-2 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="flex justify-content-between mt-5">
+        <a class="block text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700" asp-controller="Products" asp-action="Edit" asp-route-id="@ViewData["ProductId"]">
+            Powrót
+        </a>
+        <a class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" asp-controller="Products" asp-action="Index" >
+            Zapisz
+        </a>
+    </div>
+</div>
+
+
+
+@section Scripts
+{
+    <script>
+
+        function CreateBadgeElement(text)
+        {
+            let badge = document.createElement("span");
+            badge.classList.add("bg-gray-100")
+            badge.classList.add("text-gray-600")
+            badge.classList.add("text-xs")
+            badge.classList.add("font-medium")
+            badge.classList.add("mr-2")
+            badge.classList.add("px-2.5")
+            badge.classList.add("py-0.5")
+            badge.classList.add("rounded")
+            badge.classList.add("dark:bg-gray-700")
+            badge.classList.add("dark:text-gray-400")
+            badge.classList.add("border")
+            badge.classList.add("border-gray-500")
+            badge.classList.add("inline-block")
+            badge.classList.add("whitespace-nowrap")
+            badge.innerHTML = text;
+
+            return badge;
+        }
+
+        function ImagesInput()
+        {
+            let input = document.getElementById("dropzone-file");
+            let badgeContainer = document.getElementById("selected-images");
+
+            input.addEventListener("change", () => {
+                badgeContainer.innerHTML = "";
+                [...input.files].forEach(img => {
+                    badgeContainer.appendChild(CreateBadgeElement(img.name));
+                })
+            })
+        }
+
+        ImagesInput()
+
+    </script>
+}

@@ -49,6 +49,17 @@ body {
     width: 100%;
 }
 
+.current-images-table
+{
+    max-height: 360px;
+}
+
+.text-2xs
+{
+    font-size: .6rem;
+    line-height: 1;
+}
+
 .products-section
 {
     display:flex;
@@ -417,6 +428,16 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 5px;
+}
+
+.panel-button-list > button
+{
+    margin-inline: 2px;
+}
+
+.panel-button-list > a
+{
+    margin-inline: 2px;
 }
 
 .panel-product-item-edit, .panel-product-item-remove {
@@ -813,6 +834,14 @@ nav {
     border-radius: 5px;
     overflow: hidden;
     padding: 20px 5px;
+}
+
+#selected-images
+{
+    width: 70%;
+    margin: 0 auto;
+    max-height: 100px;
+    overflow-y: auto;
 }
 
 #num-of-selected-cat {

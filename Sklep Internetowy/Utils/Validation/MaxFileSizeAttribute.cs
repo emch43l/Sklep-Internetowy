@@ -17,7 +17,7 @@ namespace Sklep_Internetowy.Utils.Validation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            List<IFormFile>? files = value as List<IFormFile>;
+            ICollection<IFormFile>? files = value as ICollection<IFormFile>;
             if (files == null)
                 return ValidationResult.Success;
 

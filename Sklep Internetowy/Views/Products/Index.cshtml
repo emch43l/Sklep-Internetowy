@@ -35,16 +35,14 @@
         </div>
         <div class="panel-product-item-operations">
             <div class="panel-button-list">
+                <a class="panel-product-item-edit" asp-action="Index" asp-controller="Images" asp-route-id="@item.Guid.ToString()">
+                    <i class="fas fa-image"></i> 
+                </a>
                 <a class="panel-product-item-edit" asp-action="Edit" asp-route-id="@item.Guid.ToString()">
                     <i class="fas fa-pen"></i> 
                 </a>
                 <button class="panel-product-item-remove -confirmation-window" data-name="@item.Name" asp-action="Delete" asp-route-id="@item.Guid.ToString()"> 
                     <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div>
-                <button class="panel-product-item-details" asp-action="Details" asp-route-id="@item.Guid.ToString()" disabled>
-                    <span>Szczegóły</span> 
                 </button>
             </div>
         </div>

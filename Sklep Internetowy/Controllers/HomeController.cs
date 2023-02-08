@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace Sklep_Internetowy.Controllers
 {
-
+    [Route("")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -41,6 +41,9 @@ namespace Sklep_Internetowy.Controllers
             _pRepo = pRepo;
             _reader = uploader;
         }
+
+        [Route("")]
+        [HttpGet]
 
         public async Task<IActionResult> Index(ManageProductListViewModel model)
         {
@@ -173,6 +176,9 @@ namespace Sklep_Internetowy.Controllers
                                 c.Guid.ToString() == pc) != null))
                .ToList();
         }
+
+        [Route("privacy")]
+        [HttpGet]
 
         public IActionResult Privacy()
         {

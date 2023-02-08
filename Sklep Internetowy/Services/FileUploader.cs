@@ -20,7 +20,7 @@ namespace Sklep_Internetowy.Services
         private readonly string _enviromentDirectory;
         private List<FileUploaderError> _Errors;
         private string _rootFolderName;
-        private string _targetFolderName = "";
+        private string _targetFolderName = "Images";
         private readonly IDirectoryConfigurationReader _reader;
 
         public FileUploader(IWebHostEnvironment environment, IDirectoryConfigurationReader reader)
@@ -68,6 +68,11 @@ namespace Sklep_Internetowy.Services
             try
             {
                 filePath = GetDirectory() + "/" + file.GetFileName();
+
+                System.Diagnostics.Debug.WriteLine("----------------------------------");
+                System.Diagnostics.Debug.WriteLine(filePath);
+                System.Diagnostics.Debug.WriteLine("----------------------------------");
+
                 if (FileExists(filePath))
                 {
                     System.IO.File.Delete(filePath);
@@ -78,7 +83,7 @@ namespace Sklep_Internetowy.Services
                     _Errors.Add(
                         new FileUploaderError(FileName: file.GetFileTitle(), Message: $"File {file.GetFileTitle()} does not exist !")
                         );
-                    return file;
+                    return null;
                 }
             }
             catch (Exception e)
@@ -95,7 +100,7 @@ namespace Sklep_Internetowy.Services
             => File.Exists(filePath);
 
         private string CreateUniqueFileName(IFormFile file)
-         => Guid.NewGuid() + "_" + string.Join('_', file.FileName.Split(Path.GetInvalidFileNameChars()));
+            => Guid.NewGuid() + "_" + string.Join('_', file.FileName.Split(Path.GetInvalidFileNameChars()));
 
         private void CreatDirectoryIfNotExists(string path)
         {
