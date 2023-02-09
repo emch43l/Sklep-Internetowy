@@ -4,8 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="panel-products-header">
-    <div>
+@*<div class="panel-products-header">
+    @*<div>
         <h1 class="products-header">Producenci</h1>
     </div>
     <div>
@@ -14,8 +14,50 @@
             Utwórz nowego
         </a>
     </div>
+</div>*@
+
+<div class="mx-auto">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-2xl mx-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Nazwa producenta
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-right">
+                        <span class="mr-3">Dodaj nowego</span>
+                        <a asp-action="Create" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(Producer producer in Model)
+                {
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-5 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            @producer.Name
+                        </th>
+                        <td class="px-5 py-3 text-right">
+                            <div class="inline-flex rounded-md shadow-sm" role="group">
+                                <a asp-action="Edit" asp-route-id="@producer.Guid" class="rounded-l-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 text-xs text-sm px-3 py-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                    Edytuj
+                                </a>
+                                <button type="button" data-name="@producer.Name" asp-action="Delete" asp-route-id="@producer.Guid" class="-confirmation-window text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-r-lg text-xs px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
+
+@*
 <div class="panel-product-item-list">
     @foreach (var item in Model)
     {
@@ -35,7 +77,7 @@
             </div>
         </div>
     }
-</div>
+</div>*@
 
 @section Scripts {
     <script src="~/js/confirmationWindow.js"></script>
