@@ -36,7 +36,7 @@ namespace Sklep_Internetowy.Controllers
         {
             page = (page < 1) ? 1 : page;
             EntityPaginator<Product> paginator = new EntityPaginator<Product>(_context.Products.Include(p => p.ProductDetail).ToList());
-            paginator.SetPageEntityNumber(5);
+            paginator.SetPageEntityNumber(10);
 
             IEnumerable<Product> products = paginator.GetPaginatedData(page);
             List<int> pagesNumber = paginator.GetPagesNumber(page);

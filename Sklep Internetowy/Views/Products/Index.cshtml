@@ -9,80 +9,86 @@
     <script type="text/javascript" src="~/js/confirmationWindow.js"></script>
 }
 
-<div class="mx-auto">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-4xl mx-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Nazwa produktu
-                    </th>
-                    <th scope="col" class="px-2 py-3 text-center">
-                        Cena
-                    </th>
-                    <th scope="col" class="px-2 py-3 text-center">
-                        Data
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-right">
-                        <span class="mr-3">Dodaj nowy</span>
-                        <a asp-action="Create" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <i class="fas fa-plus"></i>
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Product product in Model.Item1)
-                {
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" class="px-5 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            @product.Name
+<div class="flex justify-center items-start">
+
+    @await Html.PartialAsync("_AdminMenuPartial")
+
+    <div class="w-full">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mx-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Nazwa produktu
                         </th>
-                        <td class="px-2 py-3 text-center">
-                            @product.Price.ToString("0.00")
-                        </td>
-                        <td class="px-2 py-3 text-center">
-                            @product.ProductDetail.Creation_Date.ToString("yyyy/mm/dd")
-                        </td>
-                        <td class="px-5 py-3 text-right">
-                            <div class="inline-flex rounded-md" role="group">
-                                <a asp-action="Edit" asp-route-id="@product.Guid" class="rounded-md mr-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 text-xs text-sm px-3 py-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-                                    Edytuj
-                                </a>
-                                <a asp-action="Index" asp-route-id="@product.Guid" asp-controller="Images" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-l-lg text-xs px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                                    <i class="fas fa-images"></i>
-                                </a>
-                                <button type="button" data-name="@product.Name" asp-action="Delete" asp-route-id="@product.Guid" class="-confirmation-window text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-r-lg text-xs px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+                        <th scope="col" class="px-2 py-3 text-center">
+                            Cena
+                        </th>
+                        <th scope="col" class="px-2 py-3 text-center">
+                            Data
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right">
+                            <span class="mr-3">Dodaj nowy</span>
+                            <a asp-action="Create" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="page-change-container">
-        <div class="page-change-buttons">
-            @if (Model.Item2.Count() > 1)
-            {
-                foreach (int i in Model.Item2)
+                </thead>
+                <tbody>
+                    @foreach (Product product in Model.Item1)
+                    {
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row" class="px-5 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                @product.Name
+                            </th>
+                            <td class="px-2 py-3 text-center">
+                                @product.Price.ToString("0.00")
+                            </td>
+                            <td class="px-2 py-3 text-center">
+                                @product.ProductDetail.Creation_Date.ToString("yyyy/mm/dd")
+                            </td>
+                            <td class="px-5 py-3 text-right">
+                                <div class="inline-flex rounded-md" role="group">
+                                    <a asp-action="Edit" asp-route-id="@product.Guid" class="rounded-md mr-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 text-xs text-sm px-3 py-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                                        Edytuj
+                                    </a>
+                                    <a asp-action="Index" asp-route-id="@product.Guid" asp-controller="Images" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-l-lg text-xs px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                        <i class="fas fa-images"></i>
+                                    </a>
+                                    <button type="button" data-name="@product.Name" asp-action="Delete" asp-route-id="@product.Guid" class="-confirmation-window text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-r-lg text-xs px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="page-change-container">
+            <div class="page-change-buttons">
+                @if (Model.Item2.Count() > 1)
                 {
-                    <form style="display: inline-block">
-                        @if (i == Model.Item3)
-                        {
-                            <button class="change-page-button current-page" name="Page" value="@i">@i</button>
-                        }
-                        else
-                        {
-                            <button class="change-page-button" name="Page" value="@i">@i</button>
-                        }
-                    </form>
+                    foreach (int i in Model.Item2)
+                    {
+                        <form style="display: inline-block">
+                            @if (i == Model.Item3)
+                            {
+                                <button class="change-page-button current-page" name="Page" value="@i">@i</button>
+                            }
+                            else
+                            {
+                                <button class="change-page-button" name="Page" value="@i">@i</button>
+                            }
+                        </form>
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
 </div>
+
 
 @*<div class="panel-products-header">
     <div>
